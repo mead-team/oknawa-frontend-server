@@ -1,8 +1,10 @@
 'use client';
 
-import { flexCenter } from '@/styles/commonStyles';
+import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import { Button } from '@nextui-org/react';
 import styled from 'styled-components';
+
+import { flexCenter } from '@/styles/commonStyles';
 
 export default function Home() {
   return (
@@ -16,6 +18,12 @@ export default function Home() {
         <Button color="warning">Warning</Button>
         <Button color="danger">Danger</Button>
       </div>
+      <Map
+        center={{ lat: 37.566826, lng: 126.9786567 }}
+        style={{ width: '100%', height: '350px', marginTop: '50px' }}
+      >
+        <MapMarker position={{ lat: 33.450701, lng: 126.570667 }} />
+      </Map>
     </Container>
   );
 }
