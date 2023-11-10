@@ -1,7 +1,7 @@
-import { styled } from "styled-components";
+import styled from 'styled-components';
 
 const media = {
-  mobile: "@media(max-width: 768px)",
+  mobile: '@media(max-width: 768px)',
 };
 
 export default function BaseLayout({
@@ -10,7 +10,7 @@ export default function BaseLayout({
   children: React.ReactNode;
 }) {
   return (
-    <Container>
+    <Container className="dark text-foreground bg-background">
       <Wrapper>{children}</Wrapper>
     </Container>
   );
@@ -22,14 +22,11 @@ const Container = styled.div`
   align-items: center;
   min-height: 100vh;
   overflow: auto;
-
-  background-color: #f7f5ed;
 `;
 
 const Wrapper = styled.div`
   height: 100vh;
   min-width: 40%;
-  background-color: white;
   overflow: auto;
   padding: 23px;
 

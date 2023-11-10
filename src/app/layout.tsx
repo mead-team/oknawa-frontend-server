@@ -1,39 +1,27 @@
-"use client";
+'use client';
 
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import { useState } from "react";
-import { ThemeProvider } from "styled-components";
+import BaseLayout from '@/components/layout/BaseLayout';
+import BaseHead from '@/app/head';
 
-import { Providers } from "./providers";
-import "./globals.css";
-import Header from "./Header";
-import BaseLayout from "./BaseLayout";
-import StyledComponentsRegistry from "./registry";
+import { Providers } from './providers';
 
-const BaseTheme = {
-  // ... 테마 정의
-};
+import StyledComponentsRegistry from '@/styles/registry';
+import '@/styles/globals.css';
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [queryClient] = useState(() => new QueryClient());
-
   return (
     <html lang="en">
-      <Header />
+      <BaseHead />
       <body>
-        <StyledComponentsRegistry>
-          <ThemeProvider theme={BaseTheme}>
-            <QueryClientProvider client={queryClient}>
-              <Providers>
-                <BaseLayout>{children}</BaseLayout>
-              </Providers>
-            </QueryClientProvider>
-          </ThemeProvider>
-        </StyledComponentsRegistry>
+        <Providers>
+          <StyledComponentsRegistry>
+            <BaseLayout>{children}</BaseLayout>
+          </StyledComponentsRegistry>
+        </Providers>
       </body>
     </html>
   );

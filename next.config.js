@@ -2,7 +2,9 @@
 
 const nextConfig = {
   compiler: {
-    styledComponents: true,
+    styledComponents: {
+      ssr: true,
+    },
   },
   eslint: {
     ignoreDuringBuilds: true,
