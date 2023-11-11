@@ -42,7 +42,12 @@ export default function DistanceSummary() {
   );
 }
 
-const Container = styled.div``;
+const Container = styled.div`
+  position: absolute;
+  top: 8px;
+  margin: 0 8px;
+  z-index: 10;
+`;
 
 const Box = styled.div`
   display: flex;

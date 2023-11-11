@@ -7,16 +7,14 @@ import ResultMap from './components/ResultMap';
 
 export default function ResultBody() {
   return (
-    <>
-      <Container>
-        <DistanceSummary />
-      </Container>
+    <Container>
+      <DistanceSummary />
       <ResultMap />
-    </>
+    </Container>
   );
 }
 
 const Container = styled.main`
-  padding: 10px;
-  z-index: 1;
+  position: relative;
+  width: 100%;
 `;

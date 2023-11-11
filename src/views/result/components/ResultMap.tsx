@@ -3,8 +3,8 @@ import styled from 'styled-components';
 
 export default function ResultMap() {
   return (
-    <StyledMap center={{ lat: 37.566826, lng: 126.9786567 }}>
-      <MapMarker position={{ lat: 33.450701, lng: 126.570667 }} />
+    <StyledMap center={{ lat: 37.566826, lng: 126.9786567 }} level={3}>
+      <MapMarker position={{ lat: 37.566826, lng: 126.9786567 }} />
     </StyledMap>
   );
 }
