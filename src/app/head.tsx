@@ -8,7 +8,7 @@ export default function BaseHead() {
     <head>
       <Script
         type="text/javascript"
-        src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_APP_KEY}&autoload=false`}
+        src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_APP_KEY}&libraries=services&autoload=false`}
         strategy="beforeInteractive"
       />
       <title>Ok, Nawa!</title>

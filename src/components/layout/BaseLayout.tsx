@@ -1,5 +1,9 @@
 import styled from 'styled-components';
 
+import ModalBox from '../ModalBox';
+
+import { flexCenter } from '@/styles/commonStyles';
+
 const media = {
   mobile: '@media(max-width: 768px)',
 };
@@ -12,14 +16,13 @@ export default function BaseLayout({
   return (
     <Container className="dark text-foreground bg-background">
       <Wrapper>{children}</Wrapper>
+      <ModalBox />
     </Container>
   );
 }
 
 const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${flexCenter('row')}
   min-height: 100vh;
   overflow: auto;
 `;
