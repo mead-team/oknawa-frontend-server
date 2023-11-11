@@ -44,8 +44,8 @@ export default function DistanceSummary() {
 
 const Container = styled.div`
   position: absolute;
-  top: 8px;
-  margin: 0 8px;
+  top: 4px;
+  margin: 0 4px;
   z-index: 10;
 `;
 
