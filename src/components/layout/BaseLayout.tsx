@@ -26,11 +26,11 @@ const Container = styled.div`
 
 const Wrapper = styled.div`
   height: 100vh;
-  min-width: 40%;
+  min-width: 50%;
   overflow: auto;
-  padding: 23px;
+  padding: 25px 19px 0;
 
   ${media.mobile} {
-    min-width: 80%; // 모바일 화면에서는 더 넓은 비율을 차지
+    min-width: 100%; // 모바일 화면에서는 더 넓은 비율을 차지
   }
 `;
