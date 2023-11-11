@@ -8,21 +8,20 @@ import { styled } from 'styled-components';
 export default function SearchBody() {
   const [modal, setModal] = useAtom(modalState);
 
-  const { register, setValue, handleSubmit, control, watch, getValues } =
-    useForm({
-      defaultValues: {
-        userSection: [
-          {
-            name: '',
-            address: { fullAddress: '', latitude: '', longitude: '' },
-          },
-          {
-            name: '',
-            address: { fullAddress: '', latitude: '', longitude: '' },
-          },
-        ],
-      },
-    });
+  const { register, setValue, handleSubmit, control, getValues } = useForm({
+    defaultValues: {
+      userSection: [
+        {
+          name: '사용자1',
+          address: { fullAddress: '', latitude: '', longitude: '' },
+        },
+        {
+          name: '사용자2',
+          address: { fullAddress: '', latitude: '', longitude: '' },
+        },
+      ],
+    },
+  });
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -47,12 +46,12 @@ export default function SearchBody() {
   };
 
   const handleSearchAddressBtnClick = (index: number) => {
-    setModal(prev => ({
-      ...prev,
+    setModal({
+      ...modal,
       isOpen: true,
       title: '주소 검색',
       contents: <DaumPostCode setValue={setValue} currentIndex={index} />,
-    }));
+    });
   };
 
   const addressValue = getValues('userSection');

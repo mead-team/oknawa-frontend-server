@@ -44,5 +44,5 @@ export default function DaumPostCode({
     }
   }, []);
 
-  return <DaumPostcodeEmbed onComplete={handleComplete} />;
+  return <DaumPostcodeEmbed onComplete={handleComplete} autoClose={false} />;
 }
