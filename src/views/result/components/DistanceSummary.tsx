@@ -24,7 +24,7 @@ export default function DistanceSummary() {
               <span>장지역 출발</span>
             </User>
             <User className="text-small">
-              <Avatar name="배" size="sm" color="success" />
+              <Avatar name="배" size="sm" color="danger" />
               <TravelTime>10분</TravelTime>
               <Divider className="h-4" orientation="vertical" />
               <span>구성역 출발</span>
