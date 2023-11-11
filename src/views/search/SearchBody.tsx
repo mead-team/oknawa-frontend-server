@@ -1,55 +1,85 @@
+import DaumPostCode from '@/components/DaumPostCode';
 import { Button, Input } from '@nextui-org/react';
+import { useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { styled } from 'styled-components';
 
 export default function SearchBody() {
-  const { register, handleSubmit, control } = useForm({
-    defaultValues: {
-      userSection: [
-        { name: '', address: '' },
-        { name: '', address: '' },
-      ],
-    },
-  });
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isOpenAddressModal, setIsOpenAddressModal] = useState(false);
+
+  const { register, setValue, handleSubmit, control, watch, getValues } =
+    useForm({
+      defaultValues: {
+        userSection: [
+          {
+            name: '',
+            address: { fullAddress: '', latitude: '', longitude: '' },
+          },
+          {
+            name: '',
+            address: { fullAddress: '', latitude: '', longitude: '' },
+          },
+        ],
+      },
+    });
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'userSection',
   });
 
+  const handleAddressSearchBtnClick = (index: number) => {
+    setCurrentIndex(index);
+    setIsOpenAddressModal(true);
+  };
+
   const handleAddBtnClick = () => {
     if (fields.length < 4) {
       append({
         name: '',
-        address: '',
+        address: { fullAddress: '', latitude: '', longitude: '' },
       });
     }
   };
 
-  const handleDeleteBtnClick = (idx: number) => {
-    remove(idx);
+  const handleDeleteBtnClick = (index: number) => {
+    remove(index);
   };
 
   const handleFindBtnClick = (data: any) => {
     console.log('handleFindBtnClick', data);
   };
 
+  const addressValue = getValues('userSection');
+
+  console.log('userSection Value', watch('userSection'));
+
   return (
     <Container onSubmit={handleSubmit(handleFindBtnClick)}>
+      {isOpenAddressModal && (
+        <DaumPostCode setValue={setValue} currentIndex={currentIndex} />
+      )}
       <Wrapper>
-        {fields.map((field, idx) => {
+        {fields.map((field, index) => {
           return (
             <Section key={field.id}>
-              <UserName
+              <NameInput
                 size="sm"
                 maxLength={4}
-                radius="md"
-                placeholder={`사용자 ${idx + 1}`}
-                {...register(`userSection.${idx}.name`)}
+                placeholder={`사용자 ${index + 1}`}
+                {...register(`userSection.${index}.name`)}
               />
-              <AddressButton size="lg">출발지를 입력해주세요.</AddressButton>
-              {idx > 1 && (
-                <DeleteButton onClick={() => handleDeleteBtnClick(idx)}>
+              <AddressInput
+                isReadOnly
+                size="sm"
+                placeholder="출발지를 입력해주세요."
+                value={addressValue[index].address.fullAddress}
+                onClick={() => handleAddressSearchBtnClick(index)}
+                onClear={() => console.log('input cleared')}
+              />
+              {index > 1 && (
+                <DeleteButton onClick={() => handleDeleteBtnClick(index)}>
                   삭제
                 </DeleteButton>
               )}
@@ -88,11 +118,11 @@ const Section = styled.section`
   gap: 50px;
 `;
 
-const UserName = styled(Input)`
+const NameInput = styled(Input)`
   width: 25%;
 `;
 
-const AddressButton = styled(Button)`
+const AddressInput = styled(Input)`
   width: 70%;
 `;
 
