@@ -15,9 +15,11 @@ declare let kakao: any;
 export default function DaumPostCode({
   setValue,
   currentIndex,
+  trigger,
 }: {
   setValue: any;
   currentIndex: number;
+  trigger: any;
 }) {
   const resetModal = useResetAtom(modalState);
 
@@ -32,6 +34,7 @@ export default function DaumPostCode({
       latitude: 위도_경도.latitude,
       longitude: 위도_경도.longitude,
     });
+    trigger(`userSection.${currentIndex}.address.fullAddress`);
 
     resetModal();
   };

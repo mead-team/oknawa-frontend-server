@@ -1,40 +1,61 @@
-import DaumPostCode from '@/components/DaumPostCode';
-import { modalState } from '@/jotai/global/store';
 import { Button, Input } from '@nextui-org/react';
 import { useAtom } from 'jotai';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { useFieldArray } from 'react-hook-form';
 import { styled } from 'styled-components';
+
+import DaumPostCode from '@/components/DaumPostCode';
+
+import useSearchForm from '@/hooks/form/search/useSearchForm';
+
+import { modalState } from '@/jotai/global/store';
+
+const initialAddress = {
+  fullAddress: '',
+  latitude: 0,
+  longitude: 0,
+};
 
 export default function SearchBody() {
   const [modal, setModal] = useAtom(modalState);
 
-  const { register, setValue, handleSubmit, control, getValues } = useForm({
-    defaultValues: {
-      userSection: [
-        {
-          name: '사용자1',
-          address: { fullAddress: '', latitude: '', longitude: '' },
-        },
-        {
-          name: '사용자2',
-          address: { fullAddress: '', latitude: '', longitude: '' },
-        },
-      ],
-    },
-  });
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    control,
+    watch,
+    trigger,
+    formState: { errors },
+  } = useSearchForm();
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'userSection',
   });
 
+  const handleSearchAddressBtnClick = (index: number) => {
+    setModal({
+      ...modal,
+      isOpen: true,
+      title: '주소 검색',
+      contents: (
+        <DaumPostCode
+          setValue={setValue}
+          currentIndex={index}
+          trigger={trigger}
+        />
+      ),
+    });
+  };
+  const handleClearAddress = (index: number) => {
+    setValue(`userSection.${index}.address`, initialAddress);
+  };
+
   const handleAddBtnClick = () => {
-    if (fields.length < 4) {
-      append({
-        name: '',
-        address: { fullAddress: '', latitude: '', longitude: '' },
-      });
-    }
+    append({
+      name: '',
+      address: initialAddress,
+    });
   };
 
   const handleDeleteBtnClick = (index: number) => {
@@ -45,16 +66,7 @@ export default function SearchBody() {
     console.log('handleFindBtnClick', data);
   };
 
-  const handleSearchAddressBtnClick = (index: number) => {
-    setModal({
-      ...modal,
-      isOpen: true,
-      title: '주소 검색',
-      contents: <DaumPostCode setValue={setValue} currentIndex={index} />,
-    });
-  };
-
-  const addressValue = getValues('userSection');
+  const addressValue = watch('userSection');
 
   return (
     <Container onSubmit={handleSubmit(handleFindBtnClick)}>
@@ -72,9 +84,9 @@ export default function SearchBody() {
                 isReadOnly
                 size="sm"
                 placeholder="출발지를 입력해주세요."
-                value={addressValue[index].address.fullAddress}
+                value={addressValue?.[index].address.fullAddress}
                 onClick={() => handleSearchAddressBtnClick(index)}
-                onClear={() => console.log('input cleared')}
+                onClear={() => handleClearAddress(index)}
               />
               {index > 1 && (
                 <DeleteButton onClick={() => handleDeleteBtnClick(index)}>
@@ -84,9 +96,12 @@ export default function SearchBody() {
             </Section>
           );
         })}
-        <AddButton onClick={handleAddBtnClick} isDisabled={fields.length > 4}>
+        <AddButton onClick={handleAddBtnClick} isDisabled={fields.length > 3}>
           +
         </AddButton>
+        {errors?.userSection && (
+          <ErrorMessage>🚨 모든 주소를 입력해주세요! 🚨</ErrorMessage>
+        )}
       </Wrapper>
       <Button color="success" type="submit">
         중간지점 찾기
@@ -137,4 +152,9 @@ const DeleteButton = styled.button`
 
 const AddButton = styled(Button)`
   margin-top: 20px;
+`;
+
+const ErrorMessage = styled.p`
+  text-align: center;
+  color: red;
 `;
