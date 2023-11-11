@@ -1,19 +1,33 @@
 'use client';
 
-import { Button } from '@nextui-org/react';
+import { Button, useDisclosure } from '@nextui-org/react';
 import styled from 'styled-components';
 
 import DistanceSummary from './components/DistanceSummary';
+import HotPlaceModal from './components/HotPlaceModal';
 import ResultMap from './components/ResultMap';
 
 export default function ResultBody() {
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  const handleFloatingButtonClick = () => {
+    onOpen();
+  };
+
   return (
     <Container>
       <DistanceSummary />
       <ResultMap />
-      <FloatingButton radius="full" size="lg" color="success">
+      <FloatingButton
+        radius="full"
+        size="lg"
+        color="success"
+        variant="shadow"
+        onClick={handleFloatingButtonClick}
+      >
         핫플레이스 보기
       </FloatingButton>
+      <HotPlaceModal isOpen={isOpen} onOpenChange={onOpenChange} />
     </Container>
   );
 }
