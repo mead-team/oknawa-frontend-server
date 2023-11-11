@@ -1,12 +1,12 @@
 import DaumPostCode from '@/components/DaumPostCode';
+import { modalState } from '@/jotai/global/store';
 import { Button, Input } from '@nextui-org/react';
-import { useState } from 'react';
+import { useAtom } from 'jotai';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { styled } from 'styled-components';
 
 export default function SearchBody() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isOpenAddressModal, setIsOpenAddressModal] = useState(false);
+  const [modal, setModal] = useAtom(modalState);
 
   const { register, setValue, handleSubmit, control, watch, getValues } =
     useForm({
@@ -29,11 +29,6 @@ export default function SearchBody() {
     name: 'userSection',
   });
 
-  const handleAddressSearchBtnClick = (index: number) => {
-    setCurrentIndex(index);
-    setIsOpenAddressModal(true);
-  };
-
   const handleAddBtnClick = () => {
     if (fields.length < 4) {
       append({
@@ -51,15 +46,19 @@ export default function SearchBody() {
     console.log('handleFindBtnClick', data);
   };
 
-  const addressValue = getValues('userSection');
+  const handleSearchAddressBtnClick = (index: number) => {
+    setModal(prev => ({
+      ...prev,
+      isOpen: true,
+      title: '주소 검색',
+      contents: <DaumPostCode setValue={setValue} currentIndex={index} />,
+    }));
+  };
 
-  console.log('userSection Value', watch('userSection'));
+  const addressValue = getValues('userSection');
 
   return (
     <Container onSubmit={handleSubmit(handleFindBtnClick)}>
-      {isOpenAddressModal && (
-        <DaumPostCode setValue={setValue} currentIndex={currentIndex} />
-      )}
       <Wrapper>
         {fields.map((field, index) => {
           return (
@@ -75,7 +74,7 @@ export default function SearchBody() {
                 size="sm"
                 placeholder="출발지를 입력해주세요."
                 value={addressValue[index].address.fullAddress}
-                onClick={() => handleAddressSearchBtnClick(index)}
+                onClick={() => handleSearchAddressBtnClick(index)}
                 onClear={() => console.log('input cleared')}
               />
               {index > 1 && (
