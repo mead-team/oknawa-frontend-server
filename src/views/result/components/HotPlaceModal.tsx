@@ -76,6 +76,7 @@ export default function HotPlaceModal({
     <StyledModal
       isOpen={isOpen}
       scrollBehavior="inside"
+      placement="bottom"
       onOpenChange={onOpenChange}
     >
       <ModalContent>

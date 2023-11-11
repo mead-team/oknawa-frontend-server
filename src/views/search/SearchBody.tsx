@@ -8,6 +8,7 @@ import DaumPostCode from '@/components/DaumPostCode';
 import useSearchForm from '@/hooks/form/search/useSearchForm';
 
 import { modalState } from '@/jotai/global/store';
+import { useRouter } from 'next/navigation';
 
 const initialAddress = {
   fullAddress: '',
@@ -17,6 +18,7 @@ const initialAddress = {
 
 export default function SearchBody() {
   const [modal, setModal] = useAtom(modalState);
+  const router = useRouter();
 
   const {
     register,
@@ -63,7 +65,7 @@ export default function SearchBody() {
   };
 
   const handleFindBtnClick = (data: any) => {
-    console.log('handleFindBtnClick', data);
+    router.push('/result');
   };
 
   const addressValue = watch('userSection');
@@ -96,11 +98,13 @@ export default function SearchBody() {
             </Section>
           );
         })}
-        <AddButton onClick={handleAddBtnClick} isDisabled={fields.length > 3}>
-          +
-        </AddButton>
+        {fields.length < 4 && (
+          <AddButton onClick={handleAddBtnClick} isDisabled={fields.length > 3}>
+            +
+          </AddButton>
+        )}
         {errors?.userSection && (
-          <ErrorMessage>🚨 모든 주소를 입력해주세요! 🚨</ErrorMessage>
+          <ErrorMessage>모든 주소를 입력해주세요.</ErrorMessage>
         )}
       </Wrapper>
       <Button color="success" type="submit">
@@ -114,7 +118,6 @@ const Container = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: gray;
   padding: 35px 19px 20px;
   min-height: 100vh;
 `;
@@ -122,13 +125,13 @@ const Container = styled.form`
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 13px;
 `;
 
 const Section = styled.section`
   position: relative;
   display: flex;
-  gap: 50px;
+  gap: 20px;
 `;
 
 const NameInput = styled(Input)`
@@ -142,10 +145,10 @@ const AddressInput = styled(Input)`
 const DeleteButton = styled.button`
   position: absolute;
   bottom: 10%;
-  left: 24%;
+  right: 2%;
   width: 22px;
   height: 15px;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: bold;
   color: red;
 `;
