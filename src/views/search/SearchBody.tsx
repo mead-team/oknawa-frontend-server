@@ -139,7 +139,7 @@ const NameInput = styled(Input)`
 `;
 
 const AddressInput = styled(Input)`
-  width: 70%;
+  width: 75%;
 `;
 
 const DeleteButton = styled.button`
