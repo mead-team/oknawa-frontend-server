@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Toaster } from 'react-hot-toast';
 
 import ModalBox from '../ModalBox';
 
@@ -16,6 +17,7 @@ export default function BaseLayout({
   return (
     <Container className="dark text-foreground bg-background">
       <Wrapper>{children}</Wrapper>
+      <Toaster position="bottom-center" />
       <ModalBox />
     </Container>
   );

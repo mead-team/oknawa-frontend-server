@@ -2,13 +2,15 @@ import { Button, Input } from '@nextui-org/react';
 import { useAtom } from 'jotai';
 import { useFieldArray } from 'react-hook-form';
 import { styled } from 'styled-components';
+import { useRouter } from 'next/navigation';
+import { toast } from 'react-hot-toast';
+import { useEffect } from 'react';
 
 import DaumPostCode from '@/components/DaumPostCode';
 
 import useSearchForm from '@/hooks/form/search/useSearchForm';
 
 import { modalState } from '@/jotai/global/store';
-import { useRouter } from 'next/navigation';
 
 const initialAddress = {
   fullAddress: '',
@@ -70,6 +72,12 @@ export default function SearchBody() {
 
   const addressValue = watch('userSection');
 
+  useEffect(() => {
+    if (errors?.userSection) {
+      toast.error('모든 주소를 입력해주세요');
+    }
+  }, [errors]);
+
   return (
     <Container onSubmit={handleSubmit(handleFindBtnClick)}>
       <Wrapper>
@@ -102,9 +110,6 @@ export default function SearchBody() {
           <AddButton onClick={handleAddBtnClick} isDisabled={fields.length > 3}>
             +
           </AddButton>
-        )}
-        {errors?.userSection && (
-          <ErrorMessage>모든 주소를 입력해주세요.</ErrorMessage>
         )}
       </Wrapper>
       <Button color="success" type="submit">
@@ -155,9 +160,4 @@ const DeleteButton = styled.button`
 
 const AddButton = styled(Button)`
   margin-top: 20px;
-`;
-
-const ErrorMessage = styled.p`
-  text-align: center;
-  color: red;
 `;
