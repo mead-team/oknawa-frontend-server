@@ -1,10 +1,17 @@
 import { atomWithReset } from 'jotai/utils';
 
+interface ItineraryItem {
+  name: string;
+  itinerary: {
+    totalTime: number;
+  };
+}
+
 interface ResultState {
   address_name: string;
   end_x: number;
   end_y: number;
-  itinerary: [];
+  itinerary: ItineraryItem[];
   station_name: string;
 }
 
