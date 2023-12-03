@@ -1,10 +1,16 @@
+import { resultState } from '@/jotai/result/store';
+import { useAtom } from 'jotai';
 import { Map as KakaoMap, MapMarker } from 'react-kakao-maps-sdk';
 import styled from 'styled-components';
 
 export default function ResultMap() {
+  const [result] = useAtom(resultState);
+
+  console.log('result', result);
+
   return (
-    <StyledMap center={{ lat: 37.566826, lng: 126.9786567 }} level={3}>
-      <MapMarker position={{ lat: 37.566826, lng: 126.9786567 }} />
+    <StyledMap center={{ lat: result.end_y, lng: result.end_x }} level={3}>
+      <MapMarker position={{ lat: result.end_y, lng: result.end_x }} />
     </StyledMap>
   );
 }

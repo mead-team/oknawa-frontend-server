@@ -8,7 +8,7 @@ const createSearchFormVerifySchema = () => {
       object().shape({
         name: string(),
         address: object().shape({
-          fullAddress: string().required('🚨 모든 주소를 입력해주세요! 🚨'),
+          fullAddress: string().required('모든 주소 입력 필요'),
           latitude: number(),
           longitude: number(),
         }),
