@@ -6,8 +6,6 @@ import styled from 'styled-components';
 export default function ResultMap() {
   const [result] = useAtom(resultState);
 
-  console.log('result', result);
-
   return (
     <StyledMap center={{ lat: result.end_y, lng: result.end_x }} level={3}>
       <MapMarker position={{ lat: result.end_y, lng: result.end_x }} />
