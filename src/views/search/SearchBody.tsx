@@ -1,5 +1,5 @@
 import { Button, Input } from '@nextui-org/react';
-import { useAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import { useFieldArray } from 'react-hook-form';
 import { styled } from 'styled-components';
 import { useRouter } from 'next/navigation';
@@ -11,6 +11,8 @@ import DaumPostCode from '@/components/DaumPostCode';
 import useSearchForm from '@/hooks/form/search/useSearchForm';
 
 import { modalState } from '@/jotai/global/store';
+import { usePlaceSearchMutation } from '@/hooks/mutation/search';
+import { resultState } from '@/jotai/result/store';
 
 const initialAddress = {
   fullAddress: '',
@@ -20,7 +22,10 @@ const initialAddress = {
 
 export default function SearchBody() {
   const [modal, setModal] = useAtom(modalState);
+  const setResult = useSetAtom(resultState);
   const router = useRouter();
+
+  const { mutate: placeSearchMutate } = usePlaceSearchMutation();
 
   const {
     register,
@@ -66,8 +71,13 @@ export default function SearchBody() {
     remove(index);
   };
 
-  const handleFindBtnClick = (data: any) => {
-    router.push('/result');
+  const handleSearchBtnClick = (searchForm: any) => {
+    placeSearchMutate(searchForm, {
+      onSuccess: data => {
+        router.push('/result');
+        setResult(data);
+      },
+    });
   };
 
   const addressValue = watch('userSection');
@@ -81,7 +91,7 @@ export default function SearchBody() {
   }, [errors]);
 
   return (
-    <Container onSubmit={handleSubmit(handleFindBtnClick)}>
+    <Container onSubmit={handleSubmit(handleSearchBtnClick)}>
       <Wrapper>
         {fields.map((field, index) => {
           return (
