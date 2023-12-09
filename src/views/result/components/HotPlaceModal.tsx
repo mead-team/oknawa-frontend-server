@@ -12,26 +12,28 @@ import PlaceItem from './PlaceItem';
 import { useHotPlaceQuery } from '@/hooks/query/hot-place';
 import { useAtom } from 'jotai';
 import { resultState } from '@/jotai/result/store';
+import { useState } from 'react';
+import { HotPlaceCategory } from '@/services/hot-place/types';
 
 interface HotPlaceModalProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
+const HOT_PLACE_CATEGORY: HotPlaceCategory[] = ['food', 'cafe', 'drink'];
+
 export default function HotPlaceModal({
   isOpen,
   onOpenChange,
 }: HotPlaceModalProps) {
+  const [category, setCategory] = useState<HotPlaceCategory>('food');
+
   const [result] = useAtom(resultState);
 
-  const { data, isLoading } = useHotPlaceQuery('food', {
+  const { data } = useHotPlaceQuery(category, {
     x: result.end_x,
     y: result.end_y,
   });
-
-  if (isLoading) {
-    return <div>로딩...</div>;
-  }
 
   return (
     <StyledModal
@@ -46,15 +48,20 @@ export default function HotPlaceModal({
             <ModalHeader>🔥 핫플레이스 in {result.station_name}</ModalHeader>
             <ModalBody>
               <Category>
-                <Chip
-                  variant="faded"
-                  color="success"
-                  startContent={<CheckIcon size={18} />}
-                >
-                  맛집
-                </Chip>
-                <Chip variant="flat">카페</Chip>
-                <Chip variant="flat">술집</Chip>
+                {HOT_PLACE_CATEGORY.map(c => {
+                  const isSelected = c === category;
+                  return (
+                    <Chip
+                      key={c}
+                      variant={isSelected ? 'faded' : 'flat'}
+                      color={isSelected ? 'success' : 'default'}
+                      startContent={isSelected && <CheckIcon />}
+                      onClick={() => setCategory(c)}
+                    >
+                      {c}
+                    </Chip>
+                  );
+                })}
               </Category>
               {data?.map(place => <PlaceItem key={place.id} place={place} />)}
             </ModalBody>

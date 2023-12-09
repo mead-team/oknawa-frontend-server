@@ -12,7 +12,7 @@ export const useHotPlaceQuery = (
   category: HotPlaceCategory,
   point: HotPlacePoint,
 ) => {
-  const { data, isLoading, refetch } = useQuery<HotPlace[], Error>({
+  const { data, isLoading } = useQuery<HotPlace[], Error>({
     queryKey: ['hotPlace', category, point],
     queryFn: () => HotPlaceService.fetchHotPlace(category, point),
   });
@@ -20,6 +20,5 @@ export const useHotPlaceQuery = (
   return {
     data,
     isLoading,
-    fetchHotPlace: refetch,
   };
 };
