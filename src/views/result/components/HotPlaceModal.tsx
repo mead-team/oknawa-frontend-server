@@ -9,69 +9,32 @@ import styled from 'styled-components';
 
 import CheckIcon from './CheckIcon';
 import PlaceItem from './PlaceItem';
-
-const PLACE_DATA = [
-  {
-    id: '1',
-    placeName: '마포갈매기',
-    placeUrl: 'http://place.map.kakao.com/7961755',
-    categoryGroupName: '닭,오리요리',
-    roadAddressName: '서울 마포구 동교로46길 34',
-    phone: '02-333-4567',
-    x: '126.925173685509',
-    y: '37.5566027683778',
-  },
-  {
-    id: '2',
-    placeName: '강남삼겹살',
-    placeUrl: 'http://place.map.kakao.com/26480737',
-    categoryGroupName: '돼지고기,삼겹살',
-    roadAddressName: '서울 마포구 동교로46길 34',
-    phone: '02-333-4567',
-    x: '126.925173685509',
-    y: '37.5566027683778',
-  },
-  {
-    id: '3',
-    placeName: '파이브스팟 판교점',
-    placeUrl: 'http://place.map.kakao.com/26480737',
-    categoryGroupName: '공유오피스',
-    roadAddressName: '서울 마포구 동교로46길 34',
-    phone: '02-333-4567',
-    x: '126.925173685509',
-    y: '37.5566027683778',
-  },
-  {
-    id: '4',
-    placeName: '유성손칼국수',
-    placeUrl: 'http://place.map.kakao.com/26480737',
-    categoryGroupName: '면, 국수',
-    roadAddressName: '서울 마포구 동교로46길 34',
-    phone: '02-333-4567',
-    x: '126.925173685509',
-    y: '37.5566027683778',
-  },
-  {
-    id: '5',
-    placeName: '일미',
-    placeUrl: 'http://place.map.kakao.com/26480737',
-    categoryGroupName: '돼지고기, 제육볶음',
-    roadAddressName: '서울 마포구 동교로46길 34',
-    phone: '02-333-4567',
-    x: '126.925173685509',
-    y: '37.5566027683778',
-  },
-];
+import { useHotPlaceQuery } from '@/hooks/query/hot-place';
+import { useAtom } from 'jotai';
+import { resultState } from '@/jotai/result/store';
+import { useState } from 'react';
+import { HotPlaceCategory } from '@/services/hot-place/types';
 
 interface HotPlaceModalProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
+const HOT_PLACE_CATEGORY: HotPlaceCategory[] = ['food', 'cafe', 'drink'];
+
 export default function HotPlaceModal({
   isOpen,
   onOpenChange,
 }: HotPlaceModalProps) {
+  const [category, setCategory] = useState<HotPlaceCategory>('food');
+
+  const [result] = useAtom(resultState);
+
+  const { data } = useHotPlaceQuery(category, {
+    x: result.end_x,
+    y: result.end_y,
+  });
+
   return (
     <StyledModal
       isOpen={isOpen}
@@ -82,22 +45,25 @@ export default function HotPlaceModal({
       <ModalContent>
         {onClose => (
           <>
-            <ModalHeader>🔥 핫플레이스 in 서울역</ModalHeader>
+            <ModalHeader>🔥 핫플레이스 in {result.station_name}</ModalHeader>
             <ModalBody>
               <Category>
-                <Chip
-                  variant="faded"
-                  color="success"
-                  startContent={<CheckIcon size={18} />}
-                >
-                  맛집
-                </Chip>
-                <Chip variant="flat">카페</Chip>
-                <Chip variant="flat">술집</Chip>
+                {HOT_PLACE_CATEGORY.map(c => {
+                  const isSelected = c === category;
+                  return (
+                    <Chip
+                      key={c}
+                      variant={isSelected ? 'faded' : 'flat'}
+                      color={isSelected ? 'success' : 'default'}
+                      startContent={isSelected && <CheckIcon />}
+                      onClick={() => setCategory(c)}
+                    >
+                      {c}
+                    </Chip>
+                  );
+                })}
               </Category>
-              {PLACE_DATA.map(place => (
-                <PlaceItem key={place.id} place={place} />
-              ))}
+              {data?.map(place => <PlaceItem key={place.id} place={place} />)}
             </ModalBody>
           </>
         )}
