@@ -1,5 +1,6 @@
+import { searchState } from '@/jotai/global/store';
 import { resultState } from '@/jotai/result/store';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { Map as KakaoMap, MapMarker, Polyline } from 'react-kakao-maps-sdk';
 import styled from 'styled-components';
 
@@ -20,13 +21,25 @@ const getStrokeColor = (index: number) => {
 
 export default function ResultMap() {
   const [result] = useAtom(resultState);
+  const searchValue = useAtomValue(searchState);
+
   const polylines = result.itinerary.map(user => {
     return user.itinerary.total_polyline;
   });
 
-  console.log(polylines);
   return (
-    <StyledMap center={{ lat: result.end_y, lng: result.end_x }} level={3}>
+    <MapCenter center={{ lat: result.end_y, lng: result.end_x }} level={3}>
+      {searchValue?.map((user, index) => {
+        return (
+          <MapMarker
+            key={index}
+            position={{
+              lat: user.address.latitude,
+              lng: user.address.longitude,
+            }}
+          />
+        );
+      })}
       <MapMarker position={{ lat: result.end_y, lng: result.end_x }} />
       {polylines.map((polyline, index) => {
         return (
@@ -39,11 +52,11 @@ export default function ResultMap() {
           />
         );
       })}
-    </StyledMap>
+    </MapCenter>
   );
 }
 
-const StyledMap = styled(KakaoMap)`
+const MapCenter = styled(KakaoMap)`
   width: 100%;
   height: 100vh;
 `;

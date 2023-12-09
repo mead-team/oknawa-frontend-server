@@ -10,7 +10,7 @@ import DaumPostCode from '@/components/DaumPostCode';
 
 import useSearchForm from '@/hooks/form/search/useSearchForm';
 
-import { modalState } from '@/jotai/global/store';
+import { modalState, searchState } from '@/jotai/global/store';
 import { usePlaceSearchMutation } from '@/hooks/mutation/search';
 import { resultState } from '@/jotai/result/store';
 
@@ -23,6 +23,7 @@ const initialAddress = {
 export default function SearchBody() {
   const [modal, setModal] = useAtom(modalState);
   const setResult = useSetAtom(resultState);
+  const setSearchState = useSetAtom(searchState);
   const router = useRouter();
 
   const { mutate: placeSearchMutate } = usePlaceSearchMutation();
@@ -74,6 +75,7 @@ export default function SearchBody() {
   const handleSearchBtnClick = (searchForm: any) => {
     placeSearchMutate(searchForm, {
       onSuccess: data => {
+        setSearchState(searchForm.userSection);
         router.push('/result');
         setResult(data);
       },
