@@ -4,6 +4,10 @@ interface ItineraryItem {
   name: string;
   itinerary: {
     totalTime: number;
+    total_polyline: {
+      lat: number;
+      lng: number;
+    }[];
   };
 }
 
