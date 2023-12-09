@@ -10,6 +10,7 @@ export default class SearchService {
 
     const { data } = await api.post('/location/point', { ...requestBody });
 
+    console.log('data', data);
     return data;
   }
 }
