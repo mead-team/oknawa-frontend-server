@@ -12,6 +12,24 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  rewrites: () => [
+    {
+      source: '/location/point',
+      destination: `${process.env.NEXT_PUBLIC_API_URL}/location/point`,
+    },
+    {
+      source: '/location/point/place/food',
+      destination: `${process.env.NEXT_PUBLIC_API_URL}/location/point/place/food`,
+    },
+    {
+      source: '/location/point/place/cafe',
+      destination: `${process.env.NEXT_PUBLIC_API_URL}/location/point/place/cafe`,
+    },
+    {
+      source: '/location/point/place/drink',
+      destination: `${process.env.NEXT_PUBLIC_API_URL}/location/point/place/drink`,
+    },
+  ],
 };
 
 module.exports = withPlugins(
