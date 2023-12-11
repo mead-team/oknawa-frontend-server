@@ -26,7 +26,7 @@ export default function SearchBody() {
   const setSearchState = useSetAtom(searchState);
   const router = useRouter();
 
-  const { mutate: placeSearchMutate } = usePlaceSearchMutation();
+  const { mutate: placeSearchMutate, isPending } = usePlaceSearchMutation();
 
   const {
     register,
@@ -126,7 +126,7 @@ export default function SearchBody() {
           </AddButton>
         )}
       </Wrapper>
-      <Button color="success" type="submit">
+      <Button color="success" type="submit" isLoading={isPending}>
         중간지점 찾기
       </Button>
     </Container>
