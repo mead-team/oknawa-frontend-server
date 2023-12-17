@@ -12,6 +12,14 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  async rewrites() {
+    return [
+      {
+        source: '/location/:path*',
+        destination: `${process.env.NEXT_PUBLIC_API_URL}/location/:path*`,
+      },
+    ];
+  },
 };
 
 module.exports = withPlugins(
