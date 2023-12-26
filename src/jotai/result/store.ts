@@ -17,6 +17,7 @@ interface ResultState {
   end_y: number;
   itinerary: ItineraryItem[];
   station_name: string;
+  share_key: string;
 }
 
 const initialState: ResultState = {
@@ -25,6 +26,7 @@ const initialState: ResultState = {
   end_y: 0,
   itinerary: [],
   station_name: '',
+  share_key: '',
 };
 
 export const resultState = atomWithReset(initialState);

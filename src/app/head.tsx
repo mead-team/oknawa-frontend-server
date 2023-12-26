@@ -11,6 +11,11 @@ export default function BaseHead() {
         src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_APP_KEY}&libraries=services&autoload=false`}
         strategy="beforeInteractive"
       />
+      <Script
+        type="text/javascript"
+        src="https://developers.kakao.com/sdk/js/kakao.js"
+        strategy="beforeInteractive"
+      />
       <title>Ok, Nawa!</title>
       <meta name="description" content="Ok, 나와!" />
       <meta charSet="UTF-8" />
