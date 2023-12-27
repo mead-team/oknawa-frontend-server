@@ -50,12 +50,6 @@ export default function ResultBody() {
   };
 
   const initializeKakaoSDK = () => {
-    if (kakao) {
-      kakao.maps.load(() => {
-        console.log('📍Loaded Kakao Maps');
-      });
-    }
-
     if (typeof window !== 'undefined' && !Kakao.isInitialized()) {
       try {
         Kakao.init(process.env.NEXT_PUBLIC_KAKAOMAP_APP_KEY);
