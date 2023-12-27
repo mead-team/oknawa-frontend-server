@@ -14,8 +14,6 @@ import { usePlaceSearchWithShareKeyQuery } from '@/hooks/query/search';
 
 import { resultState } from '@/jotai/result/store';
 
-declare let Kakao: any;
-
 export default function ResultBody() {
   const router = useRouter();
   const searchParams = useSearchParams().get('sharekey');
@@ -63,11 +61,11 @@ export default function ResultBody() {
   const initializeKakaoSDK = () => {
     if (
       typeof window !== 'undefined' &&
-      typeof Kakao !== 'undefined' &&
-      !Kakao.isInitialized()
+      typeof window.Kakao !== 'undefined' &&
+      !window.Kakao.isInitialized()
     ) {
       try {
-        Kakao.init(process.env.NEXT_PUBLIC_KAKAOMAP_APP_KEY);
+        window.Kakao.init(process.env.NEXT_PUBLIC_KAKAOMAP_APP_KEY);
       } catch (error) {
         console.error('Kakao init error:', error);
       }
