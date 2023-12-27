@@ -14,6 +14,8 @@ import { usePlaceSearchWithShareKeyQuery } from '@/hooks/query/search';
 
 import { resultState } from '@/jotai/result/store';
 
+declare let Kakao: any;
+
 export default function ResultBody() {
   const router = useRouter();
   const searchParams = useSearchParams().get('sharekey');
@@ -30,7 +32,7 @@ export default function ResultBody() {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
     try {
-      window.Kakao.Share.sendDefault({
+      Kakao.Share.sendDefault({
         objectType: 'feed',
         content: {
           title: `오늘은 ${station_name} 에서 만나요!`,
@@ -59,13 +61,9 @@ export default function ResultBody() {
   // };
 
   const initializeKakaoSDK = () => {
-    if (
-      typeof window !== 'undefined' &&
-      typeof window.Kakao !== 'undefined' &&
-      !window.Kakao.isInitialized()
-    ) {
+    if (typeof window !== 'undefined' && !Kakao.isInitialized()) {
       try {
-        window.Kakao.init(process.env.NEXT_PUBLIC_KAKAOMAP_APP_KEY);
+        Kakao.init(process.env.NEXT_PUBLIC_KAKAOMAP_APP_KEY);
       } catch (error) {
         console.error('Kakao init error:', error);
       }
