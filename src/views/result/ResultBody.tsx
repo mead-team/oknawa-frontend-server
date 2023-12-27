@@ -50,8 +50,22 @@ export default function ResultBody() {
     }
   };
 
+  // const initializeKakaoSDK = () => {
+  //   if (typeof window !== 'undefined' && !Kakao.isInitialized()) {
+  //     try {
+  //       Kakao.init(process.env.NEXT_PUBLIC_KAKAOMAP_APP_KEY);
+  //     } catch (error) {
+  //       console.error('Kakao init error:', error);
+  //     }
+  //   }
+  // };
+
   const initializeKakaoSDK = () => {
-    if (typeof window !== 'undefined' && !Kakao.isInitialized()) {
+    if (
+      typeof window !== 'undefined' &&
+      typeof Kakao !== 'undefined' &&
+      !Kakao.isInitialized()
+    ) {
       try {
         Kakao.init(process.env.NEXT_PUBLIC_KAKAOMAP_APP_KEY);
       } catch (error) {
