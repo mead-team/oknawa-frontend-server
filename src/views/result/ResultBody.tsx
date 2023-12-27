@@ -30,7 +30,7 @@ export default function ResultBody() {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
     try {
-      Kakao.Share.sendDefault({
+      window.Kakao.Share.sendDefault({
         objectType: 'feed',
         content: {
           title: `오늘은 ${station_name} 에서 만나요!`,
