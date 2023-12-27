@@ -71,7 +71,7 @@ export default function ResultBody() {
     if (searchParams) {
       updateResultData();
     }
-  }, [searchParams, data]);
+  }, [searchParams, data, updateResultData]);
 
   if (isLoading) return null;
 
