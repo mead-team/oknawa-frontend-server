@@ -38,8 +38,8 @@ export default function ResultBody() {
           imageUrl:
             'http://k.kakaocdn.net/dn/bSbH9w/btqgegaEDfW/vD9KKV0hEintg6bZT4v4WK/kakaolink40_original.png',
           link: {
-            webUrl: `http://localhost:3000/result?sharekey=${share_key}`,
-            mobileWebUrl: `http://localhost:3000/result?sharekey=${share_key}`,
+            webUrl: `https://www.oknawa.com/result?sharekey=${share_key}`,
+            mobileWebUrl: `https://www.oknawa.com/result?sharekey=${share_key}`,
           },
         },
       });
