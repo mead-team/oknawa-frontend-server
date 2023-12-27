@@ -12,4 +12,12 @@ export default class SearchService {
 
     return data;
   }
+
+  static async searchPlacesWithShareKey(shareKey?: string | null) {
+    const { data } = await api.get('/location/point', {
+      params: { share_key: shareKey },
+    });
+
+    return data;
+  }
 }

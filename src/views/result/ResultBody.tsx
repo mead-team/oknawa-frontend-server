@@ -4,21 +4,25 @@ import { Button, useDisclosure } from '@nextui-org/react';
 import styled from 'styled-components';
 import { useEffect } from 'react';
 import { useAtom } from 'jotai';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import DistanceSummary from './components/DistanceSummary';
 import HotPlaceModal from './components/HotPlaceModal';
 import ResultMap from './components/ResultMap';
+
+import { usePlaceSearchWithShareKeyQuery } from '@/hooks/query/search';
 
 import { resultState } from '@/jotai/result/store';
 
 declare let Kakao: any;
 
 export default function ResultBody() {
-  const [result] = useAtom(resultState);
-  const { station_name, address_name, share_key } = result;
+  const router = useRouter();
+  const searchParams = useSearchParams().get('sharekey');
+  const [result, setResult] = useAtom(resultState);
+  const { station_name, share_key } = result;
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
-  console.log('result', result);
+  const { data, isLoading } = usePlaceSearchWithShareKeyQuery(searchParams);
 
   const handleHotplaceBtnClick = () => {
     onOpen();
@@ -26,15 +30,13 @@ export default function ResultBody() {
 
   const handleKakaoSharingBtnClick = () => {
     try {
-      Kakao.Link.sendDefault({
-        objectType: 'location',
-        address: address_name,
-        addressTitle: station_name,
+      Kakao.Share.sendDefault({
+        objectType: 'feed',
         content: {
           title: `오늘은 ${station_name} 에서 만나요!`,
           description: '약속장소를 확인해보세요!',
           imageUrl:
-            'https://mud-kage.kakao.com/dn/NTmhS/btqfEUdFAUf/FjKzkZsnoeE4o19klTOVI1/openlink_640x640s.jpg',
+            'http://k.kakaocdn.net/dn/bSbH9w/btqgegaEDfW/vD9KKV0hEintg6bZT4v4WK/kakaolink40_original.png',
           link: {
             webUrl: `http://localhost:3000/result?sharekey=${share_key}`,
             mobileWebUrl: `http://localhost:3000/result?sharekey=${share_key}`,
@@ -46,7 +48,7 @@ export default function ResultBody() {
     }
   };
 
-  useEffect(() => {
+  const initializeKakaoSDK = () => {
     if (typeof window !== 'undefined' && !Kakao.isInitialized()) {
       try {
         Kakao.init(process.env.NEXT_PUBLIC_KAKAOMAP_APP_KEY);
@@ -54,7 +56,31 @@ export default function ResultBody() {
         console.error('Kakao init error:', error);
       }
     }
-  }, []);
+  };
+
+  const updateResultData = () => {
+    if (data) {
+      setResult(data);
+    }
+  };
+
+  const redirectToMainPage = () => {
+    if (!station_name) {
+      router.push('/');
+    }
+  };
+
+  useEffect(() => {
+    initializeKakaoSDK();
+
+    if (searchParams) {
+      updateResultData();
+    } else {
+      redirectToMainPage();
+    }
+  }, [searchParams, data]);
+
+  if (isLoading) return null;
 
   return (
     <Container>
