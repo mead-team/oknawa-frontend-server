@@ -66,20 +66,21 @@ export default function ResultBody() {
     }
   };
 
-  const redirectToMainPage = () => {
-    if (!station_name) {
-      router.push('/');
-    }
-  };
+  // const redirectToMainPage = () => {
+  //   if (!station_name) {
+  //     router.push('/');
+  //   }
+  // };
 
   useEffect(() => {
     initializeKakaoSDK();
 
     if (searchParams) {
       updateResultData();
-    } else {
-      redirectToMainPage();
     }
+    // else {
+    //   redirectToMainPage();
+    // }
   }, [searchParams, data]);
 
   if (isLoading) return null;
