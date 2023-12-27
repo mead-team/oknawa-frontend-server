@@ -29,6 +29,8 @@ export default function ResultBody() {
   };
 
   const handleKakaoSharingBtnClick = () => {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
     try {
       Kakao.Share.sendDefault({
         objectType: 'feed',
@@ -38,8 +40,8 @@ export default function ResultBody() {
           imageUrl:
             'http://k.kakaocdn.net/dn/bSbH9w/btqgegaEDfW/vD9KKV0hEintg6bZT4v4WK/kakaolink40_original.png',
           link: {
-            webUrl: `https://www.oknawa.com/result?sharekey=${share_key}`,
-            mobileWebUrl: `https://www.oknawa.com/result?sharekey=${share_key}`,
+            webUrl: `${baseUrl}/result?sharekey=${share_key}`,
+            mobileWebUrl: `${baseUrl}/result?sharekey=${share_key}`,
           },
         },
       });
