@@ -4,7 +4,7 @@ import { Button, useDisclosure } from '@nextui-org/react';
 import styled from 'styled-components';
 import { useEffect } from 'react';
 import { useAtom } from 'jotai';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 import DistanceSummary from './components/DistanceSummary';
 import HotPlaceModal from './components/HotPlaceModal';
@@ -17,7 +17,6 @@ import { resultState } from '@/jotai/result/store';
 declare let Kakao: any;
 
 export default function ResultBody() {
-  const router = useRouter();
   const searchParams = useSearchParams().get('sharekey');
   const [result, setResult] = useAtom(resultState);
   const { station_name, share_key } = result;
@@ -50,16 +49,6 @@ export default function ResultBody() {
     }
   };
 
-  // const initializeKakaoSDK = () => {
-  //   if (typeof window !== 'undefined' && !Kakao.isInitialized()) {
-  //     try {
-  //       Kakao.init(process.env.NEXT_PUBLIC_KAKAOMAP_APP_KEY);
-  //     } catch (error) {
-  //       console.error('Kakao init error:', error);
-  //     }
-  //   }
-  // };
-
   const initializeKakaoSDK = () => {
     if (typeof window !== 'undefined' && !Kakao.isInitialized()) {
       try {
@@ -76,21 +65,12 @@ export default function ResultBody() {
     }
   };
 
-  // const redirectToMainPage = () => {
-  //   if (!station_name) {
-  //     router.push('/');
-  //   }
-  // };
-
   useEffect(() => {
     initializeKakaoSDK();
 
     if (searchParams) {
       updateResultData();
     }
-    // else {
-    //   redirectToMainPage();
-    // }
   }, [searchParams, data]);
 
   if (isLoading) return null;

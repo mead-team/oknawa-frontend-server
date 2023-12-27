@@ -12,7 +12,6 @@ export default function BaseHead() {
         strategy="beforeInteractive"
       />
       <Script
-        type="text/javascript"
         src="https://developers.kakao.com/sdk/js/kakao.js"
         strategy="beforeInteractive"
       />
