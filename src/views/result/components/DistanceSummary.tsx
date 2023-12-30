@@ -55,10 +55,9 @@ export default function DistanceSummary() {
 
 const Container = styled.div`
   position: absolute;
-  top: 4px;
+  top: 90px;
   left: 50%;
   transform: translateX(-50%);
-  margin: 0 4px;
   z-index: 10;
   width: 95%;
 `;
