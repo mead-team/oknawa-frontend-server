@@ -4,7 +4,7 @@ import { Button, useDisclosure } from '@nextui-org/react';
 import styled from 'styled-components';
 import { useEffect } from 'react';
 import { useAtom } from 'jotai';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import DistanceSummary from './components/DistanceSummary';
 import HotPlaceModal from './components/HotPlaceModal';
@@ -13,15 +13,21 @@ import ResultMap from './components/ResultMap';
 import { usePlaceSearchWithShareKeyQuery } from '@/hooks/query/search';
 
 import { resultState } from '@/jotai/result/store';
+import { ArrowBackIcon } from '@/assets/icons/ArrowBack';
 
 declare let Kakao: any;
 
 export default function ResultBody() {
+  const router = useRouter();
   const searchParams = useSearchParams().get('sharekey');
   const [result, setResult] = useAtom(resultState);
   const { station_name, share_key } = result;
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { data, isLoading } = usePlaceSearchWithShareKeyQuery(searchParams);
+
+  const handleBackBtnClick = () => {
+    router.push('/');
+  };
 
   const handleHotplaceBtnClick = () => {
     onOpen();
@@ -77,6 +83,11 @@ export default function ResultBody() {
 
   return (
     <Container>
+      <Header>
+        <BackButton isIconOnly aria-label="Back" onClick={handleBackBtnClick}>
+          <ArrowBackIcon />
+        </BackButton>
+      </Header>
       <DistanceSummary />
       <ResultMap />
       <SharingButton
@@ -121,4 +132,20 @@ const SharingButton = styled(Button)`
   right: -5%;
   transform: translateX(-50%);
   z-index: 10;
+`;
+
+const Header = styled.header`
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 95%;
+  z-index: 10;
+`;
+
+const BackButton = styled(Button)`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #fff;
 `;

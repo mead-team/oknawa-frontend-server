@@ -2,31 +2,18 @@
 
 import styled from 'styled-components';
 import { useAtom } from 'jotai';
-import { Card, CardBody, Avatar, Divider } from '@nextui-org/react';
+import { Card, CardBody } from '@nextui-org/react';
 
 import { convertToKoreanTime } from '@/utils/date';
 
 import { resultState } from '@/jotai/result/store';
-
-type Color =
-  | 'primary'
-  | 'secondary'
-  | 'success'
-  | 'warning'
-  | 'danger'
-  | 'default';
-
-const AVATAR_COLOR: Color[] = [
-  'primary',
-  'secondary',
-  'success',
-  'warning',
-  'danger',
-];
+import Avatar, { AVATAR_COLORS } from '@/components/Avatar';
 
 export default function DistanceSummary() {
   const [result] = useAtom(resultState);
   const { station_name, itinerary } = result;
+
+  const stationName = station_name.split(' ')[0];
 
   const totalTravelTime = itinerary.reduce(
     (sum, user) => sum + user.itinerary.totalTime,
@@ -38,24 +25,24 @@ export default function DistanceSummary() {
     <Container>
       <Card>
         <CardBody>
-          <h1>{station_name}</h1>
-          <h2>{`평균이동시간: ${convertToKoreanTime(averageTravelTime)}`}</h2>
+          <StationName>
+            <Station>{stationName}</Station>을 추천해요!
+          </StationName>
+          <AverageArrivalTime>
+            도착하는데 평균{' '}
+            <ArrivalTime>{convertToKoreanTime(averageTravelTime)}</ArrivalTime>{' '}
+            걸려요
+          </AverageArrivalTime>
           <Box>
             {itinerary.map((user, index) => {
               const userName = user.name || `사용자${index + 1}`;
               const travelTime = convertToKoreanTime(user.itinerary.totalTime);
-              const avatarColor = AVATAR_COLOR[index] || 'default';
+              const avatarColor = AVATAR_COLORS[index];
 
               return (
                 <User className="text-small" key={index}>
-                  <Avatar
-                    name={String(index + 1)}
-                    size="sm"
-                    color={avatarColor}
-                  />
-                  <TravelTime>{travelTime}</TravelTime>
-                  <Divider className="h-4" orientation="vertical" />
-                  <UserName>{userName} 출발</UserName>
+                  <Avatar name={userName} color={avatarColor} />
+                  <UserArriveInfo>강북구에서 {travelTime}</UserArriveInfo>
                 </User>
               );
             })}
@@ -68,10 +55,9 @@ export default function DistanceSummary() {
 
 const Container = styled.div`
   position: absolute;
-  top: 4px;
+  top: 90px;
   left: 50%;
   transform: translateX(-50%);
-  margin: 0 4px;
   z-index: 10;
   width: 95%;
 `;
@@ -91,11 +77,23 @@ const User = styled.div`
   margin-top: 8px;
 `;
 
-const TravelTime = styled.span`
-  text-align: center;
-  width: 30px;
+const StationName = styled.p`
+  font-size: 20px;
 `;
 
-const UserName = styled.span`
-  font-size: 13px;
+const Station = styled.span`
+  margin-right: 1px;
+  font-weight: bold;
+`;
+
+const AverageArrivalTime = styled.p`
+  font-size: 18px;
+`;
+
+const ArrivalTime = styled.span`
+  font-weight: bold;
+`;
+
+const UserArriveInfo = styled.p`
+  font-size: 14px;
 `;
