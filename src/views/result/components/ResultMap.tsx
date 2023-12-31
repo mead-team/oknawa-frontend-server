@@ -1,8 +1,9 @@
+import { useAtom, useAtomValue } from 'jotai';
+import styled from 'styled-components';
+import { Map as KakaoMap, MapMarker, Polyline } from 'react-kakao-maps-sdk';
+
 import { searchState } from '@/jotai/global/store';
 import { resultState } from '@/jotai/result/store';
-import { useAtom, useAtomValue } from 'jotai';
-import { Map as KakaoMap, MapMarker, Polyline } from 'react-kakao-maps-sdk';
-import styled from 'styled-components';
 
 const getStrokeColor = (index: number) => {
   switch (index) {
@@ -36,6 +37,10 @@ export default function ResultMap() {
             position={{
               lat: user.address.latitude,
               lng: user.address.longitude,
+            }}
+            image={{
+              src: `/images/marker${index}.svg`,
+              size: { width: 30, height: 39 },
             }}
           />
         );
