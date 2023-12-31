@@ -1,5 +1,5 @@
 import { Button, Input } from '@nextui-org/react';
-import { useAtom, useSetAtom } from 'jotai';
+import { useSetAtom } from 'jotai';
 import { useFieldArray } from 'react-hook-form';
 import { styled } from 'styled-components';
 import { useRouter } from 'next/navigation';
@@ -9,10 +9,12 @@ import { useEffect } from 'react';
 import DaumPostCode from '@/components/DaumPostCode';
 
 import useSearchForm from '@/hooks/form/search/useSearchForm';
-
-import { modalState, searchState } from '@/jotai/global/store';
 import { usePlaceSearchMutation } from '@/hooks/mutation/search';
+
+import { bottomSheetState, searchState } from '@/jotai/global/store';
 import { resultState } from '@/jotai/result/store';
+
+import { CloseIcon } from '@/assets/icons/Close';
 
 const initialAddress = {
   fullAddress: '',
@@ -21,7 +23,7 @@ const initialAddress = {
 };
 
 export default function SearchBody() {
-  const [modal, setModal] = useAtom(modalState);
+  const setBottomSheet = useSetAtom(bottomSheetState);
   const setResult = useSetAtom(resultState);
   const setSearchState = useSetAtom(searchState);
   const router = useRouter();
@@ -44,10 +46,10 @@ export default function SearchBody() {
   });
 
   const handleSearchAddressBtnClick = (index: number) => {
-    setModal({
-      ...modal,
+    setBottomSheet(prevState => ({
+      ...prevState,
       isOpen: true,
-      title: '주소 검색',
+      title: '주소를 검색하세요',
       contents: (
         <DaumPostCode
           setValue={setValue}
@@ -55,7 +57,7 @@ export default function SearchBody() {
           trigger={trigger}
         />
       ),
-    });
+    }));
   };
   const handleClearAddress = (index: number) => {
     setValue(`userSection.${index}.address`, initialAddress);
@@ -95,6 +97,7 @@ export default function SearchBody() {
   return (
     <Container onSubmit={handleSubmit(handleSearchBtnClick)}>
       <Wrapper>
+        <Title>{'출발하는 곳을 입력하면\n중간 지점을 찾아드려요!'}</Title>
         {fields.map((field, index) => {
           return (
             <Section key={field.id}>
@@ -110,20 +113,21 @@ export default function SearchBody() {
                 placeholder="출발지를 입력해주세요."
                 value={addressValue?.[index].address.fullAddress}
                 onClick={() => handleSearchAddressBtnClick(index)}
-                onClear={() => handleClearAddress(index)}
               />
               {index > 1 && (
                 <DeleteButton onClick={() => handleDeleteBtnClick(index)}>
-                  삭제
+                  <CloseIcon width="14" height="14" color="black" />
                 </DeleteButton>
               )}
             </Section>
           );
         })}
-        {fields.length < 4 && (
+        {fields.length < 4 ? (
           <AddButton onClick={handleAddBtnClick} isDisabled={fields.length > 3}>
-            +
+            + 추가하기
           </AddButton>
+        ) : (
+          <MaxPeopleText>최대 4명까지 입력할 수 있어요</MaxPeopleText>
         )}
       </Wrapper>
       <Button color="success" type="submit" isLoading={isPending}>
@@ -145,6 +149,15 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 13px;
+  margin-top: 45px;
+`;
+
+const Title = styled.h1`
+  margin-bottom: 11px;
+  font-size: 32px;
+  font-weight: 700;
+  white-space: pre-line;
+  text-align: center;
 `;
 
 const Section = styled.section`
@@ -163,15 +176,24 @@ const AddressInput = styled(Input)`
 
 const DeleteButton = styled.button`
   position: absolute;
-  bottom: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  bottom: 30%;
   right: 2%;
-  width: 22px;
-  height: 15px;
-  font-size: 10px;
-  font-weight: bold;
-  color: red;
+  width: 16px;
+  height: 16px;
+  background-color: white;
 `;
 
 const AddButton = styled(Button)`
   margin-top: 20px;
+`;
+
+const MaxPeopleText = styled.p`
+  display: flex;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
 `;

@@ -8,12 +8,6 @@ interface ModalState {
   contents: ReactNode;
 }
 
-const initialState: ModalState = {
-  isOpen: false,
-  title: '',
-  contents: null,
-};
-
 interface SearchState {
   name: string;
   address: {
@@ -23,6 +17,28 @@ interface SearchState {
   };
 }
 
+interface BottomSheetState {
+  isOpen: boolean;
+  title: string;
+  contents: ReactNode;
+}
+
+const initialState: ModalState = {
+  isOpen: false,
+  title: '',
+  contents: null,
+};
+
+const bottomSheetInitialState: BottomSheetState = {
+  isOpen: false,
+  title: '',
+  contents: null,
+};
+
 export const modalState = atomWithReset<ModalState>(initialState);
 
 export const searchState = atom<SearchState[]>([]);
+
+export const bottomSheetState = atomWithReset<BottomSheetState>(
+  bottomSheetInitialState,
+);
