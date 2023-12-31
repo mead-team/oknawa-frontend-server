@@ -29,10 +29,13 @@ export default function DaumPostCode({
     const 전체주소 = 전체주소_생성(data.address, `${동이름_건물명}`);
     const 위도_경도 = await 위도_경도_생성(전체주소);
 
+    console.log(data);
+
     setValue(`userSection.${currentIndex}.address`, {
       fullAddress: 전체주소,
       latitude: 위도_경도.latitude,
       longitude: 위도_경도.longitude,
+      regionName: data.sigungu,
     });
     trigger(`userSection.${currentIndex}.address.fullAddress`);
 

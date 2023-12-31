@@ -89,7 +89,9 @@ export default function DistanceSummary() {
               return (
                 <User className="text-small" key={index}>
                   <Avatar name={userName} color={avatarColor} />
-                  <UserArriveInfo>강북구에서 {travelTime}</UserArriveInfo>
+                  <UserArriveInfo>
+                    {user.region_name} {travelTime}
+                  </UserArriveInfo>
                 </User>
               );
             })}

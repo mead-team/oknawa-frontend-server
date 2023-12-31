@@ -1,21 +1,28 @@
+import { useAtom, useAtomValue } from 'jotai';
+import styled from 'styled-components';
+import {
+  CustomOverlayMap,
+  Map as KakaoMap,
+  MapMarker,
+  Polyline,
+} from 'react-kakao-maps-sdk';
+
 import { searchState } from '@/jotai/global/store';
 import { resultState } from '@/jotai/result/store';
-import { useAtom, useAtomValue } from 'jotai';
-import { Map as KakaoMap, MapMarker, Polyline } from 'react-kakao-maps-sdk';
-import styled from 'styled-components';
+import CenterMarker from './CenterMarker';
 
 const getStrokeColor = (index: number) => {
   switch (index) {
     case 0:
-      return '#0070f0';
+      return '#2E7FFF';
     case 1:
-      return '#9455d3';
+      return '#8B5CCC';
     case 2:
-      return '#18c964';
+      return '#FF46CB';
     case 3:
-      return '#f5a524';
+      return '#FF5D02';
     default:
-      return '#0070f0';
+      return '#2E7FFF';
   }
 };
 
@@ -27,6 +34,8 @@ export default function ResultMap() {
     return user.itinerary.total_polyline;
   });
 
+  const stationName = result.station_name.split(' ')[0];
+
   return (
     <MapCenter center={{ lat: result.end_y, lng: result.end_x }} level={3}>
       {searchValue?.map((user, index) => {
@@ -37,18 +46,24 @@ export default function ResultMap() {
               lat: user.address.latitude,
               lng: user.address.longitude,
             }}
+            image={{
+              src: `/images/marker${index}.svg`,
+              size: { width: 30, height: 39 },
+            }}
           />
         );
       })}
-      <MapMarker position={{ lat: result.end_y, lng: result.end_x }} />
+      <CustomOverlayMap position={{ lat: result.end_y, lng: result.end_x }}>
+        <CenterMarker>{stationName}</CenterMarker>
+      </CustomOverlayMap>
       {polylines.map((polyline, index) => {
         return (
           <Polyline
             key={index}
             path={polyline}
-            strokeWeight={7}
-            strokeOpacity={0.7}
-            strokeColor={getStrokeColor(index)}
+            strokeWeight={4}
+            strokeOpacity={1}
+            strokeColor="#18C964"
           />
         );
       })}
