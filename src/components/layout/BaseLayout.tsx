@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { Toaster } from 'react-hot-toast';
 
 import ModalBox from '../ModalBox';
+import BottomSheet from '../BottomSheet';
 
 import { flexCenter } from '@/styles/commonStyles';
 
@@ -16,7 +17,10 @@ export default function BaseLayout({
 }) {
   return (
     <Container className="dark text-foreground bg-background">
-      <Wrapper>{children}</Wrapper>
+      <Wrapper>
+        {children}
+        <BottomSheet />
+      </Wrapper>
       <Toaster position="bottom-center" />
       <ModalBox />
     </Container>
