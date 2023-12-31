@@ -1,9 +1,15 @@
 import { useAtom, useAtomValue } from 'jotai';
 import styled from 'styled-components';
-import { Map as KakaoMap, MapMarker, Polyline } from 'react-kakao-maps-sdk';
+import {
+  CustomOverlayMap,
+  Map as KakaoMap,
+  MapMarker,
+  Polyline,
+} from 'react-kakao-maps-sdk';
 
 import { searchState } from '@/jotai/global/store';
 import { resultState } from '@/jotai/result/store';
+import CenterMarker from './CenterMarker';
 
 const getStrokeColor = (index: number) => {
   switch (index) {
@@ -28,6 +34,8 @@ export default function ResultMap() {
     return user.itinerary.total_polyline;
   });
 
+  const stationName = result.station_name.split(' ')[0];
+
   return (
     <MapCenter center={{ lat: result.end_y, lng: result.end_x }} level={3}>
       {searchValue?.map((user, index) => {
@@ -45,7 +53,9 @@ export default function ResultMap() {
           />
         );
       })}
-      <MapMarker position={{ lat: result.end_y, lng: result.end_x }} />
+      <CustomOverlayMap position={{ lat: result.end_y, lng: result.end_x }}>
+        <CenterMarker>{stationName}</CenterMarker>
+      </CustomOverlayMap>
       {polylines.map((polyline, index) => {
         return (
           <Polyline
