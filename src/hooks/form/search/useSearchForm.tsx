@@ -11,6 +11,7 @@ const createSearchFormVerifySchema = () => {
           fullAddress: string().required('모든 주소 입력 필요'),
           latitude: number(),
           longitude: number(),
+          regionName: string(),
         }),
       }),
     ),

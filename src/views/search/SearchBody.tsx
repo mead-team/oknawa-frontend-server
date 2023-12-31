@@ -73,6 +73,7 @@ export default function SearchBody() {
   };
 
   const handleSearchBtnClick = (searchForm: any) => {
+    console.log({ searchForm });
     placeSearchMutate(searchForm, {
       onSuccess: data => {
         setSearchState(searchForm.userSection);
