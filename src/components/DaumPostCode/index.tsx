@@ -8,7 +8,7 @@ import {
   전체주소_생성,
 } from '@/utils/common';
 
-import { modalState } from '@/jotai/global/store';
+import { bottomSheetState } from '@/jotai/global/store';
 
 declare let kakao: any;
 
@@ -21,7 +21,7 @@ export default function DaumPostCode({
   currentIndex: number;
   trigger: any;
 }) {
-  const resetModal = useResetAtom(modalState);
+  const resetBottomSheet = useResetAtom(bottomSheetState);
 
   const handleComplete = async (data: any) => {
     const 동이름 = data.bname || '';
@@ -37,14 +37,12 @@ export default function DaumPostCode({
     });
     trigger(`userSection.${currentIndex}.address.fullAddress`);
 
-    resetModal();
+    resetBottomSheet();
   };
 
   useEffect(() => {
     if (kakao) {
-      kakao.maps.load(() => {
-        console.log('📍Loaded Kakao Maps');
-      });
+      kakao.maps.load(() => {});
     }
   }, []);
 
