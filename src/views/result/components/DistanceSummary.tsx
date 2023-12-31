@@ -4,10 +4,11 @@ import styled from 'styled-components';
 import { useAtom } from 'jotai';
 import { Card, CardBody } from '@nextui-org/react';
 
+import Avatar, { AVATAR_COLORS } from '@/components/Avatar';
+
 import { convertToKoreanTime } from '@/utils/date';
 
 import { resultState } from '@/jotai/result/store';
-import Avatar, { AVATAR_COLORS } from '@/components/Avatar';
 
 export default function DistanceSummary() {
   const [result] = useAtom(resultState);
@@ -42,7 +43,9 @@ export default function DistanceSummary() {
               return (
                 <User className="text-small" key={index}>
                   <Avatar name={userName} color={avatarColor} />
-                  <UserArriveInfo>강북구에서 {travelTime}</UserArriveInfo>
+                  <UserArriveInfo>
+                    {user.region_name} {travelTime}
+                  </UserArriveInfo>
                 </User>
               );
             })}
