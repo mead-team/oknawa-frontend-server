@@ -9,6 +9,7 @@ interface ItineraryItem {
       lng: number;
     }[];
   };
+  region_name: string;
 }
 
 interface ResultState {
