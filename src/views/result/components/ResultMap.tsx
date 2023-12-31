@@ -7,15 +7,15 @@ import styled from 'styled-components';
 const getStrokeColor = (index: number) => {
   switch (index) {
     case 0:
-      return '#0070f0';
+      return '#2E7FFF';
     case 1:
-      return '#9455d3';
+      return '#8B5CCC';
     case 2:
-      return '#18c964';
+      return '#FF46CB';
     case 3:
-      return '#f5a524';
+      return '#FF5D02';
     default:
-      return '#0070f0';
+      return '#2E7FFF';
   }
 };
 
@@ -46,9 +46,9 @@ export default function ResultMap() {
           <Polyline
             key={index}
             path={polyline}
-            strokeWeight={7}
-            strokeOpacity={0.7}
-            strokeColor={getStrokeColor(index)}
+            strokeWeight={4}
+            strokeOpacity={1}
+            strokeColor="#18C964"
           />
         );
       })}
