@@ -88,8 +88,15 @@ export default function SearchBody() {
 
   useEffect(() => {
     if (errors?.userSection) {
-      toast.error('모든 주소를 입력해주세요', {
+      toast('모든 주소를 입력해주세요!', {
         duration: 700,
+        icon: '❗️',
+        style: {
+          borderRadius: '12px',
+          background: '#300B0B',
+          color: '#fff',
+          border: '1px solid #FF4D4D',
+        },
       });
     }
   }, [errors]);
