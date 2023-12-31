@@ -127,7 +127,7 @@ export default function SearchBody() {
         )}
       </Wrapper>
       <Button color="success" type="submit" isLoading={isPending}>
-        중간지점 찾기
+        만나기 편한 장소 추천받기
       </Button>
     </Container>
   );

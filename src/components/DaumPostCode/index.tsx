@@ -41,9 +41,7 @@ export default function DaumPostCode({
 
   useEffect(() => {
     if (kakao) {
-      kakao.maps.load(() => {
-        console.log('📍Loaded Kakao Maps');
-      });
+      kakao.maps.load(() => {});
     }
   }, []);
 
