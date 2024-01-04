@@ -59,9 +59,6 @@ export default function SearchBody() {
       ),
     }));
   };
-  const handleClearAddress = (index: number) => {
-    setValue(`userSection.${index}.address`, initialAddress);
-  };
 
   const handleAddBtnClick = () => {
     append({
@@ -104,26 +101,26 @@ export default function SearchBody() {
   return (
     <Container onSubmit={handleSubmit(handleSearchBtnClick)}>
       <Wrapper>
-        <Title>{'출발하는 곳을 입력하면\n중간 지점을 찾아드려요!'}</Title>
+        <Title>{'출발하는 곳을 입력하면\n중간 지점을 추천해드려요!'}</Title>
         {fields.map((field, index) => {
           return (
             <Section key={field.id}>
               <NameInput
                 size="sm"
                 maxLength={4}
-                placeholder={`사용자 ${index + 1}`}
+                placeholder={`이름 ${index + 1}`}
                 {...register(`userSection.${index}.name`)}
               />
               <AddressInput
                 isReadOnly
                 size="sm"
-                placeholder="출발지를 입력해주세요."
+                placeholder="출발지를 입력하세요"
                 value={addressValue?.[index].address.fullAddress}
                 onClick={() => handleSearchAddressBtnClick(index)}
               />
               {index > 1 && (
                 <DeleteButton onClick={() => handleDeleteBtnClick(index)}>
-                  <CloseIcon width="14" height="14" color="black" />
+                  <CloseIcon width="13" height="13" color="black" />
                 </DeleteButton>
               )}
             </Section>
@@ -187,10 +184,10 @@ const DeleteButton = styled.button`
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  bottom: 30%;
+  bottom: 34%;
   right: 2%;
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   background-color: white;
 `;
 

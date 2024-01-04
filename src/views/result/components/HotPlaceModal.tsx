@@ -1,82 +1,84 @@
-import {
-  Chip,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalHeader,
-} from '@nextui-org/react';
+import { Chip } from '@nextui-org/react';
 import styled from 'styled-components';
-
-import CheckIcon from './CheckIcon';
-import PlaceItem from './PlaceItem';
-import { useHotPlaceQuery } from '@/hooks/query/hot-place';
 import { useAtom } from 'jotai';
-import { resultState } from '@/jotai/result/store';
 import { useState } from 'react';
+
+import PlaceItem from './PlaceItem';
+
+import { useHotPlaceQuery } from '@/hooks/query/hot-place';
+
 import { HotPlaceCategory } from '@/services/hot-place/types';
 
-interface HotPlaceModalProps {
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
-}
+import { resultState } from '@/jotai/result/store';
 
-const HOT_PLACE_CATEGORY: HotPlaceCategory[] = ['food', 'cafe', 'drink'];
+import { RestaurantIcon } from '@/assets/icons/Restaurant';
+import { CafeIcon } from '@/assets/icons/Cafe';
+import { DrinkIcon } from '@/assets/icons/Drink';
 
-export default function HotPlaceModal({
-  isOpen,
-  onOpenChange,
-}: HotPlaceModalProps) {
-  const [category, setCategory] = useState<HotPlaceCategory>('food');
+const HOT_PLACE_CATEGORY: { title: string; category: HotPlaceCategory }[] = [
+  { title: '맛집', category: 'food' },
+  { title: '카페', category: 'cafe' },
+  { title: '술집', category: 'drink' },
+];
 
+export default function HotPlaceModal() {
   const [result] = useAtom(resultState);
+  const [category, setCategory] = useState<HotPlaceCategory>('food');
 
   const { data } = useHotPlaceQuery(category, {
     x: result.end_x,
     y: result.end_y,
   });
 
+  const categoryIcons = {
+    food: <RestaurantIcon />,
+    cafe: <CafeIcon color="black" />,
+    drink: <DrinkIcon color="black" />,
+  };
+
   return (
-    <StyledModal
-      isOpen={isOpen}
-      scrollBehavior="inside"
-      placement="bottom"
-      onOpenChange={onOpenChange}
-    >
-      <ModalContent>
-        {onClose => (
-          <>
-            <ModalHeader>🔥 핫플레이스 in {result.station_name}</ModalHeader>
-            <ModalBody>
-              <Category>
-                {HOT_PLACE_CATEGORY.map(c => {
-                  const isSelected = c === category;
-                  return (
-                    <Chip
-                      key={c}
-                      variant={isSelected ? 'faded' : 'flat'}
-                      color={isSelected ? 'success' : 'default'}
-                      startContent={isSelected && <CheckIcon />}
-                      onClick={() => setCategory(c)}
-                    >
-                      {c}
-                    </Chip>
-                  );
-                })}
-              </Category>
-              {data?.map(place => <PlaceItem key={place.id} place={place} />)}
-            </ModalBody>
-          </>
-        )}
-      </ModalContent>
-    </StyledModal>
+    <Container>
+      <Contents>
+        <Category>
+          {HOT_PLACE_CATEGORY.map(c => {
+            const isSelected = c.category === category;
+            return (
+              <Chip
+                key={c.category}
+                color={isSelected ? 'success' : 'default'}
+                onClick={() => setCategory(c.category)}
+              >
+                <ChipItem>
+                  {categoryIcons[c.category]}
+                  {c.title}
+                </ChipItem>
+              </Chip>
+            );
+          })}
+        </Category>
+        {data?.map(place => <PlaceItem key={place.id} place={place} />)}
+      </Contents>
+    </Container>
   );
 }
 
-const StyledModal = styled(Modal)`
-  max-height: 500px;
+const Container = styled.div``;
+
+const Contents = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 `;
 
 const Category = styled.div`
   display: flex;
   gap: 8px;
+  margin-bottom: 8px;
+`;
+
+const ChipItem = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
 `;

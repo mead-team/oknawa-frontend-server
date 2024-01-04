@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
 
 import HotPlaceService from '@/services/hot-place/HotPlaceService';
 
@@ -15,6 +15,7 @@ export const useHotPlaceQuery = (
   const { data, isLoading } = useQuery<HotPlace[], Error>({
     queryKey: ['hotPlace', category, point],
     queryFn: () => HotPlaceService.fetchHotPlace(category, point),
+    placeholderData: keepPreviousData,
   });
 
   return {

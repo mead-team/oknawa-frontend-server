@@ -23,8 +23,9 @@ export default function ResultBody() {
   const [result, setResult] = useAtom(resultState);
   const setBottomSheet = useSetAtom(bottomSheetState);
   const { station_name } = result;
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { data, isLoading } = usePlaceSearchWithShareKeyQuery(searchParams);
+
+  const stationName = station_name.split(' ')[0];
 
   const handleBackBtnClick = () => {
     router.push('/');
@@ -34,7 +35,13 @@ export default function ResultBody() {
     setBottomSheet(prevState => ({
       ...prevState,
       isOpen: true,
-      title: '핫플레이스를 추천해요!',
+      title: (
+        <div>
+          <span style={{ fontWeight: '800' }}>{stationName}</span>의
+          <div>핫플레이스를 추천해요!</div>
+        </div>
+      ),
+      contents: <HotPlaceModal />,
     }));
   };
 
@@ -51,8 +58,6 @@ export default function ResultBody() {
   }, [searchParams, data]);
 
   if (isLoading) return null;
-
-  const stationName = station_name.split(' ')[0];
 
   return (
     <Container>
@@ -72,7 +77,6 @@ export default function ResultBody() {
       >
         {stationName} 핫플레이스는 어디?
       </FloatingButton>
-      <HotPlaceModal isOpen={isOpen} onOpenChange={onOpenChange} />
     </Container>
   );
 }

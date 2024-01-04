@@ -1,6 +1,9 @@
-import { HotPlace } from '@/services/hot-place/types';
 import { Card, CardBody, CardHeader } from '@nextui-org/react';
 import Link from 'next/link';
+import styled from 'styled-components';
+
+import { HotPlace } from '@/services/hot-place/types';
+import Image from 'next/image';
 
 interface PlaceItemProps {
   place: HotPlace;
@@ -11,21 +14,68 @@ export default function PlaceItem({ place }: PlaceItemProps) {
     place_name,
     category_group_name,
     road_address_name,
-    phone,
     place_url,
+    main_photo_url,
+    open_hour,
   } = place;
+
+  const { dayOfWeek, timeSE } = open_hour.periodList[0].timeList[0];
+
   return (
     <Link href={place_url}>
-      <Card>
-        <CardHeader className="flex gap-1">
-          <h3>{place_name}</h3>
-          <small className="text-default-500">{category_group_name}</small>
-        </CardHeader>
-        <CardBody>
-          <p className="text-default-500">{road_address_name}</p>
-          <p className="text-default-500">{phone}</p>
-        </CardBody>
-      </Card>
+      <StyledCard>
+        <CardContent>
+          <CardHeader className="flex gap-2 p-0">
+            <PlaceName>{place_name}</PlaceName>
+            <Category>{category_group_name}</Category>
+          </CardHeader>
+          <CardBody className="p-0">
+            <CardBodyText>{road_address_name}</CardBodyText>
+            <CardBodyText>
+              {dayOfWeek} {timeSE}
+            </CardBodyText>
+          </CardBody>
+        </CardContent>
+        <ImageBox>
+          <Image
+            src={main_photo_url}
+            alt="핫플레이스 사진"
+            width={80}
+            height={64}
+          />
+        </ImageBox>
+      </StyledCard>
     </Link>
   );
 }
+
+const StyledCard = styled(Card)`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 16px;
+  background-color: #313131;
+`;
+
+const CardContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
+
+const PlaceName = styled.h3`
+  font-size: 16px;
+  font-weight: 700;
+`;
+
+const Category = styled.small`
+  font-size: 12px;
+  color: #bdbdbd;
+`;
+
+const CardBodyText = styled.p`
+  font-size: 12px;
+  color: #bdbdbd;
+`;
+
+const ImageBox = styled.div``;
