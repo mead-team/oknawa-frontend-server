@@ -135,9 +135,10 @@ const StationName = styled.p`
 const Station = {
   Container: styled.span`
     margin-right: 1px;
+    font-weight: 500;
   `,
   BoldText: styled.span`
-    font-weight: bold;
+    font-weight: 700;
   `,
 };
 
@@ -154,7 +155,7 @@ const AverageArrivalTime = styled.p`
 `;
 
 const ArrivalTime = styled.span`
-  font-weight: bold;
+  font-weight: 700;
 `;
 
 const UserArriveInfo = styled.p`

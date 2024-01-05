@@ -87,6 +87,7 @@ const FloatingButton = styled(Button)`
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
+  font-weight: 600;
   z-index: 10;
 `;
 

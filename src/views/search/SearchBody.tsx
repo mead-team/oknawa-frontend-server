@@ -147,9 +147,9 @@ export default function SearchBody() {
           <MaxPeopleText>최대 4명까지 입력할 수 있어요</MaxPeopleText>
         )}
       </Wrapper>
-      <Button color="success" type="submit">
+      <SearchButton color="success" type="submit">
         만나기 편한 장소 추천받기
-      </Button>
+      </SearchButton>
       {(isPending || isSuccess) && <SearchLoading />}
     </Container>
   );
@@ -214,4 +214,8 @@ const MaxPeopleText = styled.p`
   justify-content: center;
   font-size: 14px;
   font-weight: 500;
+`;
+
+const SearchButton = styled(Button)`
+  font-weight: 600;
 `;
