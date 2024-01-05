@@ -143,7 +143,7 @@ export default function SearchBody() {
           <MaxPeopleText>최대 4명까지 입력할 수 있어요</MaxPeopleText>
         )}
       </Wrapper>
-      <Button color="success" type="submit" isLoading={isPending}>
+      <Button color="success" type="submit">
         만나기 편한 장소 추천받기
       </Button>
       {(isPending || isSuccess) && <SearchLoading />}
