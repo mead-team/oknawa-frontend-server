@@ -5,6 +5,7 @@ import { styled } from 'styled-components';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import { useEffect } from 'react';
+import Image from 'next/image';
 
 import DaumPostCode from '@/components/DaumPostCode';
 
@@ -15,6 +16,7 @@ import { bottomSheetState, searchState } from '@/jotai/global/store';
 import { resultState } from '@/jotai/result/store';
 
 import { CloseIcon } from '@/assets/icons/Close';
+import SearchLoading from './components/SearchLoading';
 
 const initialAddress = {
   fullAddress: '',
@@ -28,7 +30,11 @@ export default function SearchBody() {
   const setSearchState = useSetAtom(searchState);
   const router = useRouter();
 
-  const { mutate: placeSearchMutate, isPending } = usePlaceSearchMutation();
+  const {
+    mutate: placeSearchMutate,
+    isPending,
+    isSuccess,
+  } = usePlaceSearchMutation();
 
   const {
     register,
@@ -140,6 +146,7 @@ export default function SearchBody() {
       <Button color="success" type="submit" isLoading={isPending}>
         만나기 편한 장소 추천받기
       </Button>
+      {(isPending || isSuccess) && <SearchLoading />}
     </Container>
   );
 }

@@ -1,5 +1,6 @@
 'use client';
 
+import { useCallback, useEffect, useState } from 'react';
 import { useAtom, useAtomValue } from 'jotai';
 import styled from 'styled-components';
 import {
@@ -9,10 +10,10 @@ import {
   Polyline,
 } from 'react-kakao-maps-sdk';
 
+import CenterMarker from './CenterMarker';
+
 import { searchState } from '@/jotai/global/store';
 import { resultState } from '@/jotai/result/store';
-import CenterMarker from './CenterMarker';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 const getStrokeColor = (index: number) => {
   switch (index) {
