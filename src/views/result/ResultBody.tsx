@@ -92,7 +92,7 @@ const FloatingButton = styled(Button)`
 
 const Header = styled.header`
   position: absolute;
-  top: 40px;
+  top: 15px;
   left: 50%;
   transform: translateX(-50%);
   width: 95%;

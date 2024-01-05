@@ -104,17 +104,18 @@ export default function DistanceSummary() {
 
 const Container = styled.div`
   position: absolute;
-  top: 90px;
+  top: 65px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 10;
   width: 95%;
+  z-index: 10;
+  opacity: 0.9;
 `;
 
 const Box = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.1rem;
   flex-wrap: wrap;
 `;
 
