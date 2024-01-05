@@ -2,7 +2,7 @@
 
 import { Button, useDisclosure } from '@nextui-org/react';
 import styled from 'styled-components';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useAtom, useSetAtom } from 'jotai';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -38,17 +38,17 @@ export default function ResultBody() {
     }));
   };
 
-  const updateResultData = () => {
+  const updateResultData = useCallback(() => {
     if (data) {
       setResult(data);
     }
-  };
+  }, [data, setResult]);
 
   useEffect(() => {
     if (searchParams) {
       updateResultData();
     }
-  }, [searchParams, data]);
+  }, [searchParams, data, updateResultData]);
 
   if (isLoading) return null;
 

@@ -109,7 +109,6 @@ const Container = styled.div`
   transform: translateX(-50%);
   width: 95%;
   z-index: 10;
-  opacity: 0.9;
 `;
 
 const Box = styled.div`
