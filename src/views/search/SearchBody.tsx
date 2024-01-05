@@ -5,7 +5,6 @@ import { styled } from 'styled-components';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import { useEffect } from 'react';
-import Image from 'next/image';
 
 import DaumPostCode from '@/components/DaumPostCode';
 
@@ -106,6 +105,11 @@ export default function SearchBody() {
       });
     }
   }, [errors]);
+
+  useEffect(() => {
+    const image = new Image();
+    image.src = '/loading.gif';
+  }, []);
 
   return (
     <Container onSubmit={handleSubmit(handleSearchBtnClick)}>
