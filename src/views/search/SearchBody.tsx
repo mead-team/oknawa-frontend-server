@@ -5,6 +5,7 @@ import { styled } from 'styled-components';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import { useEffect } from 'react';
+import Image from 'next/image';
 
 import DaumPostCode from '@/components/DaumPostCode';
 
@@ -100,6 +101,19 @@ export default function SearchBody() {
 
   return (
     <Container onSubmit={handleSubmit(handleSearchBtnClick)}>
+      {isPending && (
+        <LoadingContainer>
+          <LoadingWrapper>
+            <Image
+              src="/loading.gif"
+              alt="Loading Spinner"
+              width={148}
+              height={148}
+            />
+            <LoadingDesc>{'가장 만나기 편한\n장소를 찾고 있어요'}</LoadingDesc>
+          </LoadingWrapper>
+        </LoadingContainer>
+      )}
       <Wrapper>
         <Title>{'출발하는 곳을 입력하면\n중간 지점을 추천해드려요!'}</Title>
         {fields.map((field, index) => {
@@ -200,4 +214,36 @@ const MaxPeopleText = styled.p`
   justify-content: center;
   font-size: 14px;
   font-weight: 500;
+`;
+
+const LoadingContainer = styled.div`
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10;
+`;
+
+const LoadingWrapper = styled.div`
+  display: flex;
+  padding: 40px 64px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  background-color: #18c964;
+  border-radius: 20px;
+`;
+
+const LoadingDesc = styled.h3`
+  font-size: 18px;
+  line-height: 140%;
+  white-space: pre-line;
+  text-align: center;
+  color: black;
 `;
