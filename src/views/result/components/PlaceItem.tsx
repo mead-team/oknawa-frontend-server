@@ -29,8 +29,6 @@ export default function PlaceItem({ place }: PlaceItemProps) {
     open_hour?.periodList?.[0]?.timeList?.[0]?.dayOfWeek ?? '영업시간 미기재';
   const timeSE = open_hour?.periodList?.[0]?.timeList?.[0]?.timeSE ?? '';
 
-  console.log('category_group_name', category_group_name);
-
   const categoryIcons: CategoryIcons = {
     음식점: <RestaurantIcon color="gray" width="16" height="16" />,
     카페: <CafeIcon color="gray" width="16" height="16" />,

@@ -34,8 +34,6 @@ export default function HotPlaceModal() {
 
   const allPlaces = data?.pages.flatMap(page => page.documents) ?? [];
 
-  console.log('All Places', allPlaces);
-
   const categoryIcons = {
     food: <RestaurantIcon />,
     cafe: <CafeIcon color="black" />,
