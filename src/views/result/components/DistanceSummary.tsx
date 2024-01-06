@@ -105,17 +105,17 @@ export default function DistanceSummary() {
 
 const Container = styled.div`
   position: absolute;
-  top: 90px;
+  top: 65px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 10;
   width: 95%;
+  z-index: 10;
 `;
 
 const Box = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.1rem;
   flex-wrap: wrap;
 `;
 
@@ -136,9 +136,10 @@ const StationName = styled.p`
 const Station = {
   Container: styled.span`
     margin-right: 1px;
+    font-weight: 500;
   `,
   BoldText: styled.span`
-    font-weight: bold;
+    font-weight: 700;
   `,
 };
 
@@ -155,7 +156,7 @@ const AverageArrivalTime = styled.p`
 `;
 
 const ArrivalTime = styled.span`
-  font-weight: bold;
+  font-weight: 700;
 `;
 
 const UserArriveInfo = styled.p`

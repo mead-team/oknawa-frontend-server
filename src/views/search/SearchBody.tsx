@@ -5,7 +5,6 @@ import { styled } from 'styled-components';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import { useEffect } from 'react';
-import Image from 'next/image';
 
 import DaumPostCode from '@/components/DaumPostCode';
 
@@ -16,6 +15,7 @@ import { bottomSheetState, searchState } from '@/jotai/global/store';
 import { resultState } from '@/jotai/result/store';
 
 import { CloseIcon } from '@/assets/icons/Close';
+import SearchLoading from './components/SearchLoading';
 
 const initialAddress = {
   fullAddress: '',
@@ -29,7 +29,11 @@ export default function SearchBody() {
   const setSearchState = useSetAtom(searchState);
   const router = useRouter();
 
-  const { mutate: placeSearchMutate, isPending } = usePlaceSearchMutation();
+  const {
+    mutate: placeSearchMutate,
+    isPending,
+    isSuccess,
+  } = usePlaceSearchMutation();
 
   const {
     register,
@@ -101,19 +105,6 @@ export default function SearchBody() {
 
   return (
     <Container onSubmit={handleSubmit(handleSearchBtnClick)}>
-      {isPending && (
-        <LoadingContainer>
-          <LoadingWrapper>
-            <Image
-              src="/loading.gif"
-              alt="Loading Spinner"
-              width={148}
-              height={148}
-            />
-            <LoadingDesc>{'가장 만나기 편한\n장소를 찾고 있어요'}</LoadingDesc>
-          </LoadingWrapper>
-        </LoadingContainer>
-      )}
       <Wrapper>
         <Title>{'출발하는 곳을 입력하면\n중간 지점을 추천해드려요!'}</Title>
         {fields.map((field, index) => {
@@ -148,9 +139,10 @@ export default function SearchBody() {
           <MaxPeopleText>최대 4명까지 입력할 수 있어요</MaxPeopleText>
         )}
       </Wrapper>
-      <Button color="success" type="submit" isLoading={isPending}>
+      <SearchButton color="success" type="submit">
         만나기 편한 장소 추천받기
-      </Button>
+      </SearchButton>
+      {(isPending || isSuccess) && <SearchLoading />}
     </Container>
   );
 }
@@ -216,34 +208,6 @@ const MaxPeopleText = styled.p`
   font-weight: 500;
 `;
 
-const LoadingContainer = styled.div`
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 10;
-`;
-
-const LoadingWrapper = styled.div`
-  display: flex;
-  padding: 40px 64px;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 24px;
-  background-color: #18c964;
-  border-radius: 20px;
-`;
-
-const LoadingDesc = styled.h3`
-  font-size: 18px;
-  line-height: 140%;
-  white-space: pre-line;
-  text-align: center;
-  color: black;
+const SearchButton = styled(Button)`
+  font-weight: 600;
 `;

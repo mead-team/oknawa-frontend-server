@@ -2,7 +2,7 @@
 
 import { Button, useDisclosure } from '@nextui-org/react';
 import styled from 'styled-components';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useAtom, useSetAtom } from 'jotai';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -45,17 +45,17 @@ export default function ResultBody() {
     }));
   };
 
-  const updateResultData = () => {
+  const updateResultData = useCallback(() => {
     if (data) {
       setResult(data);
     }
-  };
+  }, [data, setResult]);
 
   useEffect(() => {
     if (searchParams) {
       updateResultData();
     }
-  }, [searchParams, data]);
+  }, [searchParams, data, updateResultData]);
 
   if (isLoading) return null;
 
@@ -91,12 +91,13 @@ const FloatingButton = styled(Button)`
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
+  font-weight: 600;
   z-index: 10;
 `;
 
 const Header = styled.header`
   position: absolute;
-  top: 40px;
+  top: 15px;
   left: 50%;
   transform: translateX(-50%);
   width: 95%;
