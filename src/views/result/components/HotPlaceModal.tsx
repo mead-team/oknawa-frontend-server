@@ -112,6 +112,7 @@ const Category = styled.div`
   display: flex;
   gap: 8px;
   margin-bottom: 8px;
+  cursor: pointer;
 `;
 
 const ChipItem = styled.div`

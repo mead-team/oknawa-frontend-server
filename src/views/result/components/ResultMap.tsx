@@ -57,7 +57,7 @@ export default function ResultMap() {
 
   return (
     <>
-      {loaded ? (
+      {loaded && (
         <MapCenter center={{ lat: result.end_y, lng: result.end_x }} level={3}>
           {searchValue?.map((user, index) => {
             return (
@@ -89,7 +89,7 @@ export default function ResultMap() {
             );
           })}
         </MapCenter>
-      ) : null}
+      )}
     </>
   );
 }

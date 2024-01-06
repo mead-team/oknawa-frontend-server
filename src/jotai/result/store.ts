@@ -1,4 +1,4 @@
-import { atomWithReset } from 'jotai/utils';
+import { atomWithStorage, createJSONStorage } from 'jotai/utils';
 
 interface ItineraryItem {
   name: string;
@@ -30,4 +30,8 @@ const initialState: ResultState = {
   share_key: '',
 };
 
-export const resultState = atomWithReset(initialState);
+export const resultState = atomWithStorage<ResultState>(
+  'result',
+  initialState,
+  createJSONStorage(() => sessionStorage),
+);
