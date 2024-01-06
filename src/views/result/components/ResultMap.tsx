@@ -12,6 +12,7 @@ import {
 
 import { searchState } from '@/jotai/global/store';
 import { resultState } from '@/jotai/result/store';
+import CenterMarker from './CenterMarker';
 
 const KAKAO_APP_KEY = process.env.NEXT_PUBLIC_KAKAOMAP_APP_KEY;
 
@@ -34,7 +35,6 @@ export default function ResultMap() {
   const [result] = useAtom(resultState);
   const searchValue = useAtomValue(searchState);
   const [loaded, setLoaded] = useState(false);
-
   const [map, setMap] = useState<kakao.maps.Map | undefined>(undefined);
 
   const polylines = result.itinerary.map(user => {
@@ -141,7 +141,7 @@ export default function ResultMap() {
   );
 }
 
-const MapCenter = styled(KakaoMap)`
+const Map = styled(KakaoMap)`
   width: 100%;
   height: 100vh;
 `;
