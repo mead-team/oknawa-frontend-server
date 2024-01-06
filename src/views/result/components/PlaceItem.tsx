@@ -1,13 +1,19 @@
 import { Card, CardBody, CardHeader } from '@nextui-org/react';
 import Link from 'next/link';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import Image from 'next/image';
 
 import { HotPlace } from '@/services/hot-place/types';
+import { CafeIcon } from '@/assets/icons/Cafe';
+import { RestaurantIcon } from '@/assets/icons/Restaurant';
 
 interface PlaceItemProps {
   place: HotPlace;
 }
+
+type CategoryIcons = {
+  [key: string]: JSX.Element;
+};
 
 export default function PlaceItem({ place }: PlaceItemProps) {
   const {
@@ -22,7 +28,13 @@ export default function PlaceItem({ place }: PlaceItemProps) {
   const dayOfWeek =
     open_hour?.periodList?.[0]?.timeList?.[0]?.dayOfWeek ?? '영업시간 미기재';
   const timeSE = open_hour?.periodList?.[0]?.timeList?.[0]?.timeSE ?? '';
-  const defaultImageUrl = '/icons/icon-256x256.png';
+
+  console.log('category_group_name', category_group_name);
+
+  const categoryIcons: CategoryIcons = {
+    음식점: <RestaurantIcon color="gray" width="16" height="16" />,
+    카페: <CafeIcon color="gray" width="16" height="16" />,
+  };
 
   return (
     <Link href={place_url}>
@@ -40,12 +52,21 @@ export default function PlaceItem({ place }: PlaceItemProps) {
           </CardBody>
         </CardContent>
         <ImageBox>
-          <Image
-            src={main_photo_url || defaultImageUrl}
-            alt="핫플레이스 사진"
-            width={80}
-            height={64}
-          />
+          {main_photo_url ? (
+            <Image
+              src={main_photo_url}
+              alt="핫플레이스 사진"
+              width={80}
+              height={64}
+              objectFit="cover"
+              style={{
+                borderRadius: '8px',
+                minHeight: '70px',
+              }}
+            />
+          ) : (
+            <DefaultImage>{categoryIcons[category_group_name]}</DefaultImage>
+          )}
         </ImageBox>
       </StyledCard>
     </Link>
@@ -90,4 +111,22 @@ const CardBodyText = styled.p`
   color: #bdbdbd;
 `;
 
-const ImageBox = styled.div``;
+const ImageBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  max-height: 75px;
+  overflow: hidden;
+  border-radius: 8px;
+`;
+
+const DefaultImage = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 64px;
+  background-color: #9e9e9e;
+  border-radius: 8px;
+`;
