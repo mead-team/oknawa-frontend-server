@@ -1,9 +1,9 @@
 import { Card, CardBody, CardHeader } from '@nextui-org/react';
 import Link from 'next/link';
 import styled from 'styled-components';
+import Image from 'next/image';
 
 import { HotPlace } from '@/services/hot-place/types';
-import Image from 'next/image';
 
 interface PlaceItemProps {
   place: HotPlace;
@@ -19,16 +19,19 @@ export default function PlaceItem({ place }: PlaceItemProps) {
     open_hour,
   } = place;
 
-  const { dayOfWeek, timeSE } = open_hour.periodList[0].timeList[0];
+  const dayOfWeek =
+    open_hour?.periodList?.[0]?.timeList?.[0]?.dayOfWeek ?? '영업시간 미기재';
+  const timeSE = open_hour?.periodList?.[0]?.timeList?.[0]?.timeSE ?? '';
+  const defaultImageUrl = '/icons/icon-256x256.png';
 
   return (
     <Link href={place_url}>
       <StyledCard>
         <CardContent>
-          <CardHeader className="flex gap-2 p-0">
+          <StyledCardHeader>
             <PlaceName>{place_name}</PlaceName>
             <Category>{category_group_name}</Category>
-          </CardHeader>
+          </StyledCardHeader>
           <CardBody className="p-0">
             <CardBodyText>{road_address_name}</CardBodyText>
             <CardBodyText>
@@ -38,7 +41,7 @@ export default function PlaceItem({ place }: PlaceItemProps) {
         </CardContent>
         <ImageBox>
           <Image
-            src={main_photo_url}
+            src={main_photo_url || defaultImageUrl}
             alt="핫플레이스 사진"
             width={80}
             height={64}
@@ -63,9 +66,18 @@ const CardContent = styled.div`
   gap: 16px;
 `;
 
+const StyledCardHeader = styled(CardHeader)`
+  gap: 4px;
+  padding: 0;
+`;
+
 const PlaceName = styled.h3`
   font-size: 16px;
   font-weight: 700;
+  overflow: hidden;
+  text-overflow: clip;
+  white-space: nowrap;
+  max-width: 170px;
 `;
 
 const Category = styled.small`

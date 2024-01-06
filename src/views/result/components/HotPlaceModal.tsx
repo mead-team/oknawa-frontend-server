@@ -1,7 +1,7 @@
 import { Chip } from '@nextui-org/react';
 import styled from 'styled-components';
 import { useAtom } from 'jotai';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import PlaceItem from './PlaceItem';
 
@@ -24,17 +24,56 @@ const HOT_PLACE_CATEGORY: { title: string; category: HotPlaceCategory }[] = [
 export default function HotPlaceModal() {
   const [result] = useAtom(resultState);
   const [category, setCategory] = useState<HotPlaceCategory>('food');
+  const loaderRef = useRef(null);
 
-  const { data } = useHotPlaceQuery(category, {
-    x: result.end_x,
-    y: result.end_y,
-  });
+  const { data, hasNextPage, isFetchingNextPage, fetchNextPage } =
+    useHotPlaceQuery(category, {
+      x: result.end_x,
+      y: result.end_y,
+    });
+
+  const allPlaces = data?.pages.flatMap(page => page.documents) ?? [];
+
+  console.log('All Places', allPlaces);
 
   const categoryIcons = {
     food: <RestaurantIcon />,
     cafe: <CafeIcon color="black" />,
     drink: <DrinkIcon color="black" />,
   };
+
+  const handleObserver = (entries: any) => {
+    const target = entries[0];
+
+    if (target.isIntersecting && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  };
+
+  const intersectionObserveroptions = {
+    root: null,
+    rootMargin: '0px 0px 300px',
+    threshold: 0.1,
+  };
+
+  const currentRef = loaderRef.current;
+
+  const io = new IntersectionObserver(
+    handleObserver,
+    intersectionObserveroptions,
+  );
+
+  useEffect(() => {
+    if (currentRef) {
+      io.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        io.unobserve(currentRef);
+      }
+    };
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   return (
     <Container>
@@ -56,8 +95,9 @@ export default function HotPlaceModal() {
             );
           })}
         </Category>
-        {data?.map(place => <PlaceItem key={place.id} place={place} />)}
+        {allPlaces?.map(place => <PlaceItem key={place.id} place={place} />)}
       </Contents>
+      <div ref={loaderRef} style={{ height: '10px' }} />
     </Container>
   );
 }
