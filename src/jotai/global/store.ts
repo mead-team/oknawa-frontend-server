@@ -19,7 +19,7 @@ interface SearchState {
 
 interface BottomSheetState {
   isOpen: boolean;
-  title: string;
+  title: string | ReactNode;
   contents: ReactNode;
 }
 
@@ -31,7 +31,7 @@ const initialState: ModalState = {
 
 const bottomSheetInitialState: BottomSheetState = {
   isOpen: false,
-  title: '',
+  title: null,
   contents: null,
 };
 

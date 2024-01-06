@@ -16,6 +16,8 @@ export interface HotPlace {
   place_name: string;
   place_url: string;
   road_address_name: string;
+  main_photo_url: string;
   x: string;
   y: string;
+  open_hour: any;
 }

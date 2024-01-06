@@ -9,6 +9,20 @@ const nextConfig = {
       ssr: true,
     },
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 't1.kakaocdn.net',
+        pathname: '/**',
+      },
+      {
+        protocol: 'http',
+        hostname: 't1.daumcdn.net',
+        pathname: '/**',
+      },
+    ],
+  },
   eslint: {
     ignoreDuringBuilds: true,
   },

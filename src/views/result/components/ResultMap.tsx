@@ -10,10 +10,11 @@ import {
   Polyline,
 } from 'react-kakao-maps-sdk';
 
-import CenterMarker from './CenterMarker';
-
 import { searchState } from '@/jotai/global/store';
 import { resultState } from '@/jotai/result/store';
+import CenterMarker from './CenterMarker';
+
+const KAKAO_APP_KEY = process.env.NEXT_PUBLIC_KAKAOMAP_APP_KEY;
 
 const getStrokeColor = (index: number) => {
   switch (index) {
@@ -33,7 +34,7 @@ const getStrokeColor = (index: number) => {
 export default function ResultMap() {
   const [result] = useAtom(resultState);
   const searchValue = useAtomValue(searchState);
-
+  const [loaded, setLoaded] = useState(false);
   const [map, setMap] = useState<kakao.maps.Map | undefined>(undefined);
 
   const polylines = result.itinerary.map(user => {
@@ -80,44 +81,63 @@ export default function ResultMap() {
     map.setBounds(bounds);
   }, [map, searchValue, getMapBounds]);
 
+  useEffect(() => {
+    const loadKakaoMapScript = () => {
+      const script = document.createElement('script');
+      script.onload = () => window.kakao.maps.load(() => setLoaded(true));
+      script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_APP_KEY}&autoload=false`;
+      document.head.appendChild(script);
+    };
+
+    if (window.kakao && window.kakao.maps) {
+      window.kakao.maps.load(() => setLoaded(true));
+    } else {
+      loadKakaoMapScript();
+    }
+  }, [result, polylines]);
+
   return (
-    <Map
-      center={{ lat: result.end_y, lng: result.end_x }}
-      level={3}
-      isPanto
-      onCreate={setMap}
-    >
-      {searchValue?.map((user, index) => {
-        return (
-          <MapMarker
-            key={index}
-            position={{
-              lat: user.address.latitude,
-              lng: user.address.longitude,
-            }}
-            image={{
-              src: `/images/marker${index}.svg`,
-              size: { width: 30, height: 39 },
-            }}
-            onClick={marker => handleMarkerClick(marker, index)}
-          />
-        );
-      })}
-      <CustomOverlayMap position={{ lat: result.end_y, lng: result.end_x }}>
-        <CenterMarker>{stationName}</CenterMarker>
-      </CustomOverlayMap>
-      {polylines.map((polyline, index) => {
-        return (
-          <Polyline
-            key={index}
-            path={polyline}
-            strokeWeight={6}
-            strokeOpacity={1}
-            strokeColor="#18C964"
-          />
-        );
-      })}
-    </Map>
+    <>
+      {loaded && (
+        <Map
+          center={{ lat: result.end_y, lng: result.end_x }}
+          level={3}
+          isPanto
+          onCreate={setMap}
+        >
+          {searchValue?.map((user, index) => {
+            return (
+              <MapMarker
+                key={index}
+                position={{
+                  lat: user.address.latitude,
+                  lng: user.address.longitude,
+                }}
+                image={{
+                  src: `/images/marker${index}.svg`,
+                  size: { width: 30, height: 39 },
+                }}
+                onClick={marker => handleMarkerClick(marker, index)}
+              />
+            );
+          })}
+          <CustomOverlayMap position={{ lat: result.end_y, lng: result.end_x }}>
+            <CenterMarker>{stationName}</CenterMarker>
+          </CustomOverlayMap>
+          {polylines.map((polyline, index) => {
+            return (
+              <Polyline
+                key={index}
+                path={polyline}
+                strokeWeight={6}
+                strokeOpacity={1}
+                strokeColor="#18C964"
+              />
+            );
+          })}
+        </Map>
+      )}
+    </>
   );
 }
 

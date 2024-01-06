@@ -96,4 +96,7 @@ const CloseBtnBox = styled.div`
   cursor: pointer;
 `;
 
-const Contents = styled.div``;
+const Contents = styled.div`
+  max-height: 18rem;
+  overflow-y: auto;
+`;

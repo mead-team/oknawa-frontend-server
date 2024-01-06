@@ -5,18 +5,20 @@ export default class HotPlaceService {
   static async fetchHotPlace(
     category: HotPlaceCategory,
     point: HotPlacePoint,
-  ): Promise<HotPlace[]> {
+    page = 1,
+    size = 5,
+  ) {
     const res = await api.get(`/location/point/place/${category}`, {
       params: {
         x: point.x,
         y: point.y,
         radius: 500,
-        page: 1,
-        size: 10,
+        page,
+        size,
         sort: 'accuracy',
       },
     });
 
-    return res.data.documents;
+    return res.data;
   }
 }
