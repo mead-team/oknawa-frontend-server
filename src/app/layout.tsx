@@ -8,15 +8,13 @@ import { Providers } from './providers';
 import StyledComponentsRegistry from '@/styles/registry';
 import '@/styles/globals.css';
 
-import { pretendardFont } from '@/assets/fonts/pretendard/pretendard';
-
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={pretendardFont.className}>
+    <html lang="en">
       <BaseHead />
       <body>
         <Providers>
