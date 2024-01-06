@@ -35,38 +35,40 @@ export default function PlaceItem({ place }: PlaceItemProps) {
   };
 
   return (
-    <Link href={place_url}>
-      <StyledCard>
-        <CardContent>
-          <StyledCardHeader>
-            <PlaceName>{place_name}</PlaceName>
-            <Category>{category_group_name}</Category>
-          </StyledCardHeader>
-          <CardBody className="p-0">
-            <CardBodyText>{road_address_name}</CardBodyText>
-            <CardBodyText>
-              {dayOfWeek} {timeSE}
-            </CardBodyText>
-          </CardBody>
-        </CardContent>
-        <ImageBox>
-          {main_photo_url ? (
-            <Image
-              src={main_photo_url}
-              alt="핫플레이스 사진"
-              width={80}
-              height={64}
-              objectFit="cover"
-              style={{
-                borderRadius: '8px',
-                minHeight: '70px',
-              }}
-            />
-          ) : (
-            <DefaultImage>{categoryIcons[category_group_name]}</DefaultImage>
-          )}
-        </ImageBox>
-      </StyledCard>
+    <Link href={place_url} passHref legacyBehavior>
+      <a target="_blank" rel="noreferrer">
+        <StyledCard>
+          <CardContent>
+            <StyledCardHeader>
+              <PlaceName>{place_name}</PlaceName>
+              <Category>{category_group_name}</Category>
+            </StyledCardHeader>
+            <CardBody className="p-0">
+              <CardBodyText>{road_address_name}</CardBodyText>
+              <CardBodyText>
+                {dayOfWeek} {timeSE}
+              </CardBodyText>
+            </CardBody>
+          </CardContent>
+          <ImageBox>
+            {main_photo_url ? (
+              <Image
+                src={main_photo_url}
+                alt="핫플레이스 사진"
+                width={80}
+                height={64}
+                objectFit="cover"
+                style={{
+                  borderRadius: '8px',
+                  minHeight: '70px',
+                }}
+              />
+            ) : (
+              <DefaultImage>{categoryIcons[category_group_name]}</DefaultImage>
+            )}
+          </ImageBox>
+        </StyledCard>
+      </a>
     </Link>
   );
 }
