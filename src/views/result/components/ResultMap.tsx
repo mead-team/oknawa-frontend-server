@@ -10,8 +10,6 @@ import {
   Polyline,
 } from 'react-kakao-maps-sdk';
 
-import CenterMarker from './CenterMarker';
-
 import { searchState } from '@/jotai/global/store';
 import { resultState } from '@/jotai/result/store';
 
@@ -143,7 +141,7 @@ export default function ResultMap() {
   );
 }
 
-const Map = styled(KakaoMap)`
+const MapCenter = styled(KakaoMap)`
   width: 100%;
   height: 100vh;
 `;

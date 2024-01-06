@@ -103,6 +103,11 @@ export default function SearchBody() {
     }
   }, [errors]);
 
+  useEffect(() => {
+    const image = new Image();
+    image.src = '/loading.gif';
+  }, []);
+
   return (
     <Container onSubmit={handleSubmit(handleSearchBtnClick)}>
       <Wrapper>
