@@ -47,7 +47,7 @@ export default function BaseHead() {
       />
       <meta
         name="twitter:image"
-        content="https://oknawa.com/icons/icon-256x256.png"
+        content="https://oknawa.com/images/og-image.jpg"
       />
       <meta charSet="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
