@@ -14,7 +14,7 @@ export default function BaseHead() {
         src="https://developers.kakao.com/sdk/js/kakao.js"
         strategy="afterInteractive"
       />
-      <title>Ok, 나와!</title>
+      <title>Okay, 나와!</title>
       <meta
         name="description"
         content="만나기 편한 중간 장소와 핫플레이스를 추천해드려요!"

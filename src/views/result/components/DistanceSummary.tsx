@@ -3,7 +3,6 @@
 import styled from 'styled-components';
 import { useAtom } from 'jotai';
 import { Card, CardBody } from '@nextui-org/react';
-import { useEffect } from 'react';
 
 import { convertToKoreanTime } from '@/utils/date';
 
