@@ -13,7 +13,7 @@ export default function BaseHead() {
       />
       <Script
         src="https://developers.kakao.com/sdk/js/kakao.js"
-        strategy="beforeInteractive"
+        strategy="afterInteractive"
       />
       <title>Ok, 나와!</title>
       <meta

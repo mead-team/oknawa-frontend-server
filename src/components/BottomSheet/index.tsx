@@ -97,6 +97,6 @@ const CloseBtnBox = styled.div`
 `;
 
 const Contents = styled.div`
-  max-height: 18rem;
+  max-height: 22rem;
   overflow-y: auto;
 `;
