@@ -33,7 +33,7 @@ export default function DistanceSummary() {
           title: `오늘은 ${station_name} 에서 만나요!`,
           description: '약속장소를 확인해보세요!',
           imageUrl:
-            'http://k.kakaocdn.net/dn/bSbH9w/btqgegaEDfW/vD9KKV0hEintg6bZT4v4WK/kakaolink40_original.png',
+            'https://prod-oknawa.s3.ap-northeast-2.amazonaws.com/oknawa-image.jpg',
           link: {
             webUrl: `${baseUrl}/result?sharekey=${share_key}`,
             mobileWebUrl: `${baseUrl}/result?sharekey=${share_key}`,
