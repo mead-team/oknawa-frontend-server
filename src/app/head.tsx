@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-before-interactive-script-outside-document */
 import Script from 'next/script';
 
 const KAKAO_APP_KEY = process.env.NEXT_PUBLIC_KAKAOMAP_APP_KEY;
@@ -9,7 +8,7 @@ export default function BaseHead() {
       <Script
         type="text/javascript"
         src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_APP_KEY}&libraries=services&autoload=false`}
-        strategy="beforeInteractive"
+        strategy="afterInteractive"
       />
       <Script
         src="https://developers.kakao.com/sdk/js/kakao.js"
