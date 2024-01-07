@@ -9,22 +9,22 @@
   "description": "\uc911\uac04\uc9c0\uc810\uc5d0\uc11c \ub9cc\ub098\uc694!",
   "icons": [
     {
-      "src": "oknawa-192.jpg",
+      "src": "icons/oknawa-192.jpg",
       "sizes": "192x192",
       "type": "image/jpg"
     },
     {
-      "src": "oknawa-256.jpg",
+      "src": "icons/oknawa-256.jpg",
       "sizes": "256x256",
       "type": "image/jpg"
     },
     {
-      "src": "oknawa-384.jpg",
+      "src": "icons/oknawa-384.jpg",
       "sizes": "384x384",
       "type": "image/jpg"
     },
     {
-      "src": "oknawa-512.jpg",
+      "src": "icons/oknawa-512.jpg",
       "sizes": "512x512",
       "type": "image/jpg"
     }
