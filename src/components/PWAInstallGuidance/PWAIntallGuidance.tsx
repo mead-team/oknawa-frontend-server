@@ -46,6 +46,7 @@ export default function PWAIntallGuidance() {
         } else {
           console.log('사용자가 앱 설치를 동의하지 않았습니다.');
         }
+        onOpenChange();
 
         setDeferredPrompt(null);
       });
