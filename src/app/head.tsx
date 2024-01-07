@@ -14,7 +14,7 @@ export default function BaseHead() {
         src="https://developers.kakao.com/sdk/js/kakao.js"
         strategy="afterInteractive"
       />
-      <title>나오시개</title>
+      <title>Ok, 나와!</title>
       <meta
         name="description"
         content="만나기 편한 중간 장소와 핫플레이스를 추천해드려요!"
@@ -23,7 +23,7 @@ export default function BaseHead() {
         name="keywords"
         content="만나기, 중간 장소, 약속 장소, 핫플레이스, 맛집 추천, oknawa, 오케이나와, 오키나와, 약속 장소 추천, 핫플레이스, 중간 장소 추천, ok nawa, oknawa.com"
       />
-      <meta property="og:title" content="나오시개" />
+      <meta property="og:title" content="Ok, 나와!" />
       <meta
         property="og:description"
         content="만나기 편한 중간 장소와 핫플레이스를 추천해드려요!"
@@ -36,11 +36,11 @@ export default function BaseHead() {
       <meta property="og:image:height" content="256" />
       <meta property="og:url" content="https://oknawa.com" />
       <meta property="og:type" content="website" />
-      <meta property="og:site_name" content="나오시개" />
+      <meta property="og:site_name" content="Ok, 나와!" />
       <meta name="twitter:card" content="summary" />
       <meta name="twitter:site" content="@oknawa" />
       <meta name="twitter:creator" content="@oknawa" />
-      <meta name="twitter:title" content="나오시개" />
+      <meta name="twitter:title" content="Ok, 나와!" />
       <meta
         name="twitter:description"
         content="만나기 편한 중간 장소와 핫플레이스를 추천해드려요!"
