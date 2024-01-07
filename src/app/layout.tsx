@@ -7,6 +7,7 @@ import { Providers } from './providers';
 
 import StyledComponentsRegistry from '@/styles/registry';
 import '@/styles/globals.css';
+import PWAIntallGuidance from '@/components/PWAInstallGuidance/PWAIntallGuidance';
 
 export default function RootLayout({
   children,
@@ -20,6 +21,7 @@ export default function RootLayout({
         <Providers>
           <StyledComponentsRegistry>
             <BaseLayout>{children}</BaseLayout>
+            <PWAIntallGuidance />
           </StyledComponentsRegistry>
         </Providers>
       </body>
