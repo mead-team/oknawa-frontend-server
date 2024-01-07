@@ -18,9 +18,16 @@ export default function DistanceSummary() {
   const handleKakaoSharingBtnClick = () => {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
-    try {
-      window.Kakao.init(process.env.NEXT_PUBLIC_KAKAOMAP_APP_KEY);
+    if (window.Kakao && !window.Kakao.isInitialized()) {
+      try {
+        window.Kakao.init(process.env.NEXT_PUBLIC_KAKAOMAP_APP_KEY);
+      } catch (error) {
+        console.error('Kakao init error:', error);
+        return;
+      }
+    }
 
+    try {
       window.Kakao.Share.sendDefault({
         objectType: 'feed',
         content: {
