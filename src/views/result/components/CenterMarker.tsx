@@ -30,13 +30,13 @@ export default function CenterMarker({ children }: CenterMarkerProps) {
 
 const Container = styled.div`
   position: relative;
-  padding: 8px;
+  padding: 6px;
   border-radius: 8px;
   background-color: #000;
 `;
 
 const CenterMarkerText = styled.span`
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 600;
   color: #fff;
 `;

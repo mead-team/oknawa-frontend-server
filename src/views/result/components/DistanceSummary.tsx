@@ -19,6 +19,8 @@ export default function DistanceSummary() {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
     try {
+      window.Kakao.init(process.env.NEXT_PUBLIC_KAKAOMAP_APP_KEY);
+
       window.Kakao.Share.sendDefault({
         objectType: 'feed',
         content: {
@@ -37,15 +39,15 @@ export default function DistanceSummary() {
     }
   };
 
-  const initializeKakaoSDK = () => {
-    if (typeof window !== 'undefined' && !window.Kakao.isInitialized()) {
-      try {
-        window.Kakao.init(process.env.NEXT_PUBLIC_KAKAOMAP_APP_KEY);
-      } catch (error) {
-        console.error('Kakao init error:', error);
-      }
-    }
-  };
+  // const initializeKakaoSDK = () => {
+  //   if (typeof window !== 'undefined' && !window.Kakao.isInitialized()) {
+  //     try {
+  //       window.Kakao.init(process.env.NEXT_PUBLIC_KAKAOMAP_APP_KEY);
+  //     } catch (error) {
+  //       console.error('Kakao init error:', error);
+  //     }
+  //   }
+  // };
 
   const stationName = station_name.split(' ')[0];
 
@@ -56,9 +58,9 @@ export default function DistanceSummary() {
 
   const averageTravelTime = totalTravelTime / itinerary.length;
 
-  useEffect(() => {
-    initializeKakaoSDK();
-  }, []);
+  // useEffect(() => {
+  //   initializeKakaoSDK();
+  // }, []);
 
   return (
     <Container>
