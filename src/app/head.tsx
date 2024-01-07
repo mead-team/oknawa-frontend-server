@@ -30,7 +30,7 @@ export default function BaseHead() {
       />
       <meta
         property="og:image"
-        content="https://oknawa.com/icons/icon-256x256.png"
+        content="https://oknawa.com/images/og-image.jpg"
       />
       <meta property="og:image:width" content="256" />
       <meta property="og:image:height" content="256" />
