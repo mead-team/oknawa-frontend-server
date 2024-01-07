@@ -17,9 +17,8 @@ export default function PWAIntallGuidance() {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const userAgent = window.navigator?.userAgent;
+    const userAgent =
+      typeof navigator === 'undefined' ? 'SSR' : navigator.userAgent;
 
     setIsMobile(
       userAgent.match(
