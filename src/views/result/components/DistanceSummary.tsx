@@ -11,44 +11,41 @@ import { resultState } from '@/jotai/result/store';
 import Avatar, { AVATAR_COLORS } from '@/components/Avatar';
 import { ShareIcon } from '@/assets/icons/Share';
 
-// declare let Kakao: any;
-
 export default function DistanceSummary() {
   const [result] = useAtom(resultState);
   const { station_name, itinerary, share_key } = result;
 
-  // TODO 공유하기 기능 주석처리
-  // const handleKakaoSharingBtnClick = () => {
-  //   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const handleKakaoSharingBtnClick = () => {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
-  //   try {
-  //     Kakao.Share.sendDefault({
-  //       objectType: 'feed',
-  //       content: {
-  //         title: `오늘은 ${station_name} 에서 만나요!`,
-  //         description: '약속장소를 확인해보세요!',
-  //         imageUrl:
-  //           'http://k.kakaocdn.net/dn/bSbH9w/btqgegaEDfW/vD9KKV0hEintg6bZT4v4WK/kakaolink40_original.png',
-  //         link: {
-  //           webUrl: `${baseUrl}/result?sharekey=${share_key}`,
-  //           mobileWebUrl: `${baseUrl}/result?sharekey=${share_key}`,
-  //         },
-  //       },
-  //     });
-  //   } catch (error) {
-  //     console.error('Kakao share error:', error);
-  //   }
-  // };
+    try {
+      window.Kakao.Share.sendDefault({
+        objectType: 'feed',
+        content: {
+          title: `오늘은 ${station_name} 에서 만나요!`,
+          description: '약속장소를 확인해보세요!',
+          imageUrl:
+            'http://k.kakaocdn.net/dn/bSbH9w/btqgegaEDfW/vD9KKV0hEintg6bZT4v4WK/kakaolink40_original.png',
+          link: {
+            webUrl: `${baseUrl}/result?sharekey=${share_key}`,
+            mobileWebUrl: `${baseUrl}/result?sharekey=${share_key}`,
+          },
+        },
+      });
+    } catch (error) {
+      console.error('Kakao share error:', error);
+    }
+  };
 
-  // const initializeKakaoSDK = () => {
-  //   if (typeof window !== 'undefined' && !Kakao.isInitialized()) {
-  //     try {
-  //       Kakao.init(process.env.NEXT_PUBLIC_KAKAOMAP_APP_KEY);
-  //     } catch (error) {
-  //       console.error('Kakao init error:', error);
-  //     }
-  //   }
-  // };
+  const initializeKakaoSDK = () => {
+    if (typeof window !== 'undefined' && !window.Kakao.isInitialized()) {
+      try {
+        window.Kakao.init(process.env.NEXT_PUBLIC_KAKAOMAP_APP_KEY);
+      } catch (error) {
+        console.error('Kakao init error:', error);
+      }
+    }
+  };
 
   const stationName = station_name.split(' ')[0];
 
@@ -59,9 +56,9 @@ export default function DistanceSummary() {
 
   const averageTravelTime = totalTravelTime / itinerary.length;
 
-  // useEffect(() => {
-  //   initializeKakaoSDK();
-  // }, []);
+  useEffect(() => {
+    initializeKakaoSDK();
+  }, []);
 
   return (
     <Container>
@@ -71,10 +68,10 @@ export default function DistanceSummary() {
             <Station.Container>
               <Station.BoldText>{stationName}</Station.BoldText>을 추천해요!
             </Station.Container>
-            {/* <SharingButton onClick={handleKakaoSharingBtnClick}>
+            <SharingButton onClick={handleKakaoSharingBtnClick}>
               <ShareIcon />
               공유하기
-            </SharingButton> */}
+            </SharingButton>
           </StationName>
           <AverageArrivalTime>
             도착하는데 평균{' '}
