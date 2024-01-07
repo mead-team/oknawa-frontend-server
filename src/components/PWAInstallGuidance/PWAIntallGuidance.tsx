@@ -14,7 +14,7 @@ export default function PWAIntallGuidance() {
 
   const isMobile =
     /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-      navigator.userAgent,
+      window.navigator.userAgent,
     );
 
   const [deferredPrompt, setDeferredPrompt] =
