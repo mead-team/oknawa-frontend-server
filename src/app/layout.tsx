@@ -1,13 +1,13 @@
 'use client';
 
 import BaseLayout from '@/components/layout/BaseLayout';
+import PWAIntallGuidance from '@/components/PWAInstallGuidance/PWAIntallGuidance';
 import BaseHead from '@/app/head';
 
 import { Providers } from './providers';
 
 import StyledComponentsRegistry from '@/styles/registry';
 import '@/styles/globals.css';
-import PWAIntallGuidance from '@/components/PWAInstallGuidance/PWAIntallGuidance';
 
 export default function RootLayout({
   children,
