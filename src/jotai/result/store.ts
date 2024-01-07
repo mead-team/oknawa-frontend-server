@@ -12,6 +12,15 @@ interface ItineraryItem {
   region_name: string;
 }
 
+interface Participant {
+  start_x: number;
+  start_y: number;
+}
+
+interface RequestInfo {
+  participant: Participant[];
+}
+
 interface ResultState {
   address_name: string;
   end_x: number;
@@ -19,6 +28,7 @@ interface ResultState {
   itinerary: ItineraryItem[];
   station_name: string;
   share_key: string;
+  request_info: RequestInfo;
 }
 
 const initialState: ResultState = {
@@ -28,6 +38,7 @@ const initialState: ResultState = {
   itinerary: [],
   station_name: '',
   share_key: '',
+  request_info: { participant: [] },
 };
 
 export const resultState = atomWithStorage<ResultState>(

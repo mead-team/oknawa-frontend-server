@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtomValue } from 'jotai';
 import styled from 'styled-components';
 import {
   CustomOverlayMap,
@@ -10,9 +10,9 @@ import {
   Polyline,
 } from 'react-kakao-maps-sdk';
 
-import { searchState } from '@/jotai/global/store';
-import { resultState } from '@/jotai/result/store';
 import CenterMarker from './CenterMarker';
+
+import { resultState } from '@/jotai/result/store';
 
 const KAKAO_APP_KEY = process.env.NEXT_PUBLIC_KAKAOMAP_APP_KEY;
 
@@ -32,29 +32,31 @@ const getStrokeColor = (index: number) => {
 };
 
 export default function ResultMap() {
-  const [result] = useAtom(resultState);
-  const searchValue = useAtomValue(searchState);
+  const resultValue = useAtomValue(resultState);
   const [loaded, setLoaded] = useState(false);
   const [map, setMap] = useState<kakao.maps.Map | undefined>(undefined);
 
-  const polylines = result.itinerary.map(user => {
+  const participants = resultValue?.request_info?.participant;
+
+  const polylines = resultValue.itinerary.map(user => {
     return user.itinerary.total_polyline;
   });
 
-  const stationName = result.station_name.split(' ')[0];
+  const stationName = resultValue.station_name.split(' ')[0];
 
   const getMapBounds = useCallback(() => {
     if (!map) return;
 
     const bounds = new kakao.maps.LatLngBounds();
-    searchValue?.forEach(user => {
-      const { latitude, longitude } = user.address;
-      const position = new kakao.maps.LatLng(latitude, longitude);
+
+    participants?.forEach(user => {
+      const { start_y, start_x } = user;
+      const position = new kakao.maps.LatLng(start_y, start_x);
       bounds.extend(position);
     });
 
     return bounds;
-  }, [searchValue, map]);
+  }, [participants, map]);
 
   const handleMarkerClick = (marker: kakao.maps.Marker, index: number) => {
     if (!map) return;
@@ -79,7 +81,7 @@ export default function ResultMap() {
     const bounds = getMapBounds()!;
 
     map.setBounds(bounds);
-  }, [map, searchValue, getMapBounds]);
+  }, [map, resultValue, getMapBounds]);
 
   useEffect(() => {
     const loadKakaoMapScript = () => {
@@ -94,24 +96,24 @@ export default function ResultMap() {
     } else {
       loadKakaoMapScript();
     }
-  }, [result, polylines]);
+  }, [resultValue, polylines]);
 
   return (
     <>
       {loaded && (
         <Map
-          center={{ lat: result.end_y, lng: result.end_x }}
+          center={{ lat: resultValue.end_y, lng: resultValue.end_x }}
           level={3}
           isPanto
           onCreate={setMap}
         >
-          {searchValue?.map((user, index) => {
+          {participants?.map((user, index) => {
             return (
               <MapMarker
                 key={index}
                 position={{
-                  lat: user.address.latitude,
-                  lng: user.address.longitude,
+                  lat: user.start_y,
+                  lng: user.start_x,
                 }}
                 image={{
                   src: `/images/marker${index}.svg`,
@@ -121,7 +123,9 @@ export default function ResultMap() {
               />
             );
           })}
-          <CustomOverlayMap position={{ lat: result.end_y, lng: result.end_x }}>
+          <CustomOverlayMap
+            position={{ lat: resultValue.end_y, lng: resultValue.end_x }}
+          >
             <CenterMarker>{stationName}</CenterMarker>
           </CustomOverlayMap>
           {polylines.map((polyline, index) => {
