@@ -29,6 +29,7 @@ export default function PWAIntallGuidance() {
 
   const [deferredPrompt, setDeferredPrompt] =
     useState<BeforeInstallPromptEvent | null>(null);
+  const [userChoice, setUserChoice] = useState('');
 
   const handleBeforeInstallPrompt = (event: Event) => {
     event.preventDefault();
@@ -42,14 +43,16 @@ export default function PWAIntallGuidance() {
 
       deferredPrompt.userChoice.then(choiceResult => {
         if (choiceResult.outcome === 'accepted') {
+          setUserChoice('accepted');
           console.log('사용자가 앱 설치를 동의했습니다.');
-        } else {
-          console.log('사용자가 앱 설치를 동의하지 않았습니다.');
         }
-        onOpenChange();
-
-        setDeferredPrompt(null);
+        if (choiceResult.outcome === 'dismissed') {
+          setUserChoice('dismissed');
+          console.log('사용자가 앱 설치를 거부했습니다.');
+        }
       });
+      setDeferredPrompt(null);
+      onOpenChange();
     }
   };
 
@@ -65,10 +68,10 @@ export default function PWAIntallGuidance() {
   }, []);
 
   useEffect(() => {
-    if (deferredPrompt) {
+    if (deferredPrompt && userChoice === '') {
       onOpen();
     }
-  }, [deferredPrompt, onOpen]);
+  }, [deferredPrompt, userChoice, onOpen]);
 
   if (!isMobile) return null;
 
