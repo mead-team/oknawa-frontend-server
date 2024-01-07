@@ -69,9 +69,6 @@ export default function PWAIntallGuidance() {
     }
   }, [deferredPrompt, onOpen]);
 
-  console.log('userAgent:: ', navigator.userAgent);
-  console.log({ isMobile });
-
   if (!isMobile) return null;
 
   return (
