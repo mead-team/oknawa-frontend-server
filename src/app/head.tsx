@@ -30,11 +30,11 @@ export default function BaseHead() {
       />
       <meta
         property="og:image"
-        content="https://oknawa.com/images/og-image.jpg"
+        content="https://www.oknawa.com/images/og-image.jpg"
       />
       <meta property="og:image:width" content="256" />
       <meta property="og:image:height" content="256" />
-      <meta property="og:url" content="https://oknawa.com" />
+      <meta property="og:url" content="https://www.oknawa.com" />
       <meta property="og:type" content="website" />
       <meta property="og:site_name" content="Ok, 나와!" />
       <meta name="twitter:card" content="summary" />
@@ -47,7 +47,7 @@ export default function BaseHead() {
       />
       <meta
         name="twitter:image"
-        content="https://oknawa.com/images/og-image.jpg"
+        content="https://www.oknawa.com/images/og-image.jpg"
       />
       <meta charSet="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
