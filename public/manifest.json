@@ -1,12 +1,12 @@
 {
   "theme_color": "#4a4a4a",
   "background_color": "#2dbde3",
-  "display": "standalone",
+  "display": "fullscreen",
   "scope": "/",
   "start_url": "/",
-  "name": "oknawa",
-  "short_name": "oknawa",
-  "description": "\uc911\uac04\uc9c0\uc810\uc5d0\uc11c \ub9cc\ub098\uc694!",
+  "name": "오케이나와",
+  "short_name": "오케이나와",
+  "description": "만나기 편한 중간 장소와 핫플레이스를 소개합니다.",
   "icons": [
     {
       "src": "icons/oknawa-192.png",
