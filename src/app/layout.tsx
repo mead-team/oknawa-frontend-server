@@ -1,5 +1,7 @@
 'use client';
 
+import { Analytics } from '@vercel/analytics/react';
+
 import BaseLayout from '@/components/layout/BaseLayout';
 import PWAIntallGuidance from '@/components/PWAInstallGuidance/PWAIntallGuidance';
 import BaseHead from '@/app/head';
@@ -24,6 +26,7 @@ export default function RootLayout({
             <PWAIntallGuidance />
           </StyledComponentsRegistry>
         </Providers>
+        <Analytics />
       </body>
     </html>
   );
