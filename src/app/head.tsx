@@ -17,16 +17,16 @@ export default function BaseHead() {
       <title>Ok, 나와!</title>
       <meta
         name="description"
-        content="만나기 편한 중간 장소와 핫플레이스를 추천해드려요!"
+        content="만나기 편한 약속 장소와 핫플레이스를 추천해드려요!"
       />
       <meta
         name="keywords"
-        content="만나기, 중간 장소, 약속 장소, 핫플레이스, 맛집 추천, oknawa, 오케이나와, 오키나와, 약속 장소 추천, 핫플레이스, 중간 장소 추천, ok nawa, oknawa.com"
+        content="만나기 편한 약속 장소, 만나기 편한 중간 장소, 약속 장소, 핫플레이스, 맛집 추천, oknawa, 오케이나와, 오키나와, 약속 장소 추천, ok nawa, oknawa.com, 오케이나와"
       />
       <meta property="og:title" content="Ok, 나와!" />
       <meta
         property="og:description"
-        content="만나기 편한 중간 장소와 핫플레이스를 추천해드려요!"
+        content="만나기 편한 약속 장소와 핫플레이스를 추천해드려요!"
       />
       <meta
         property="og:image"
@@ -43,7 +43,7 @@ export default function BaseHead() {
       <meta name="twitter:title" content="Ok, 나와!" />
       <meta
         name="twitter:description"
-        content="만나기 편한 중간 장소와 핫플레이스를 추천해드려요!"
+        content="만나기 편한 약속 장소와 핫플레이스를 추천해드려요!"
       />
       <meta
         name="twitter:image"
