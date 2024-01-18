@@ -1,8 +1,8 @@
 'use client';
 
-import { Button, useDisclosure } from '@nextui-org/react';
+import { Button } from '@nextui-org/react';
 import styled from 'styled-components';
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useAtom, useSetAtom } from 'jotai';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -19,50 +19,42 @@ import { ArrowBackIcon } from '@/assets/icons/ArrowBack';
 
 export default function ResultBody() {
   const router = useRouter();
-  const searchParams = useSearchParams().get('sharekey');
+  const shareKey = useSearchParams().get('sharekey');
+
   const [result, setResult] = useAtom(resultState);
   const setBottomSheet = useSetAtom(bottomSheetState);
-  const { station_name } = result;
-  const { data, isLoading } = usePlaceSearchWithShareKeyQuery(searchParams);
+  const stationName = result?.station_name.split(' ')[0];
 
-  const stationName = station_name.split(' ')[0];
-
-  const handleBackBtnClick = () => {
-    router.push('/');
-  };
+  const { data } = usePlaceSearchWithShareKeyQuery(shareKey);
 
   const handleHotplaceBtnClick = () => {
     setBottomSheet(prevState => ({
       ...prevState,
       isOpen: true,
       title: (
-        <div>
+        <>
           <span style={{ fontWeight: '800' }}>{stationName}</span>의
           <div>핫플레이스를 추천해요!</div>
-        </div>
+        </>
       ),
       contents: <HotPlaceModal />,
     }));
   };
 
-  const updateResultData = useCallback(() => {
-    if (data) {
+  useEffect(() => {
+    if (shareKey && data) {
       setResult(data);
     }
-  }, [data, setResult]);
-
-  useEffect(() => {
-    if (searchParams) {
-      updateResultData();
-    }
-  }, [searchParams, data, updateResultData]);
-
-  if (isLoading) return null;
+  }, [shareKey, data, setResult]);
 
   return (
     <Container>
       <Header>
-        <BackButton isIconOnly aria-label="Back" onClick={handleBackBtnClick}>
+        <BackButton
+          isIconOnly
+          aria-label="Back"
+          onClick={() => router.push('/')}
+        >
           <ArrowBackIcon />
         </BackButton>
       </Header>
