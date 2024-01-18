@@ -1,6 +1,6 @@
 import { atomWithStorage, createJSONStorage } from 'jotai/utils';
 
-interface ItineraryItem {
+export interface ItineraryItem {
   name: string;
   itinerary: {
     totalTime: number;

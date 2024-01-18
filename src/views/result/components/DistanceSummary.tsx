@@ -1,72 +1,43 @@
 'use client';
 
 import styled from 'styled-components';
-import { useAtom } from 'jotai';
 import { Card, CardBody } from '@nextui-org/react';
+
+import Avatar, { AVATAR_COLORS } from '@/components/Avatar';
 
 import { convertToKoreanTime } from '@/utils/date';
 
-import { resultState } from '@/jotai/result/store';
-import Avatar, { AVATAR_COLORS } from '@/components/Avatar';
+import useDistanceSummary from '@/hooks/useDistanceSummary';
+
+import { ItineraryItem } from '@/jotai/result/store';
+
 import { ShareIcon } from '@/assets/icons/Share';
 
 export default function DistanceSummary() {
-  const [result] = useAtom(resultState);
-  const { station_name, itinerary, share_key } = result;
+  const {
+    stationName,
+    averageTravelTime,
+    itinerary,
+    initKakao,
+    kakaoShareSendDefault,
+  } = useDistanceSummary();
 
   const handleKakaoSharingBtnClick = () => {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-
-    if (window.Kakao && !window.Kakao.isInitialized()) {
-      try {
-        window.Kakao.init(process.env.NEXT_PUBLIC_KAKAOMAP_APP_KEY);
-      } catch (error) {
-        console.error('Kakao init error:', error);
-        return;
-      }
-    }
-
-    try {
-      window.Kakao.Share.sendDefault({
-        objectType: 'feed',
-        content: {
-          title: `오늘은 ${station_name} 에서 만나요!`,
-          description: '약속장소를 확인해보세요!',
-          imageUrl:
-            'https://prod-oknawa.s3.ap-northeast-2.amazonaws.com/oknawa-image.jpg',
-          link: {
-            webUrl: `${baseUrl}/result?sharekey=${share_key}`,
-            mobileWebUrl: `${baseUrl}/result?sharekey=${share_key}`,
-          },
-        },
-      });
-    } catch (error) {
-      console.error('Kakao share error:', error);
-    }
+    initKakao();
+    kakaoShareSendDefault();
   };
 
-  // const initializeKakaoSDK = () => {
-  //   if (typeof window !== 'undefined' && !window.Kakao.isInitialized()) {
-  //     try {
-  //       window.Kakao.init(process.env.NEXT_PUBLIC_KAKAOMAP_APP_KEY);
-  //     } catch (error) {
-  //       console.error('Kakao init error:', error);
-  //     }
-  //   }
-  // };
+  const genUserArriveInfo = (user: ItineraryItem, index: number) => {
+    const userName = user.name || `사용자${index + 1}`;
+    const travelTime = convertToKoreanTime(user.itinerary.totalTime);
+    const avatarColor = AVATAR_COLORS[index];
 
-  const stationName = station_name.split(' ')[0];
-
-  const totalTravelTime = itinerary.reduce(
-    (sum, user) => sum + user.itinerary.totalTime,
-    0,
-  );
-
-  const averageTravelTime = totalTravelTime / itinerary.length;
-
-  // useEffect(() => {
-  //   initializeKakaoSDK();
-  // }, []);
+    return {
+      userName,
+      travelTime,
+      avatarColor,
+    };
+  };
 
   return (
     <Container>
@@ -87,10 +58,11 @@ export default function DistanceSummary() {
             걸려요
           </AverageArrivalTime>
           <Box>
-            {itinerary.map((user, index) => {
-              const userName = user.name || `사용자${index + 1}`;
-              const travelTime = convertToKoreanTime(user.itinerary.totalTime);
-              const avatarColor = AVATAR_COLORS[index];
+            {itinerary?.map((user, index) => {
+              const { userName, travelTime, avatarColor } = genUserArriveInfo(
+                user,
+                index,
+              );
 
               return (
                 <User className="text-small" key={index}>
