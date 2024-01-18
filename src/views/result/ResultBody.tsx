@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, useDisclosure } from '@nextui-org/react';
+import { Button } from '@nextui-org/react';
 import styled from 'styled-components';
 import { useCallback, useEffect } from 'react';
 import { useAtom, useSetAtom } from 'jotai';
@@ -20,16 +20,13 @@ import { ArrowBackIcon } from '@/assets/icons/ArrowBack';
 export default function ResultBody() {
   const router = useRouter();
   const searchParams = useSearchParams().get('sharekey');
+
   const [result, setResult] = useAtom(resultState);
   const setBottomSheet = useSetAtom(bottomSheetState);
   const { station_name } = result;
   const { data, isLoading } = usePlaceSearchWithShareKeyQuery(searchParams);
 
   const stationName = station_name.split(' ')[0];
-
-  const handleBackBtnClick = () => {
-    router.push('/');
-  };
 
   const handleHotplaceBtnClick = () => {
     setBottomSheet(prevState => ({
@@ -62,7 +59,11 @@ export default function ResultBody() {
   return (
     <Container>
       <Header>
-        <BackButton isIconOnly aria-label="Back" onClick={handleBackBtnClick}>
+        <BackButton
+          isIconOnly
+          aria-label="Back"
+          onClick={() => router.push('/')}
+        >
           <ArrowBackIcon />
         </BackButton>
       </Header>
