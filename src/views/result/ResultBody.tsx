@@ -24,7 +24,7 @@ export default function ResultBody() {
   const [result, setResult] = useAtom(resultState);
   const setBottomSheet = useSetAtom(bottomSheetState);
   const { station_name } = result;
-  const { data, isLoading } = usePlaceSearchWithShareKeyQuery(searchParams);
+  const { data } = usePlaceSearchWithShareKeyQuery(searchParams);
 
   const stationName = station_name.split(' ')[0];
 
@@ -53,8 +53,6 @@ export default function ResultBody() {
       updateResultData();
     }
   }, [searchParams, data, updateResultData]);
-
-  if (isLoading) return null;
 
   return (
     <Container>
