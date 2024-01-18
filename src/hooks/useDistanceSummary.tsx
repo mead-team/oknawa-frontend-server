@@ -1,9 +1,10 @@
 import { useAtom } from 'jotai';
 
 import { resultState } from '@/jotai/result/store';
-import { baseURL } from '@/axois';
 
 import { ErrorNotify } from '@/types/error';
+
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function useDistanceSummary() {
   const [result] = useAtom(resultState);
@@ -28,8 +29,8 @@ export default function useDistanceSummary() {
           description: '약속장소를 확인해보세요!',
           imageUrl: process.env.NEXT_PUBLIC_KAKAO_SHARE_IMAGE,
           link: {
-            webUrl: `${baseURL}/result?sharekey=${share_key}`,
-            mobileWebUrl: `${baseURL}/result?sharekey=${share_key}`,
+            webUrl: `${baseUrl}/result?sharekey=${share_key}`,
+            mobileWebUrl: `${baseUrl}/result?sharekey=${share_key}`,
           },
         },
       });
