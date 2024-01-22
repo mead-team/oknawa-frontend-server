@@ -52,12 +52,12 @@ export default function PlaceItem({ place }: PlaceItemProps) {
           </CardContent>
           <ImageBox>
             {main_photo_url ? (
-              <Image
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
                 src={main_photo_url}
                 alt="핫플레이스 사진"
                 width={80}
                 height={64}
-                objectFit="cover"
                 style={{
                   borderRadius: '8px',
                   minHeight: '70px',
