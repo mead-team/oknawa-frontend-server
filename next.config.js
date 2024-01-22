@@ -22,7 +22,7 @@ const nextConfig = {
         pathname: '/**',
       },
       {
-        protocol: 'https',
+        protocol: 'http',
         hostname: 'postfiles.pstatic.net',
         pathname: '/**',
       },
