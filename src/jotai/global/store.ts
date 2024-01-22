@@ -21,6 +21,7 @@ interface BottomSheetState {
   isOpen: boolean;
   title: string | ReactNode;
   contents: ReactNode;
+  containerHeight: number;
 }
 
 const initialState: ModalState = {
@@ -33,6 +34,7 @@ const bottomSheetInitialState: BottomSheetState = {
   isOpen: false,
   title: null,
   contents: null,
+  containerHeight: 52,
 };
 
 export const modalState = atomWithReset<ModalState>(initialState);
