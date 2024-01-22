@@ -21,6 +21,11 @@ const nextConfig = {
         hostname: 't1.daumcdn.net',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'postfiles.pstatic.net',
+        pathname: '/**',
+      },
     ],
   },
   eslint: {

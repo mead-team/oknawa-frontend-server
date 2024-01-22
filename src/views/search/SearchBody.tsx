@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import { useEffect } from 'react';
 
+import SearchLoading from './components/SearchLoading';
 import DaumPostCode from '@/components/DaumPostCode';
 
 import useSearchForm from '@/hooks/form/search/useSearchForm';
@@ -15,7 +16,6 @@ import { bottomSheetState, searchState } from '@/jotai/global/store';
 import { resultState } from '@/jotai/result/store';
 
 import { CloseIcon } from '@/assets/icons/Close';
-import SearchLoading from './components/SearchLoading';
 
 const initialAddress = {
   fullAddress: '',
@@ -121,13 +121,14 @@ export default function SearchBody() {
                 placeholder={`이름 ${index + 1}`}
                 {...register(`userSection.${index}.name`)}
               />
-              <AddressInput
-                isReadOnly
-                size="sm"
-                placeholder="출발지를 입력하세요"
-                value={addressValue?.[index].address.fullAddress}
-                onClick={() => handleSearchAddressBtnClick(index)}
-              />
+              <ClickableArea onClick={() => handleSearchAddressBtnClick(index)}>
+                <AddressInput
+                  isReadOnly
+                  size="sm"
+                  placeholder="출발지를 입력하세요"
+                  value={addressValue?.[index].address.fullAddress}
+                />
+              </ClickableArea>
               {index > 1 && (
                 <DeleteButton onClick={() => handleDeleteBtnClick(index)}>
                   <CloseIcon width="13" height="13" color="black" />
@@ -185,9 +186,11 @@ const NameInput = styled(Input)`
   width: 25%;
 `;
 
-const AddressInput = styled(Input)`
-  width: 75%;
+const ClickableArea = styled.div`
+  width: 100%;
 `;
+
+const AddressInput = styled(Input)``;
 
 const DeleteButton = styled.button`
   position: absolute;
@@ -204,6 +207,7 @@ const DeleteButton = styled.button`
 
 const AddButton = styled(Button)`
   margin-top: 20px;
+  font-weight: 600;
 `;
 
 const MaxPeopleText = styled.p`

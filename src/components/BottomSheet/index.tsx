@@ -1,6 +1,7 @@
 import { useAtom } from 'jotai';
 import styled from 'styled-components';
 import { useResetAtom } from 'jotai/utils';
+import { useEffect } from 'react';
 
 import { bottomSheetState } from '@/jotai/global/store';
 
@@ -10,7 +11,19 @@ export default function BottomSheet() {
   const [bottomSheet] = useAtom(bottomSheetState);
   const reset = useResetAtom(bottomSheetState);
 
-  const { isOpen, title, contents } = bottomSheet;
+  const { isOpen, title, contents, height } = bottomSheet;
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
 
   const handleOutsideClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
@@ -26,7 +39,7 @@ export default function BottomSheet() {
 
   return (
     <Container onClick={handleOutsideClick}>
-      <Wrapper>
+      <Wrapper height={height}>
         <TitleBox>
           <Title>{title}</Title>
           <CloseBtnBox onClick={handleCloseBtnClick}>
@@ -62,13 +75,14 @@ const Container = styled.section`
   }
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ height: number }>`
   display: flex;
   flex-direction: column;
   width: 100%;
   padding: 1rem;
   border-radius: 0.8rem 0.8rem 0 0;
   background-color: #27272a;
+  height: ${({ height }) => `${height}%`};
   animation: slide_up 0.4s both;
 
   @keyframes slide_up {
@@ -97,6 +111,5 @@ const CloseBtnBox = styled.div`
 `;
 
 const Contents = styled.div`
-  max-height: 22rem;
   overflow-y: auto;
 `;

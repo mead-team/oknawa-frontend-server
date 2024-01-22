@@ -38,6 +38,7 @@ export default function ResultBody() {
         </>
       ),
       contents: <HotPlaceModal />,
+      height: 70,
     }));
   };
 
