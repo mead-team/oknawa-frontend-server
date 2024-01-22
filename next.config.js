@@ -10,23 +10,7 @@ const nextConfig = {
     },
   },
   images: {
-    remotePatterns: [
-      {
-        protocol: 'http',
-        hostname: 't1.kakaocdn.net',
-        pathname: '/**',
-      },
-      {
-        protocol: 'http',
-        hostname: 't1.daumcdn.net',
-        pathname: '/**',
-      },
-      {
-        protocol: 'http',
-        hostname: 'postfiles.pstatic.net',
-        pathname: '/**',
-      },
-    ],
+    domains: ['t1.kakaocdn.net', 't1.daumcdn.net', 'postfiles.pstatic.net'],
   },
   eslint: {
     ignoreDuringBuilds: true,
