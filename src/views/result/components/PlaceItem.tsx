@@ -1,6 +1,6 @@
 import { Card, CardBody, CardHeader } from '@nextui-org/react';
 import Link from 'next/link';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import Image from 'next/image';
 
 import { HotPlace } from '@/services/hot-place/types';
@@ -52,12 +52,12 @@ export default function PlaceItem({ place }: PlaceItemProps) {
           </CardContent>
           <ImageBox>
             {main_photo_url ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
+              <Image
                 src={main_photo_url}
                 alt="핫플레이스 사진"
                 width={80}
                 height={64}
+                objectFit="cover"
                 style={{
                   borderRadius: '8px',
                   minHeight: '70px',
