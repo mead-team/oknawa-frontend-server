@@ -11,7 +11,7 @@ export default function BottomSheet() {
   const [bottomSheet] = useAtom(bottomSheetState);
   const reset = useResetAtom(bottomSheetState);
 
-  const { isOpen, title, contents, containerHeight } = bottomSheet;
+  const { isOpen, title, contents, height } = bottomSheet;
 
   useEffect(() => {
     if (isOpen) {
@@ -39,7 +39,7 @@ export default function BottomSheet() {
 
   return (
     <Container onClick={handleOutsideClick}>
-      <Wrapper containerHeight={containerHeight}>
+      <Wrapper height={height}>
         <TitleBox>
           <Title>{title}</Title>
           <CloseBtnBox onClick={handleCloseBtnClick}>
@@ -75,14 +75,14 @@ const Container = styled.section`
   }
 `;
 
-const Wrapper = styled.div<{ containerHeight: number }>`
+const Wrapper = styled.div<{ height: number }>`
   display: flex;
   flex-direction: column;
   width: 100%;
   padding: 1rem;
   border-radius: 0.8rem 0.8rem 0 0;
   background-color: #27272a;
-  height: ${({ containerHeight }) => `${containerHeight}%`};
+  height: ${({ height }) => `${height}%`};
   animation: slide_up 0.4s both;
 
   @keyframes slide_up {

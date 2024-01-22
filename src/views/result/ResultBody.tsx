@@ -38,7 +38,7 @@ export default function ResultBody() {
         </>
       ),
       contents: <HotPlaceModal />,
-      containerHeight: 70,
+      height: 70,
     }));
   };
 
