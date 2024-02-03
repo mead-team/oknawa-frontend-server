@@ -183,7 +183,7 @@ const Section = styled.section`
 `;
 
 const NameInput = styled(Input)`
-  width: 25%;
+  width: 27%;
 `;
 
 const ClickableArea = styled.div`
