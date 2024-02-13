@@ -5,7 +5,10 @@ export default function SearchLoading() {
     <Container>
       <Wrapper>
         <Image src="/loading.gif" width={148} height={148} alt="loading" />
-        <Text>가장 만나기 편한 장소를 찾고 있어요</Text>
+        <Text>
+          {/* 가장 만나기 편한 장소를 찾고 있어요 */}
+          가장 만나기 편한 <br /> 장소를 찾고 있어요
+        </Text>
       </Wrapper>
     </Container>
   );

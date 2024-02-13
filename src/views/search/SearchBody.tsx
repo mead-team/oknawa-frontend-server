@@ -148,7 +148,8 @@ export default function SearchBody() {
       <SearchButton color="success" type="submit">
         만나기 편한 장소 추천받기
       </SearchButton>
-      {(isPending || isSuccess) && <SearchLoading />}
+      {/* {(isPending || isSuccess) && <SearchLoading />} */}
+      <SearchLoading />
     </Container>
   );
 }
