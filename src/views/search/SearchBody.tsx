@@ -29,11 +29,7 @@ export default function SearchBody() {
   const setSearchState = useSetAtom(searchState);
   const router = useRouter();
 
-  const {
-    mutate: placeSearchMutate,
-    isPending,
-    isSuccess,
-  } = usePlaceSearchMutation();
+  const { mutate: placeSearchMutate, isPending, isSuccess } = usePlaceSearchMutation();
 
   const {
     register,
@@ -55,13 +51,7 @@ export default function SearchBody() {
       ...prevState,
       isOpen: true,
       title: '주소를 검색하세요',
-      contents: (
-        <DaumPostCode
-          setValue={setValue}
-          currentIndex={index}
-          trigger={trigger}
-        />
-      ),
+      contents: <DaumPostCode setValue={setValue} currentIndex={index} trigger={trigger} />,
     }));
   };
 
@@ -149,7 +139,6 @@ export default function SearchBody() {
         만나기 편한 장소 추천받기
       </SearchButton>
       {(isPending || isSuccess) && <SearchLoading />}
-      <SearchLoading />
     </Container>
   );
 }
