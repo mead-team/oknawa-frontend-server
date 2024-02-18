@@ -4,7 +4,7 @@ import { useFieldArray } from 'react-hook-form';
 import { styled } from 'styled-components';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import SearchLoading from './components/SearchLoading';
 import DaumPostCode from '@/components/DaumPostCode';
@@ -29,7 +29,11 @@ export default function SearchBody() {
   const setSearchState = useSetAtom(searchState);
   const router = useRouter();
 
-  const { mutate: placeSearchMutate, isPending, isSuccess } = usePlaceSearchMutation();
+  const {
+    mutate: placeSearchMutate,
+    isPending,
+    isSuccess,
+  } = usePlaceSearchMutation();
 
   const {
     register,
@@ -51,7 +55,13 @@ export default function SearchBody() {
       ...prevState,
       isOpen: true,
       title: '주소를 검색하세요',
-      contents: <DaumPostCode setValue={setValue} currentIndex={index} trigger={trigger} />,
+      contents: (
+        <DaumPostCode
+          setValue={setValue}
+          currentIndex={index}
+          trigger={trigger}
+        />
+      ),
     }));
   };
 
@@ -99,47 +109,60 @@ export default function SearchBody() {
   }, []);
 
   return (
-    <Container onSubmit={handleSubmit(handleSearchBtnClick)}>
-      <Wrapper>
-        <Title>{'출발하는 곳을 입력하면\n중간 지점을 추천해드려요!'}</Title>
-        {fields.map((field, index) => {
-          return (
-            <Section key={field.id}>
-              <NameInput
-                size="sm"
-                maxLength={4}
-                placeholder={`이름 ${index + 1}`}
-                {...register(`userSection.${index}.name`)}
-              />
-              <ClickableArea onClick={() => handleSearchAddressBtnClick(index)}>
-                <AddressInput
-                  isReadOnly
+    <>
+      <Container onSubmit={handleSubmit(handleSearchBtnClick)}>
+        <Wrapper>
+          <Title>{'출발하는 곳을 입력하면\n중간 지점을 추천해드려요!'}</Title>
+          {fields.map((field, index) => {
+            return (
+              <Section key={field.id}>
+                <NameInput
                   size="sm"
-                  placeholder="출발지를 입력하세요"
-                  value={addressValue?.[index].address.fullAddress}
+                  maxLength={4}
+                  placeholder={`이름 ${index + 1}`}
+                  {...register(`userSection.${index}.name`)}
                 />
-              </ClickableArea>
-              {index > 1 && (
-                <DeleteButton onClick={() => handleDeleteBtnClick(index)}>
-                  <CloseIcon width="13" height="13" color="black" />
-                </DeleteButton>
-              )}
-            </Section>
-          );
-        })}
-        {fields.length < 4 ? (
-          <AddButton onClick={handleAddBtnClick} isDisabled={fields.length > 3}>
-            + 추가하기
-          </AddButton>
-        ) : (
-          <MaxPeopleText>최대 4명까지 입력할 수 있어요</MaxPeopleText>
-        )}
-      </Wrapper>
-      <SearchButton color="success" type="submit">
-        만나기 편한 장소 추천받기
-      </SearchButton>
-      {(isPending || isSuccess) && <SearchLoading />}
-    </Container>
+                <ClickableArea
+                  onClick={() => handleSearchAddressBtnClick(index)}
+                >
+                  <AddressInput
+                    isReadOnly
+                    size="sm"
+                    placeholder="출발지를 입력하세요"
+                    value={addressValue?.[index].address.fullAddress}
+                  />
+                </ClickableArea>
+                {index > 1 && (
+                  <DeleteButton onClick={() => handleDeleteBtnClick(index)}>
+                    <CloseIcon width="13" height="13" color="black" />
+                  </DeleteButton>
+                )}
+              </Section>
+            );
+          })}
+          {fields.length < 10 ? (
+            <AddButton
+              onClick={handleAddBtnClick}
+              isDisabled={fields.length > 10}
+            >
+              + 추가하기
+            </AddButton>
+          ) : (
+            <MaxPeopleText>최대 10명까지 입력할 수 있어요</MaxPeopleText>
+          )}
+        </Wrapper>
+
+        {(isPending || isSuccess) && <SearchLoading />}
+      </Container>
+      <SearchButtonWrapper>
+        <SearchButton
+          color="success"
+          onClick={handleSubmit(handleSearchBtnClick)}
+        >
+          만나기 편한 장소 추천받기
+        </SearchButton>
+      </SearchButtonWrapper>
+    </>
   );
 }
 
@@ -156,6 +179,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   gap: 13px;
   margin-top: 45px;
+  padding-bottom: 120px;
 `;
 
 const Title = styled.h1`
@@ -207,6 +231,19 @@ const MaxPeopleText = styled.p`
   font-weight: 500;
 `;
 
+const SearchButtonWrapper = styled.div`
+  /* display: flex; */
+  width: 100%;
+  max-width: 500px;
+  justify-content: center;
+  position: fixed;
+  z-index: 2;
+  bottom: 0;
+  padding: 10px 20px 40px;
+`;
+
 const SearchButton = styled(Button)`
   font-weight: 600;
+  width: 100%;
+  height: 56px;
 `;
