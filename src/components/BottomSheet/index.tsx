@@ -79,6 +79,7 @@ const Wrapper = styled.div<{ height: number }>`
   display: flex;
   flex-direction: column;
   width: 100%;
+  max-width: 500px;
   padding: 1rem;
   border-radius: 0.8rem 0.8rem 0 0;
   background-color: #27272a;

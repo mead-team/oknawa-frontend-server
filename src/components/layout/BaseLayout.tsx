@@ -16,7 +16,7 @@ export default function BaseLayout({
   children: React.ReactNode;
 }) {
   return (
-    <Container className="dark text-foreground bg-background">
+    <Container className="dark text-foreground ">
       <Wrapper>
         {children}
         <BottomSheet />
@@ -31,12 +31,16 @@ const Container = styled.div`
   ${flexCenter('row')}
   min-height: 100vh;
   overflow: auto;
+  background-color: #0d0d0d;
 `;
 
 const Wrapper = styled.div`
   height: 100vh;
-  min-width: 50%;
+  /* min-width: 50%; */
+  width: 100%;
+  max-width: 500px;
   overflow: auto;
+  background-color: black;
 
   ${media.mobile} {
     min-width: 100%; // 모바일 화면에서는 더 넓은 비율을 차지
