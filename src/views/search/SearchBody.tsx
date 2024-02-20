@@ -7,7 +7,7 @@ import { toast } from 'react-hot-toast';
 import { useEffect } from 'react';
 
 import SearchLoading from './components/SearchLoading';
-import DaumPostCode from '@/components/DaumPostCode';
+import Address from '@/components/Address';
 
 import useSearchForm from '@/hooks/form/search/useSearchForm';
 import { usePlaceSearchMutation } from '@/hooks/mutation/search';
@@ -29,7 +29,11 @@ export default function SearchBody() {
   const setSearchState = useSetAtom(searchState);
   const router = useRouter();
 
-  const { mutate: placeSearchMutate, isPending, isSuccess } = usePlaceSearchMutation();
+  const {
+    mutate: placeSearchMutate,
+    isPending,
+    isSuccess,
+  } = usePlaceSearchMutation();
 
   const {
     register,
@@ -51,7 +55,7 @@ export default function SearchBody() {
       ...prevState,
       isOpen: true,
       title: '주소를 검색하세요',
-      contents: <DaumPostCode setValue={setValue} currentIndex={index} trigger={trigger} />,
+      contents: <Address setValue={setValue} currentIndex={index} />,
     }));
   };
 
@@ -116,7 +120,7 @@ export default function SearchBody() {
                   isReadOnly
                   size="sm"
                   placeholder="출발지를 입력하세요"
-                  value={addressValue?.[index].address.fullAddress}
+                  value={addressValue?.[index].address.regionName}
                 />
               </ClickableArea>
               {index > 1 && (
