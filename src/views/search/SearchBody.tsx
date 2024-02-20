@@ -1,10 +1,10 @@
 import { Button, Input } from '@nextui-org/react';
-import { useSetAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import { useFieldArray } from 'react-hook-form';
 import { styled } from 'styled-components';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
 import SearchLoading from './components/SearchLoading';
 import DaumPostCode from '@/components/DaumPostCode';
@@ -27,6 +27,7 @@ export default function SearchBody() {
   const setBottomSheet = useSetAtom(bottomSheetState);
   const setResult = useSetAtom(resultState);
   const setSearchState = useSetAtom(searchState);
+  const [searchList] = useAtom(searchState);
   const router = useRouter();
 
   const {
@@ -120,6 +121,7 @@ export default function SearchBody() {
                   size="sm"
                   maxLength={4}
                   placeholder={`이름 ${index + 1}`}
+                  defaultValue={searchList[index]?.name || ''}
                   {...register(`userSection.${index}.name`)}
                 />
                 <ClickableArea
@@ -128,7 +130,10 @@ export default function SearchBody() {
                   <AddressInput
                     isReadOnly
                     size="sm"
-                    placeholder="출발지를 입력하세요"
+                    placeholder={
+                      searchList[index]?.address?.fullAddress ||
+                      '출발지를 입력해주세요.'
+                    }
                     value={addressValue?.[index].address.fullAddress}
                   />
                 </ClickableArea>
