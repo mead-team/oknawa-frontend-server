@@ -2,10 +2,10 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Button } from '@nextui-org/react';
 import { FieldValues, UseFormSetValue } from 'react-hook-form';
-
 import { useResetAtom } from 'jotai/utils';
 
 import { bottomSheetState } from '@/jotai/global/store';
+
 import { KakaoPlace, KakaoPlacesSearchStatus } from './types';
 
 interface AddressProps {
@@ -38,7 +38,6 @@ export default function Address({ setValue, currentIndex }: AddressProps) {
     status: KakaoPlacesSearchStatus,
   ) => {
     if (status === kakao.maps.services.Status.OK) {
-      console.log('places', data);
       setPlaces(data);
     } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
       return setPlaces([]);
