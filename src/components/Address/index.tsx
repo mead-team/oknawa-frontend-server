@@ -1,12 +1,16 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import styled from 'styled-components';
 import { Button } from '@nextui-org/react';
 import { FieldValues, UseFormSetValue } from 'react-hook-form';
 import { useResetAtom } from 'jotai/utils';
 
-import { bottomSheetState } from '@/jotai/global/store';
+import Place from './components/Place';
 
-import { KakaoPlace, KakaoPlacesSearchStatus } from './types';
+import useKakaoPlaceService from '@/hooks/common/useKakaoPlaceService';
+
+import { KakaoPlace } from './types';
+
+import { bottomSheetState } from '@/jotai/global/store';
 
 interface AddressProps {
   setValue: UseFormSetValue<FieldValues>;
@@ -15,11 +19,9 @@ interface AddressProps {
 
 export default function Address({ setValue, currentIndex }: AddressProps) {
   const resetBottomSheet = useResetAtom(bottomSheetState);
-
-  const [kakaoPlaceService, setKakaoPlaceService] =
-    useState<kakao.maps.services.Places | null>(null);
   const [input, setInput] = useState('');
-  const [places, setPlaces] = useState<KakaoPlace[]>([]);
+
+  const { places, kakaoPlaceService, searchPlaceCB } = useKakaoPlaceService();
 
   const handleAddressChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
@@ -27,23 +29,10 @@ export default function Address({ setValue, currentIndex }: AddressProps) {
 
   const handleAddressSearchBtnClick = (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!input) return null;
+    if (!input) return;
 
     if (kakaoPlaceService)
       return kakaoPlaceService.keywordSearch(input, searchPlaceCB);
-  };
-
-  const searchPlaceCB = (
-    data: KakaoPlace[],
-    status: KakaoPlacesSearchStatus,
-  ) => {
-    if (status === kakao.maps.services.Status.OK) {
-      setPlaces(data);
-    } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-      return setPlaces([]);
-    } else if (status === kakao.maps.services.Status.ERROR) {
-      return alert('검색 결과 중 오류가 발생했습니다.');
-    }
   };
 
   const handlePlaceItemClick = (place: KakaoPlace) => {
@@ -58,13 +47,6 @@ export default function Address({ setValue, currentIndex }: AddressProps) {
 
     resetBottomSheet();
   };
-
-  useEffect(() => {
-    kakao.maps.load(() => {
-      const ps = new kakao.maps.services.Places();
-      setKakaoPlaceService(ps);
-    });
-  }, []);
 
   return (
     <Container>
@@ -82,15 +64,12 @@ export default function Address({ setValue, currentIndex }: AddressProps) {
         <PlacesList>
           {places.map(place => {
             return (
-              <Place.Container
-                key={place.id}
-                onClick={() => handlePlaceItemClick(place)}
-              >
-                <Place.Name>{place.place_name}</Place.Name>
-                <Place.SubName>
+              <Place key={place.id} onClick={() => handlePlaceItemClick(place)}>
+                <Place.Title>{place.place_name}</Place.Title>
+                <Place.SubTitle>
                   {place.road_address_name || place.address_name}
-                </Place.SubName>
-              </Place.Container>
+                </Place.SubTitle>
+              </Place>
             );
           })}
         </PlacesList>
@@ -135,24 +114,6 @@ const PlacesList = styled.ul`
   }
   cursor: pointer;
 `;
-
-const Place = {
-  Container: styled.li`
-    border-bottom: solid 1px rgba(0, 0, 0, 0.1);
-    &:last-child {
-      border-bottom: none;
-    }
-  `,
-  Name: styled.h2`
-    font-size: 16px;
-    color: #000;
-  `,
-  SubName: styled.h3`
-    margin-bottom: 0.3rem;
-    font-size: 14px;
-    color: rgba(0, 0, 0, 0.5);
-  `,
-};
 
 const NoData = styled.div`
   display: flex;
