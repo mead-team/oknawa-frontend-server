@@ -4,11 +4,7 @@ import { Toaster } from 'react-hot-toast';
 import ModalBox from '../ModalBox';
 import BottomSheet from '../BottomSheet';
 
-import { flexCenter } from '@/styles/commonStyles';
-
-const media = {
-  mobile: '@media(max-width: 768px)',
-};
+import { flexCenter, media } from '@/styles/commonStyles';
 
 export default function BaseLayout({
   children,

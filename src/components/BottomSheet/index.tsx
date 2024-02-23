@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { bottomSheetState } from '@/jotai/global/store';
 
 import { CloseIcon } from '@/assets/icons/Close';
+import { media } from '@/styles/commonStyles';
 
 export default function BottomSheet() {
   const [bottomSheet] = useAtom(bottomSheetState);
@@ -93,6 +94,10 @@ const Wrapper = styled.div<{ height: number }>`
     to {
       transform: translateY(0);
     }
+  }
+
+  ${media.mobile} {
+    min-width: 100%;
   }
 `;
 

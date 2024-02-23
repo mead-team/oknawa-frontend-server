@@ -16,6 +16,7 @@ import { bottomSheetState, searchState } from '@/jotai/global/store';
 import { resultState } from '@/jotai/result/store';
 
 import { CloseIcon } from '@/assets/icons/Close';
+import { media } from '@/styles/commonStyles';
 
 const initialAddress = {
   fullAddress: '',
@@ -236,10 +237,6 @@ const MaxPeopleText = styled.p`
   font-weight: 500;
 `;
 
-const media = {
-  mobile: '@media(max-width: 768px)',
-};
-
 const SearchButtonWrapper = styled.div`
   /* display: flex; */
   width: 100%;
@@ -251,7 +248,7 @@ const SearchButtonWrapper = styled.div`
   padding: 10px 20px 40px;
 
   ${media.mobile} {
-    min-width: 100%; // 모바일 화면에서는 더 넓은 비율을 차지
+    min-width: 100%;
   }
 `;
 

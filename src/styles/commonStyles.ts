@@ -8,3 +8,7 @@ export const flexCenter = (direction: DirectionType = 'row') => css`
   align-items: center;
   flex-direction: ${direction};
 `;
+
+export const media = {
+  mobile: '@media(max-width: 768px)',
+};
