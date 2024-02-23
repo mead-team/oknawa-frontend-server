@@ -236,6 +236,10 @@ const MaxPeopleText = styled.p`
   font-weight: 500;
 `;
 
+const media = {
+  mobile: '@media(max-width: 768px)',
+};
+
 const SearchButtonWrapper = styled.div`
   /* display: flex; */
   width: 100%;
@@ -245,6 +249,10 @@ const SearchButtonWrapper = styled.div`
   z-index: 2;
   bottom: 0;
   padding: 10px 20px 40px;
+
+  ${media.mobile} {
+    min-width: 100%; // 모바일 화면에서는 더 넓은 비율을 차지
+  }
 `;
 
 const SearchButton = styled(Button)`
