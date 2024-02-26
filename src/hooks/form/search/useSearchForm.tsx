@@ -30,11 +30,21 @@ export default function useSearchForm() {
           ? [
               {
                 name: '',
-                address: { fullAddress: '', latitude: 0, longitude: 0 },
+                address: {
+                  fullAddress: '',
+                  latitude: 0,
+                  longitude: 0,
+                  regionName: '',
+                },
               },
               {
                 name: '',
-                address: { fullAddress: '', latitude: 0, longitude: 0 },
+                address: {
+                  fullAddress: '',
+                  latitude: 0,
+                  longitude: 0,
+                  regionName: '',
+                },
               },
             ]
           : searchList.map((serach, index) => {
@@ -44,6 +54,7 @@ export default function useSearchForm() {
                   fullAddress: `${searchList[index]?.address?.fullAddress}`,
                   latitude: searchList[index]?.address?.latitude,
                   longitude: searchList[index]?.address?.longitude,
+                  regionName: `${searchList[index]?.address?.regionName}`,
                 },
               };
             }),
