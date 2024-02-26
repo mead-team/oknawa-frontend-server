@@ -126,10 +126,7 @@ export default function SearchBody() {
                   <AddressInput
                     isReadOnly
                     size="sm"
-                    placeholder={
-                      searchList[index]?.address?.fullAddress ||
-                      '출발지를 입력해주세요.'
-                    }
+                    placeholder="출발지를 입력해주세요."
                     value={addressValue?.[index].address.fullAddress}
                   />
                 </ClickableArea>
