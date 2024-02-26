@@ -80,6 +80,7 @@ export default function SearchBody() {
         setResult(data);
       },
     });
+    console.log('searchForm??', searchForm);
   };
 
   const addressValue = watch('userSection');
@@ -114,8 +115,10 @@ export default function SearchBody() {
               <Section key={field.id}>
                 <NameInput
                   size="sm"
-                  placeholder="출발지를 입력하세요"
-                  value={addressValue?.[index].address.regionName}
+                  maxLength={4}
+                  placeholder={`이름 ${index + 1}`}
+                  defaultValue={searchList[index]?.name || ''}
+                  {...register(`userSection.${index}.name`)}
                 />
                 <ClickableArea
                   onClick={() => handleSearchAddressBtnClick(index)}
