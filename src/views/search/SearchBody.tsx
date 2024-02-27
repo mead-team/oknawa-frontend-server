@@ -80,7 +80,6 @@ export default function SearchBody() {
         setResult(data);
       },
     });
-    console.log('searchForm??', searchForm);
   };
 
   const addressValue = watch('userSection');
