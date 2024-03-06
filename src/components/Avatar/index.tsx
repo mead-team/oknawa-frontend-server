@@ -14,6 +14,11 @@ export const AVATAR_COLORS: AvatarColor[] = [
   '#FF46CB',
   '#FF5D02',
   '#FFA500',
+  '#B1DB08',
+  '#F01616',
+  '#2DAB00',
+  '#7B420E',
+  '#00FFFF',
 ];
 
 const generateContainerSize = (size: string) => {

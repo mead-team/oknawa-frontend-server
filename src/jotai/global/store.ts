@@ -14,6 +14,7 @@ interface SearchState {
     fullAddress: string;
     latitude: number;
     longitude: number;
+    regionName: string;
   };
 }
 

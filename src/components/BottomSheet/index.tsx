@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { bottomSheetState } from '@/jotai/global/store';
 
 import { CloseIcon } from '@/assets/icons/Close';
+import { media } from '@/styles/commonStyles';
 
 export default function BottomSheet() {
   const [bottomSheet] = useAtom(bottomSheetState);
@@ -79,6 +80,7 @@ const Wrapper = styled.div<{ height: number }>`
   display: flex;
   flex-direction: column;
   width: 100%;
+  max-width: 500px;
   padding: 1rem;
   border-radius: 0.8rem 0.8rem 0 0;
   background-color: #27272a;
@@ -92,6 +94,10 @@ const Wrapper = styled.div<{ height: number }>`
     to {
       transform: translateY(0);
     }
+  }
+
+  ${media.mobile} {
+    min-width: 100%;
   }
 `;
 
