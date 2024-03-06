@@ -24,6 +24,8 @@ const createSearchFormVerifySchema = () => {
 export default function useSearchForm() {
   const [searchList] = useAtom(searchState);
 
+  const hasInputValue = searchList.length < 2;
+
   const defaultUserSection = {
     name: '',
     address: {
@@ -36,18 +38,17 @@ export default function useSearchForm() {
 
   const getDefaultValues = (): SearchFormType => {
     return {
-      userSection:
-        searchList.length < 2
-          ? Array(2).fill(defaultUserSection)
-          : searchList.map(search => ({
-              name: search?.name || '',
-              address: {
-                fullAddress: search?.address?.fullAddress || '',
-                latitude: search?.address?.latitude || 0,
-                longitude: search?.address?.longitude || 0,
-                regionName: search?.address?.regionName || '',
-              },
-            })),
+      userSection: hasInputValue
+        ? Array(2).fill(defaultUserSection)
+        : searchList.map(search => ({
+            name: search?.name || '',
+            address: {
+              fullAddress: search?.address?.fullAddress || '',
+              latitude: search?.address?.latitude || 0,
+              longitude: search?.address?.longitude || 0,
+              regionName: search?.address?.regionName || '',
+            },
+          })),
     };
   };
 
