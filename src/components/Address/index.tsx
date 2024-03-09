@@ -29,6 +29,7 @@ export default function Address({ setValue, currentIndex }: AddressProps) {
 
   const handleAddressSearchBtnClick = (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
+    e.stopPropagation();
     if (!input) return;
 
     if (kakaoPlaceService)
