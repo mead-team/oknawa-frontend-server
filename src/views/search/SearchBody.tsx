@@ -43,7 +43,6 @@ export default function SearchBody() {
     handleSubmit,
     control,
     watch,
-    trigger,
     formState: { errors },
   } = useSearchForm();
 
@@ -58,6 +57,7 @@ export default function SearchBody() {
       isOpen: true,
       title: '주소를 검색하세요',
       contents: <Address setValue={setValue} currentIndex={index} />,
+      height: 70,
     }));
   };
 

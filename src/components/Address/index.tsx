@@ -121,5 +121,5 @@ const NoData = styled.div`
   justify-content: center;
   align-items: center;
   color: rgba(0, 0, 0, 0.5);
-  height: 32vh;
+  height: 50vh;
 `;
