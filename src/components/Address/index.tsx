@@ -1,8 +1,8 @@
 import { ChangeEvent, useState } from 'react';
 import styled from 'styled-components';
-import { Button } from '@nextui-org/react';
 import { FieldValues, UseFormSetValue } from 'react-hook-form';
 import { useResetAtom } from 'jotai/utils';
+import debounce from 'lodash/debounce';
 
 import Place from './components/Place';
 
@@ -21,19 +21,20 @@ export default function Address({ setValue, currentIndex }: AddressProps) {
   const resetBottomSheet = useResetAtom(bottomSheetState);
   const [input, setInput] = useState('');
 
-  const { places, kakaoPlaceService, searchPlaceCB } = useKakaoPlaceService();
+  const { places, setPlaces, kakaoPlaceService, searchPlaceCB } =
+    useKakaoPlaceService();
+
+  const debouncedSearch = debounce(address => {
+    if (address && kakaoPlaceService) {
+      kakaoPlaceService.keywordSearch(address, searchPlaceCB);
+    } else {
+      setPlaces([]);
+    }
+  }, 100);
 
   const handleAddressChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
-  };
-
-  const handleAddressSearchBtnClick = (e: ChangeEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!input) return;
-
-    if (kakaoPlaceService)
-      return kakaoPlaceService.keywordSearch(input, searchPlaceCB);
+    debouncedSearch(e.target.value);
   };
 
   const handlePlaceItemClick = (place: KakaoPlace) => {
@@ -51,15 +52,12 @@ export default function Address({ setValue, currentIndex }: AddressProps) {
 
   return (
     <Container>
-      <SearchForm onSubmit={handleAddressSearchBtnClick}>
+      <SearchForm>
         <SearchInput
           value={input}
           onChange={handleAddressChange}
           placeholder="출발지를 입력해주세요."
         />
-        <SearchButton color="success" type="submit">
-          검색
-        </SearchButton>
       </SearchForm>
       {places.length > 0 ? (
         <PlacesList>
@@ -85,24 +83,18 @@ const Container = styled.div`
   background-color: white;
 `;
 
-const SearchForm = styled.form`
+const SearchForm = styled.section`
   display: flex;
   align-items: center;
   padding: 0.8rem 1rem;
 `;
 
 const SearchInput = styled.input`
-  width: 90%;
+  width: 100%;
   padding: 0.8rem;
   background-color: #f6f6f6;
   border-radius: 0.5rem;
   color: black;
-`;
-
-const SearchButton = styled(Button)`
-  height: 49px;
-  margin-left: 0.8rem;
-  font-weight: 600;
 `;
 
 const PlacesList = styled.ul`
@@ -110,6 +102,7 @@ const PlacesList = styled.ul`
   flex-direction: column;
   gap: 0.5rem;
   padding: 0.5rem 0.8rem;
+  min-height: 50vh;
   :hover {
     background-color: #f6f6f6;
   }

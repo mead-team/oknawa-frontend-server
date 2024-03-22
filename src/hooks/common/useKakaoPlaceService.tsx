@@ -34,5 +34,5 @@ export default function useKakaoPlaceService() {
     });
   }, []);
 
-  return { places, kakaoPlaceService, searchPlaceCB };
+  return { places, setPlaces, kakaoPlaceService, searchPlaceCB };
 }

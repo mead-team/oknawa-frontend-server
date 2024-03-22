@@ -126,7 +126,7 @@ export default function SearchBody() {
                     isReadOnly
                     size="sm"
                     placeholder="출발지를 입력해주세요."
-                    value={addressValue?.[index].address.fullAddress}
+                    value={addressValue?.[index].address.regionName}
                   />
                 </ClickableArea>
                 {index > 1 && (
