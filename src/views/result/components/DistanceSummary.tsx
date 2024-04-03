@@ -11,6 +11,7 @@ import useDistanceSummary from '@/hooks/useDistanceSummary';
 
 import { ItineraryItem } from '@/jotai/result/store';
 
+import { ArrowRight } from '@/assets/icons/ArrowRight';
 import { ShareIcon } from '@/assets/icons/Share';
 import { AnyNsRecord } from 'dns';
 
