@@ -116,7 +116,7 @@ export default function Address({ setValue, currentIndex }: AddressProps) {
           ref={recentSearchRef}
         />
         {/* TODO 컴포넌트 분리 */}
-        {isOpenDropItem && (
+        {isOpenDropItem && recentSearchesArray.length > 0 && (
           <RecentSearch>
             {recentSearchesArray.map((item: any, index: any) => {
               return (
