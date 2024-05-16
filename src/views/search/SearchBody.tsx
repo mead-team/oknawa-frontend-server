@@ -12,7 +12,11 @@ import Address from '@/components/Address';
 import useSearchForm from '@/hooks/form/search/useSearchForm';
 import { usePlaceSearchMutation } from '@/hooks/mutation/search';
 
-import { bottomSheetState, searchState } from '@/jotai/global/store';
+import {
+  bottomSheetState,
+  modalState,
+  searchState,
+} from '@/jotai/global/store';
 import { resultState } from '@/jotai/result/store';
 
 import { CloseIcon } from '@/assets/icons/Close';
@@ -26,6 +30,7 @@ const initialAddress = {
 
 export default function SearchBody() {
   const setBottomSheet = useSetAtom(bottomSheetState);
+  const setModal = useSetAtom(modalState);
   const setResult = useSetAtom(resultState);
   const setSearchState = useSetAtom(searchState);
   const [searchList] = useAtom(searchState);
@@ -35,6 +40,7 @@ export default function SearchBody() {
     mutate: placeSearchMutate,
     isPending,
     isSuccess,
+    isError,
   } = usePlaceSearchMutation();
 
   const {
@@ -98,6 +104,24 @@ export default function SearchBody() {
       });
     }
   }, [errors]);
+
+  useEffect(() => {
+    if (isError) {
+      setModal(pervState => ({
+        ...pervState,
+        isOpen: true,
+        isTitle: false,
+        isButton: true,
+        title: '제목입니다',
+        buttonLabel: '확인',
+        contents: (
+          <div>
+            지점을 찾을수없습니다. <br /> 다시 검색해주세요.
+          </div>
+        ),
+      }));
+    }
+  }, [isError, setModal]);
 
   useEffect(() => {
     const image = new Image();
