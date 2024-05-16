@@ -4,7 +4,10 @@ import { ReactNode } from 'react';
 
 interface ModalState {
   isOpen: boolean;
-  title: string;
+  isTitle?: boolean;
+  isButton?: boolean;
+  title?: string;
+  buttonLabel?: string;
   contents: ReactNode;
 }
 
@@ -27,7 +30,10 @@ interface BottomSheetState {
 
 const initialState: ModalState = {
   isOpen: false,
-  title: '',
+  isTitle: false,
+  isButton: true,
+  title: '타이틀',
+  buttonLabel: '버튼',
   contents: null,
 };
 
