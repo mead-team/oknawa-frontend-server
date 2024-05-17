@@ -106,24 +106,6 @@ export default function SearchBody() {
   }, [errors]);
 
   useEffect(() => {
-    if (isError) {
-      setModal(pervState => ({
-        ...pervState,
-        isOpen: true,
-        isTitle: false,
-        isButton: true,
-        title: '제목입니다',
-        buttonLabel: '확인',
-        contents: (
-          <div>
-            지점을 찾을수없습니다. <br /> 다시 검색해주세요.
-          </div>
-        ),
-      }));
-    }
-  }, [isError, setModal]);
-
-  useEffect(() => {
     const image = new Image();
     image.src = '/loading.gif';
   }, []);

@@ -4,8 +4,6 @@ import { ReactNode } from 'react';
 
 interface ModalState {
   isOpen: boolean;
-  isTitle?: boolean;
-  isButton?: boolean;
   title?: string;
   buttonLabel?: string;
   contents: ReactNode;
@@ -30,10 +28,8 @@ interface BottomSheetState {
 
 const initialState: ModalState = {
   isOpen: false,
-  isTitle: false,
-  isButton: true,
-  title: '타이틀',
-  buttonLabel: '버튼',
+  title: '',
+  buttonLabel: '',
   contents: null,
 };
 

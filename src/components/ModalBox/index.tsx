@@ -1,7 +1,6 @@
 import { styled } from 'styled-components';
 
 import { modalState } from '@/jotai/global/store';
-// import { Modal, ModalBody, ModalContent, ModalHeader } from '@nextui-org/react';
 
 import { useAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
@@ -9,7 +8,7 @@ import { useEffect } from 'react';
 
 export default function ModalBox() {
   const [modal] = useAtom(modalState);
-  const resetModal = useResetAtom(modalState);
+  const reset = useResetAtom(modalState);
 
   const { isOpen } = modal;
 
@@ -32,7 +31,7 @@ export default function ModalBox() {
   };
 
   const handleCloseBtnClick = () => {
-    resetModal();
+    reset();
   };
 
   if (isOpen === false) return null;
@@ -41,9 +40,9 @@ export default function ModalBox() {
     <Container onClick={handleOutsideClick}>
       <Modal>
         <ModalContent>
-          {modal.isTitle && <ModalHeader>{modal.title}</ModalHeader>}
+          {modal.title && <ModalHeader>{modal.title}</ModalHeader>}
           <ModalBody>{modal.contents}</ModalBody>
-          {modal.isButton && (
+          {modal.buttonLabel && (
             <ModalButton onClick={handleCloseBtnClick}>
               {modal.buttonLabel}
             </ModalButton>
@@ -78,7 +77,6 @@ const Container = styled.section`
 `;
 
 const Modal = styled.div`
-  /* position: absolute; */
   display: flex;
   flex-direction: column;
   padding: 24px;
