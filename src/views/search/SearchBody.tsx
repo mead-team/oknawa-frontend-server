@@ -30,7 +30,6 @@ const initialAddress = {
 
 export default function SearchBody() {
   const setBottomSheet = useSetAtom(bottomSheetState);
-  const setModal = useSetAtom(modalState);
   const setResult = useSetAtom(resultState);
   const setSearchState = useSetAtom(searchState);
   const [searchList] = useAtom(searchState);
@@ -40,7 +39,6 @@ export default function SearchBody() {
     mutate: placeSearchMutate,
     isPending,
     isSuccess,
-    isError,
   } = usePlaceSearchMutation();
 
   const {
