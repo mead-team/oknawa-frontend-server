@@ -5,11 +5,10 @@ import { SearchFormType } from '@/services/search/types';
 
 import { useSetAtom } from 'jotai';
 import { modalState } from '@/jotai/global/store';
-import { ReactNode } from 'react';
 
 interface IModalProps {
   buttonLabel: string;
-  contents: ReactNode;
+  contents: String;
 }
 
 export const usePlaceSearchMutation = () => {
