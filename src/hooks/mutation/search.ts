@@ -8,7 +8,7 @@ import { modalState } from '@/jotai/global/store';
 
 interface IModalProps {
   buttonLabel: string;
-  contents: String;
+  contents: string;
 }
 
 export const usePlaceSearchMutation = () => {

@@ -6,7 +6,7 @@ interface ModalState {
   isOpen: boolean;
   title?: string;
   buttonLabel?: string;
-  contents: ReactNode;
+  contents: string;
 }
 
 interface SearchState {
@@ -30,7 +30,7 @@ const initialState: ModalState = {
   isOpen: false,
   title: '',
   buttonLabel: '',
-  contents: null,
+  contents: '',
 };
 
 const bottomSheetInitialState: BottomSheetState = {
