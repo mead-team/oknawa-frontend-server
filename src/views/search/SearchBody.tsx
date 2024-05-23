@@ -12,7 +12,11 @@ import Address from '@/components/Address';
 import useSearchForm from '@/hooks/form/search/useSearchForm';
 import { usePlaceSearchMutation } from '@/hooks/mutation/search';
 
-import { bottomSheetState, searchState } from '@/jotai/global/store';
+import {
+  bottomSheetState,
+  modalState,
+  searchState,
+} from '@/jotai/global/store';
 import { resultState } from '@/jotai/result/store';
 
 import { CloseIcon } from '@/assets/icons/Close';

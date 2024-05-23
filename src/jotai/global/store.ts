@@ -4,8 +4,9 @@ import { ReactNode } from 'react';
 
 interface ModalState {
   isOpen: boolean;
-  title: string;
-  contents: ReactNode;
+  title?: string;
+  buttonLabel?: string;
+  contents: string;
 }
 
 interface SearchState {
@@ -28,7 +29,8 @@ interface BottomSheetState {
 const initialState: ModalState = {
   isOpen: false,
   title: '',
-  contents: null,
+  buttonLabel: '',
+  contents: '',
 };
 
 const bottomSheetInitialState: BottomSheetState = {

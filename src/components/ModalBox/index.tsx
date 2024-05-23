@@ -1,19 +1,61 @@
 import { modalState } from '@/jotai/global/store';
-import { Modal, ModalBody, ModalContent, ModalHeader } from '@nextui-org/react';
-import { useAtom } from 'jotai';
 
+import { useAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
+import { useEffect } from 'react';
+
+import {
+  Container,
+  Modal,
+  ModalBody,
+  ModalButton,
+  ModalContent,
+  ModalHeader,
+} from './style';
 
 export default function ModalBox() {
   const [modal] = useAtom(modalState);
-  const resetModal = useResetAtom(modalState);
+  const reset = useResetAtom(modalState);
+
+  const { isOpen } = modal;
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
+  const handleOutsideClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      handleCloseBtnClick();
+    }
+  };
+
+  const handleCloseBtnClick = () => {
+    reset();
+  };
+
+  if (isOpen === false) return null;
 
   return (
-    <Modal isOpen={modal.isOpen} onOpenChange={resetModal}>
-      <ModalContent>
-        <ModalHeader className="flex flex-col gap-1">{modal.title}</ModalHeader>
-        <ModalBody>{modal.contents}</ModalBody>
-      </ModalContent>
-    </Modal>
+    <Container onClick={handleOutsideClick}>
+      <Modal>
+        <ModalContent>
+          {modal.title && <ModalHeader>{modal.title}</ModalHeader>}
+          <ModalBody>{modal.contents}</ModalBody>
+          {modal.buttonLabel && (
+            <ModalButton onClick={handleCloseBtnClick}>
+              {modal.buttonLabel}
+            </ModalButton>
+          )}
+        </ModalContent>
+      </Modal>
+    </Container>
   );
 }
