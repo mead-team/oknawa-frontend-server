@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 interface AvatarProps {
-  name: string;
+  name?: string;
   size?: 'sm' | 'md' | 'lg';
   color: AvatarColor;
 }
@@ -16,7 +16,7 @@ export const AVATAR_COLORS: AvatarColor[] = [
   '#FFA500',
   '#B1DB08',
   '#F01616',
-  '#2DAB00',
+  '#18C964',
   '#7B420E',
   '#00FFFF',
 ];
@@ -47,12 +47,12 @@ const generateFontSize = (size: string) => {
   }
 };
 
-export default function Avatar({ name, size = 'sm', color }: AvatarProps) {
+export default function Avatar({ name = '', size = 'sm', color }: AvatarProps) {
   const userName = name.length > 4 ? `${name.slice(0, 4)}` : name;
 
   return (
     <Container size={size} color={color}>
-      <Name size={size}>{userName}</Name>
+      {name && <Name size={size}>{userName}</Name>}
     </Container>
   );
 }

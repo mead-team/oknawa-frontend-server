@@ -1,7 +1,7 @@
 'use client';
 
-import SearchBody from '@/views/search/SearchBody';
+import MainView from '@/views/main/MainView';
 
-export default function SearchPage() {
-  return <SearchBody />;
+export default function MainPage() {
+  return <MainView />;
 }

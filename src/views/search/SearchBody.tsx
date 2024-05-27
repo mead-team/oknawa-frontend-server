@@ -1,3 +1,5 @@
+'use client';
+
 import { Button, Input } from '@nextui-org/react';
 import { useAtom, useSetAtom } from 'jotai';
 import { useFieldArray } from 'react-hook-form';
