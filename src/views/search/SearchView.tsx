@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Input } from '@nextui-org/react';
+import { Input } from '@nextui-org/react';
 import { useAtom, useSetAtom } from 'jotai';
 import { useFieldArray } from 'react-hook-form';
 import { styled } from 'styled-components';
@@ -23,6 +23,7 @@ import { resultState } from '@/jotai/result/store';
 
 import { CloseIcon } from '@/assets/icons/Close';
 import { media } from '@/styles/commonStyles';
+import Button from '@/components/Button';
 
 const initialAddress = {
   fullAddress: '',
@@ -30,7 +31,11 @@ const initialAddress = {
   longitude: 0,
 };
 
-export default function SearchBody() {
+interface SearchViewProps {
+  type: 'individual' | 'together';
+}
+
+export default function SearchView({ type }: SearchViewProps) {
   const setBottomSheet = useSetAtom(bottomSheetState);
   const setResult = useSetAtom(resultState);
   const setSearchState = useSetAtom(searchState);
@@ -110,11 +115,17 @@ export default function SearchBody() {
     image.src = '/loading.gif';
   }, []);
 
+  // FIXME 새로 코드 작성 시작
+  const titleText =
+    type === 'individual'
+      ? '출발지 정보를 입력해주세요'
+      : '먼저 자신의 출발지 정보를\n입력해주세요';
+
   return (
     <>
       <Container onSubmit={handleSubmit(handleSearchBtnClick)}>
         <Wrapper>
-          <Title>{'출발하는 곳을 입력하면\n중간 지점을 추천해드려요!'}</Title>
+          <Title>{titleText}</Title>
           {fields.map((field, index) => {
             return (
               <Section key={field.id}>
@@ -144,26 +155,26 @@ export default function SearchBody() {
             );
           })}
           {fields.length < 10 ? (
-            <AddButton
-              onClick={handleAddBtnClick}
-              isDisabled={fields.length > 10}
-            >
-              + 추가하기
-            </AddButton>
+            // <AddButton
+            //   onClick={handleAddBtnClick}
+            //   isDisabled={fields.length > 10}
+            // >
+            //   + 추가하기
+            // </AddButton>
+            <Button label="추가하기">+</Button>
           ) : (
             <MaxPeopleText>최대 10명까지 입력할 수 있어요</MaxPeopleText>
           )}
         </Wrapper>
-
         {(isPending || isSuccess) && <SearchLoading />}
       </Container>
       <SearchButtonWrapper>
-        <SearchButton
+        {/* <SearchButton
           color="success"
           onClick={handleSubmit(handleSearchBtnClick)}
         >
           만나기 편한 장소 추천받기
-        </SearchButton>
+        </SearchButton> */}
       </SearchButtonWrapper>
     </>
   );
@@ -185,12 +196,13 @@ const Wrapper = styled.div`
   padding-bottom: 120px;
 `;
 
+// FIXME 공통 스타일
 const Title = styled.h1`
-  margin-bottom: 11px;
+  margin-bottom: 16px;
   font-size: 32px;
   font-weight: 700;
   white-space: pre-line;
-  text-align: center;
+  line-height: 43px;
 `;
 
 const Section = styled.section`
@@ -222,10 +234,10 @@ const DeleteButton = styled.button`
   background-color: white;
 `;
 
-const AddButton = styled(Button)`
-  margin-top: 20px;
-  font-weight: 600;
-`;
+// const AddButton = styled(Button)`
+//   margin-top: 20px;
+//   font-weight: 600;
+// `;
 
 const MaxPeopleText = styled.p`
   display: flex;
@@ -249,8 +261,8 @@ const SearchButtonWrapper = styled.div`
   }
 `;
 
-const SearchButton = styled(Button)`
-  font-weight: 600;
-  width: 100%;
-  height: 56px;
-`;
+// const SearchButton = styled(Button)`
+//   font-weight: 600;
+//   width: 100%;
+//   height: 56px;
+// `;

@@ -3,11 +3,11 @@ import Avatar from '../Avatar';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 
-interface InputSelectorProps {
+interface SearchTypeSelectorProps {
   type: 'individual' | 'together';
 }
 
-export default function InputSelector({ type }: InputSelectorProps) {
+export default function SearchTypeSelector({ type }: SearchTypeSelectorProps) {
   const router = useRouter();
 
   const titleText = type === 'individual' ? '직접' : '함께';
@@ -18,7 +18,7 @@ export default function InputSelector({ type }: InputSelectorProps) {
 
   const handleButtonClick = () => {
     if (type === 'individual') {
-      router.push('/search');
+      router.push('/search/individual');
     } else {
       toast('서비스 준비중입니다.', {
         duration: 900,
