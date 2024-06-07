@@ -15,17 +15,12 @@ import { ArrowRight } from '@/assets/icons/ArrowRight';
 import { ShareIcon } from '@/assets/icons/Share';
 
 export default function DistanceSummary() {
-  const {
-    stationName,
-    averageTravelTime,
-    itinerary,
-    initKakao,
-    kakaoShareSendDefault,
-  } = useDistanceSummary();
+  const { distanceSummaries, initKakao, kakaoShareSendDefault } =
+    useDistanceSummary();
 
-  const handleKakaoSharingBtnClick = () => {
+  const handleKakaoSharingBtnClick = (index: number) => {
     initKakao();
-    kakaoShareSendDefault();
+    kakaoShareSendDefault(index);
   };
 
   const genUserArriveInfo = (user: ItineraryItem, index: number) => {
@@ -41,49 +36,76 @@ export default function DistanceSummary() {
   };
 
   return (
-    <Container>
-      <Card>
-        <CardBody>
-          <StationName>
-            <Station.Container>
-              <Station.BoldText>{stationName}</Station.BoldText>을 추천해요!
-            </Station.Container>
-            <SharingButton onClick={handleKakaoSharingBtnClick}>
-              <ShareIcon />
-              공유하기
-            </SharingButton>
-          </StationName>
-          <AverageArrivalTime>
-            도착하는데 평균{' '}
-            <ArrivalTime>{convertToKoreanTime(averageTravelTime)}</ArrivalTime>{' '}
-            걸려요
-          </AverageArrivalTime>
-          <Box>
-            {itinerary?.map((user, index) => {
-              const { userName, travelTime, avatarColor } = genUserArriveInfo(
-                user,
-                index,
-              );
+    <>
+      {distanceSummaries?.map((station, index) => {
+        return (
+          <Container key={index}>
+            <Card>
+              <CardBody>
+                <StationName>
+                  <Station.Container>
+                    <Station.BoldText>{station.stationName}</Station.BoldText>을
+                    추천해요!
+                  </Station.Container>
+                  <SharingButton
+                    onClick={() => handleKakaoSharingBtnClick(index)}
+                  >
+                    <ShareIcon />
+                    공유하기
+                  </SharingButton>
+                </StationName>
+                <AverageArrivalTime>
+                  도착하는데 평균{' '}
+                  <ArrivalTime>
+                    {convertToKoreanTime(station.averageTravelTime)}
+                  </ArrivalTime>{' '}
+                </AverageArrivalTime>
+                <Box>
+                  {station.itinerary?.map((user, index) => {
+                    const { userName, travelTime, avatarColor } =
+                      genUserArriveInfo(user, index);
 
-              return (
-                <User className="text-small" key={index}>
-                  <Avatar name={userName} color={avatarColor} />
-                  <UserArriveInfo>
-                    {user.region_name} {travelTime}
-                  </UserArriveInfo>
-                </User>
-              );
-            })}
-          </Box>
-          <Indicator>
-            <IndicatorLabel>다른 장소 더보기</IndicatorLabel>
-            <ArrowRight />
-          </Indicator>
-        </CardBody>
-      </Card>
-    </Container>
+                    return (
+                      <User className="text-small" key={index}>
+                        <Avatar name={userName} color={avatarColor} />
+                        <UserArriveInfo>
+                          {user.region_name} {travelTime}
+                        </UserArriveInfo>
+                      </User>
+                    );
+                  })}
+                  <User className="text-small">
+                    <AvatarDraft />
+                    <UserArriveInfo></UserArriveInfo>
+                  </User>
+                  <User className="text-small">
+                    <AvatarDraft />
+                    <UserArriveInfo></UserArriveInfo>
+                  </User>
+                  <User className="text-small">
+                    <AvatarDraft />
+                    <UserArriveInfo></UserArriveInfo>
+                  </User>
+                </Box>
+                <Indicator>
+                  <IndicatorLabel>다른 장소 더보기</IndicatorLabel>
+                  <ArrowRight />
+                </Indicator>
+              </CardBody>
+            </Card>
+          </Container>
+        );
+      })}
+    </>
   );
 }
+
+const AvatarDraft = styled.div`
+  width: 32px;
+  height: 32px;
+  border-radius: 1000px;
+  background-color: gray;
+`;
 
 const Container = styled.div`
   position: absolute;
