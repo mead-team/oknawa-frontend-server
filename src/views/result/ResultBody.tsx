@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { useEffect } from 'react';
 import { useAtom, useSetAtom } from 'jotai';
 import { useRouter, useSearchParams } from 'next/navigation';
+import useDistanceSummary from '@/hooks/useDistanceSummary';
 
 import DistanceSummary from './components/DistanceSummary';
 import HotPlaceModal from './components/HotPlaceModal';
@@ -21,26 +22,31 @@ export default function ResultBody() {
   const router = useRouter();
   const shareKey = useSearchParams().get('sharekey');
 
-  const [result, setResult] = useAtom(resultState);
+  const { distanceSummaries } = useDistanceSummary();
+
   const setBottomSheet = useSetAtom(bottomSheetState);
-  const stationName = result?.station_name.split(' ')[0];
+
+  const [result, setResult] = useAtom(resultState);
+
+  // const stationName = result?.station_info.station_name.split(' ')[0];
 
   const { data } = usePlaceSearchWithShareKeyQuery(shareKey);
 
-  const handleHotplaceBtnClick = () => {
-    setBottomSheet(prevState => ({
-      ...prevState,
-      isOpen: true,
-      title: (
-        <>
-          <span style={{ fontWeight: '800' }}>{stationName}</span>의
-          <div>핫플레이스를 추천해요!</div>
-        </>
-      ),
-      contents: <HotPlaceModal />,
-      height: 70,
-    }));
-  };
+  // const handleHotplaceBtnClick = () => {
+  //   setBottomSheet(prevState => ({
+  //     ...prevState,
+  //     isOpen: true,
+  //     title: (
+  //       <>
+  //         {/* <span style={{ fontWeight: '800' }}>테스트역</span>의 */}
+  //         <span style={{ fontWeight: '800' }}>{stationName}</span>의
+  //         <div>핫플레이스를 추천해요!</div>
+  //       </>
+  //     ),
+  //     contents: <HotPlaceModal />,
+  //     height: 70,
+  //   }));
+  // };
 
   useEffect(() => {
     if (shareKey && data) {
@@ -59,9 +65,17 @@ export default function ResultBody() {
           <ArrowBackIcon />
         </BackButton>
       </Header>
-      <DistanceSummary />
-      <ResultMap />
-      <FloatingButton
+      {distanceSummaries?.map(station => {
+        return (
+          <>
+            <DistanceSummary />
+            <ResultMap
+              station={station}
+              participants={station.participants}
+              itinerary={station.itinerary}
+              stationName={station.stationName}
+            />
+            {/* <FloatingButton
         radius="full"
         size="lg"
         color="success"
@@ -69,7 +83,10 @@ export default function ResultBody() {
         onClick={handleHotplaceBtnClick}
       >
         {stationName} 핫플레이스는 어디?
-      </FloatingButton>
+      </FloatingButton> */}
+          </>
+        );
+      })}
     </Container>
   );
 }
