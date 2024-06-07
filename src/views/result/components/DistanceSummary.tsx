@@ -74,18 +74,6 @@ export default function DistanceSummary() {
                       </User>
                     );
                   })}
-                  <User className="text-small">
-                    <AvatarDraft />
-                    <UserArriveInfo></UserArriveInfo>
-                  </User>
-                  <User className="text-small">
-                    <AvatarDraft />
-                    <UserArriveInfo></UserArriveInfo>
-                  </User>
-                  <User className="text-small">
-                    <AvatarDraft />
-                    <UserArriveInfo></UserArriveInfo>
-                  </User>
                 </Box>
                 <Indicator>
                   <IndicatorLabel>다른 장소 더보기</IndicatorLabel>
@@ -99,13 +87,6 @@ export default function DistanceSummary() {
     </>
   );
 }
-
-const AvatarDraft = styled.div`
-  width: 32px;
-  height: 32px;
-  border-radius: 1000px;
-  background-color: gray;
-`;
 
 const Container = styled.div`
   position: absolute;

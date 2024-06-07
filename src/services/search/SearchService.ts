@@ -21,7 +21,7 @@ export default class SearchService {
       return;
     }
 
-    const { data } = await api.get('/location/points', {
+    const { data } = await api.get('/location/point', {
       params: { share_key: shareKey },
     });
 
