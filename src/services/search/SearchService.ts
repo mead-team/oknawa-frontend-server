@@ -8,7 +8,9 @@ export default class SearchService {
   static async searchPlaces(searchForm: SearchFormType) {
     const requestBody = SearchForm.convertToRequestBody(searchForm);
 
-    const { data } = await api.post('/location/point', { ...requestBody });
+    const { data } = await api.post('/location/points', { ...requestBody });
+
+    console.log('searchPlaces:', data);
 
     return data;
   }
@@ -18,9 +20,11 @@ export default class SearchService {
       return;
     }
 
-    const { data } = await api.get('/location/point', {
+    const { data } = await api.get('/location/points', {
       params: { share_key: shareKey },
     });
+
+    console.log('searchPlacesWithShareKey:', data);
 
     return data;
   }
