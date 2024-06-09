@@ -11,7 +11,6 @@ import useDistanceSummary from '@/hooks/useDistanceSummary';
 
 import { ItineraryItem } from '@/jotai/result/store';
 
-import { ArrowRight } from '@/assets/icons/ArrowRight';
 import { ShareIcon } from '@/assets/icons/Share';
 
 export default function DistanceSummary() {
@@ -75,10 +74,6 @@ export default function DistanceSummary() {
                     );
                   })}
                 </Box>
-                {/* <Indicator>
-                  <IndicatorLabel>다른 장소 더보기</IndicatorLabel>
-                  <ArrowRight />
-                </Indicator> */}
               </CardBody>
             </Card>
           </Container>
@@ -89,30 +84,8 @@ export default function DistanceSummary() {
 }
 
 const Container = styled.div`
-  position: absolute;
-  top: 65px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 95%;
-  z-index: 10;
+  width: 100%;
 `;
-
-// const Indicator = styled.div`
-//   display: flex;
-//   padding: 24px 0 8px;
-//   justify-content: center;
-//   align-items: center;
-//   gap: 8px;
-//   cursor: pointer;
-
-//   &:hover {
-//     font-weight: 500;
-//   }
-// `;
-
-// const IndicatorLabel = styled.div`
-//   font-size: 14px;
-// `;
 
 const Box = styled.div`
   display: flex;
