@@ -75,10 +75,10 @@ export default function DistanceSummary() {
                     );
                   })}
                 </Box>
-                <Indicator>
+                {/* <Indicator>
                   <IndicatorLabel>다른 장소 더보기</IndicatorLabel>
                   <ArrowRight />
-                </Indicator>
+                </Indicator> */}
               </CardBody>
             </Card>
           </Container>
@@ -97,22 +97,22 @@ const Container = styled.div`
   z-index: 10;
 `;
 
-const Indicator = styled.div`
-  display: flex;
-  padding: 24px 0 8px;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
+// const Indicator = styled.div`
+//   display: flex;
+//   padding: 24px 0 8px;
+//   justify-content: center;
+//   align-items: center;
+//   gap: 8px;
+//   cursor: pointer;
 
-  &:hover {
-    font-weight: 500;
-  }
-`;
+//   &:hover {
+//     font-weight: 500;
+//   }
+// `;
 
-const IndicatorLabel = styled.div`
-  font-size: 14px;
-`;
+// const IndicatorLabel = styled.div`
+//   font-size: 14px;
+// `;
 
 const Box = styled.div`
   display: flex;
