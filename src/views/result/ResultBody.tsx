@@ -1,22 +1,30 @@
 'use client';
 
-import { Button } from '@nextui-org/react';
-import styled from 'styled-components';
 import { useEffect } from 'react';
-import { useAtom, useSetAtom } from 'jotai';
-import { useRouter, useSearchParams } from 'next/navigation';
-import useDistanceSummary from '@/hooks/useDistanceSummary';
 
+import useDistanceSummary from '@/hooks/useDistanceSummary';
+import { usePlaceSearchWithShareKeyQuery } from '@/hooks/query/search';
+
+import { useAtom, useSetAtom } from 'jotai';
+import { resultState } from '@/jotai/result/store';
+import { bottomSheetState } from '@/jotai/global/store';
+
+import styled from 'styled-components';
 import DistanceSummary from './components/DistanceSummary';
 import HotPlaceModal from './components/HotPlaceModal';
 import ResultMap from './components/ResultMap';
 
-import { usePlaceSearchWithShareKeyQuery } from '@/hooks/query/search';
-
-import { resultState } from '@/jotai/result/store';
-import { bottomSheetState } from '@/jotai/global/store';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Button } from '@nextui-org/react';
 
 import { ArrowBackIcon } from '@/assets/icons/ArrowBack';
+
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+import 'swiper/css';
+import 'swiper/css/pagination';
+
+import './styles.css';
 
 export default function ResultBody() {
   const router = useRouter();
@@ -32,17 +40,17 @@ export default function ResultBody() {
 
   const setBottomSheet = useSetAtom(bottomSheetState);
 
-  const handleHotplaceBtnClick = (stationName: any) => {
+  const handleHotplaceBtnClick = (station: any) => {
     setBottomSheet(prevState => ({
       ...prevState,
       isOpen: true,
       title: (
         <>
-          <span style={{ fontWeight: '800' }}>{stationName}</span>의
+          <span style={{ fontWeight: '800' }}>{station.stationName}</span>의
           <div>핫플레이스를 추천해요!</div>
         </>
       ),
-      contents: <HotPlaceModal />,
+      contents: <HotPlaceModal station={station} />,
       height: 70,
     }));
   };
@@ -64,10 +72,26 @@ export default function ResultBody() {
           <ArrowBackIcon />
         </BackButton>
       </Header>
+
       {distanceSummaries?.map(station => {
         return (
           <>
-            <DistanceSummary />
+            <Swiper
+              spaceBetween={12}
+              centeredSlides={true}
+              className="mySwiper"
+            >
+              <SwiperSlide>
+                <DistanceSummary />
+              </SwiperSlide>
+              <SwiperSlide>
+                <DistanceSummary />
+              </SwiperSlide>
+              <SwiperSlide>
+                <DistanceSummary />
+              </SwiperSlide>
+            </Swiper>
+
             <ResultMap
               station={station}
               participants={station.participants}
@@ -79,7 +103,7 @@ export default function ResultBody() {
               size="lg"
               color="success"
               variant="shadow"
-              onClick={() => handleHotplaceBtnClick(station.stationName)}
+              onClick={() => handleHotplaceBtnClick(station)}
             >
               {station.stationName} 핫플레이스는 어디?
             </FloatingButton>
@@ -93,6 +117,7 @@ export default function ResultBody() {
 const Container = styled.main`
   position: relative;
   width: 100%;
+  height: 100vh;
 `;
 
 const FloatingButton = styled(Button)`
