@@ -12,7 +12,7 @@ export default function useDistanceSummary() {
   const { station_info } = result;
 
   const distanceSummaries = station_info.map(station => {
-    const stationName = station.station_name.split(' ');
+    const stationName = station.station_name.split(' ')[0];
     const itinerary = station.itinerary;
     const shareKey = station.share_key;
     const participants = station.request_info;
