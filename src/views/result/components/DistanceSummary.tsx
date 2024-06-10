@@ -1,7 +1,7 @@
 'use client';
 
 import styled from 'styled-components';
-import { Card, CardBody } from '@nextui-org/react';
+// import { Card, CardBody } from '@nextui-org/react';
 
 import Avatar, { AVATAR_COLORS } from '@/components/Avatar';
 
@@ -39,28 +39,31 @@ export default function DistanceSummary() {
       {distanceSummaries?.map((station, index) => {
         return (
           <Container key={index}>
-            <Card>
-              <CardBody>
+            {/* <Card> */}
+            {/* <CardBody> */}
+            <Body>
+              <Indicator>01/03</Indicator>
+              <SharingButton onClick={() => handleKakaoSharingBtnClick(index)}>
+                <ShareIcon />
+                공유하기
+              </SharingButton>
+              <TitleWrapper>
                 <StationName>
                   <Station.Container>
-                    <Station.BoldText>{station.stationName}</Station.BoldText>을
-                    추천해요!
+                    <Station.BoldText>{station.stationName}</Station.BoldText>
                   </Station.Container>
-                  <SharingButton
-                    onClick={() => handleKakaoSharingBtnClick(index)}
-                  >
-                    <ShareIcon />
-                    공유하기
-                  </SharingButton>
                 </StationName>
                 <AverageArrivalTime>
                   도착하는데 평균{' '}
                   <ArrivalTime>
                     {convertToKoreanTime(station.averageTravelTime)}
                   </ArrivalTime>{' '}
+                  걸려요!
                 </AverageArrivalTime>
-                <Box>
-                  {station.itinerary?.map((user, index) => {
+              </TitleWrapper>
+            </Body>
+            {/* <Box>
+              {station.itinerary?.map((user, index) => {
                     const { userName, travelTime, avatarColor } =
                       genUserArriveInfo(user, index);
 
@@ -73,9 +76,9 @@ export default function DistanceSummary() {
                       </User>
                     );
                   })}
-                </Box>
-              </CardBody>
-            </Card>
+            </Box> */}
+            {/* </CardBody> */}
+            {/* </Card> */}
           </Container>
         );
       })}
@@ -84,22 +87,47 @@ export default function DistanceSummary() {
 }
 
 const Container = styled.div`
+  position: relative;
+  background-color: #151518;
+  padding: 20px 20px 16px;
+  border-radius: 12px;
   width: 100%;
 `;
 
-const Box = styled.div`
+const Body = styled.div`
   display: flex;
-  align-items: center;
-  gap: 0.1rem;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 12px;
 `;
 
-const User = styled.div`
+const Indicator = styled.div`
+  color: #777781;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.003em;
+`;
+// const Card = styled.div``;
+// const CardBody = styled.div``;
+
+// const Box = styled.div`
+//   display: flex;
+//   align-items: center;
+//   gap: 0.1rem;
+//   flex-wrap: wrap;
+// `;
+
+// const User = styled.div`
+//   display: flex;
+//   align-items: center;
+//   gap: 8px;
+//   width: calc(50% - 4px);
+//   margin-top: 8px;
+// `;
+
+const TitleWrapper = styled.div`
   display: flex;
-  align-items: center;
-  gap: 8px;
-  width: calc(50% - 4px);
-  margin-top: 8px;
+  flex-direction: column;
+  gap: 2px;
 `;
 
 const StationName = styled.p`
@@ -119,11 +147,13 @@ const Station = {
 };
 
 const SharingButton = styled.button`
+  position: absolute;
+  right: 20px;
   display: flex;
-  gap: 0.3rem;
+  gap: 4px;
   align-items: center;
-  font-size: 11px;
-  color: #bdbdbd;
+  font-size: 13px;
+  color: #d9d9d9;
 `;
 
 const AverageArrivalTime = styled.p`
@@ -131,6 +161,7 @@ const AverageArrivalTime = styled.p`
 `;
 
 const ArrivalTime = styled.span`
+  color: var(--primary);
   font-weight: 700;
 `;
 
