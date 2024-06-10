@@ -91,13 +91,33 @@ export default function ResultBody() {
                 <DistanceSummary />
               </SwiperSlide>
             </Swiper>
+            <Swiper className="mapSwiepr">
+              <SwiperSlide>
+                <ResultMap
+                  station={station}
+                  participants={station.participants}
+                  itinerary={station.itinerary}
+                  stationName={station.stationName}
+                />
+              </SwiperSlide>
+              <SwiperSlide>
+                <ResultMap
+                  station={station}
+                  participants={station.participants}
+                  itinerary={station.itinerary}
+                  stationName={station.stationName}
+                />
+              </SwiperSlide>
+              <SwiperSlide>
+                <ResultMap
+                  station={station}
+                  participants={station.participants}
+                  itinerary={station.itinerary}
+                  stationName={station.stationName}
+                />
+              </SwiperSlide>
+            </Swiper>
 
-            <ResultMap
-              station={station}
-              participants={station.participants}
-              itinerary={station.itinerary}
-              stationName={station.stationName}
-            />
             <FloatingButton
               radius="full"
               size="lg"
@@ -121,8 +141,8 @@ const Container = styled.main`
 `;
 
 const FloatingButton = styled(Button)`
-  position: absolute;
-  bottom: 20px;
+  position: fixed;
+  bottom: 48px;
   left: 50%;
   transform: translateX(-50%);
   font-weight: 600;
