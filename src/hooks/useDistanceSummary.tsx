@@ -43,17 +43,17 @@ export default function useDistanceSummary() {
     }
   };
 
-  const kakaoShareSendDefault = (index: number) => {
+  const kakaoShareSendDefault = (stationName: any, shareKey: any) => {
     try {
       window.Kakao.Share.sendDefault({
         objectType: 'feed',
         content: {
-          title: `오늘은 ${distanceSummaries[index].stationName} 에서 만나요!`,
+          title: `오늘은 ${stationName} 에서 만나요!`,
           description: '약속 장소를 확인해보세요!',
           imageUrl: process.env.NEXT_PUBLIC_KAKAO_SHARE_IMAGE,
           link: {
-            webUrl: `${baseUrl}/result?sharekey=${distanceSummaries[index].shareKey}`,
-            mobileWebUrl: `${baseUrl}/result?sharekey=${distanceSummaries[index].shareKey}`,
+            webUrl: `${baseUrl}/result?sharekey=${shareKey}`,
+            mobileWebUrl: `${baseUrl}/result?sharekey=${shareKey}`,
           },
         },
       });
