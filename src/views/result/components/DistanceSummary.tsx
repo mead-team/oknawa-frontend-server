@@ -12,76 +12,63 @@ import useDistanceSummary from '@/hooks/useDistanceSummary';
 import { ItineraryItem } from '@/jotai/result/store';
 
 import { ShareIcon } from '@/assets/icons/Share';
+import { AnyNsRecord } from 'dns';
 
-export default function DistanceSummary() {
-  const { distanceSummaries, initKakao, kakaoShareSendDefault } =
-    useDistanceSummary();
+export default function DistanceSummary({
+  station,
+  stationName,
+  shareKey,
+  stationIndex,
+  stationLength,
+}: any) {
+  const { initKakao, kakaoShareSendDefault } = useDistanceSummary();
 
-  const handleKakaoSharingBtnClick = (index: number) => {
+  const handleKakaoSharingBtnClick = (stationName: any, shareKey: any) => {
     initKakao();
-    kakaoShareSendDefault(index);
+    kakaoShareSendDefault(stationName, shareKey);
   };
 
-  const genUserArriveInfo = (user: ItineraryItem, index: number) => {
-    const userName = user.name || `사용자${index + 1}`;
-    const travelTime = convertToKoreanTime(user.itinerary.totalTime);
-    const avatarColor = AVATAR_COLORS[index];
+  // const genUserArriveInfo = (user: ItineraryItem, index: number) => {
+  //   const userName = user.name || `사용자${index + 1}`;
+  //   const travelTime = convertToKoreanTime(user.itinerary.totalTime);
+  //   const avatarColor = AVATAR_COLORS[index];
 
-    return {
-      userName,
-      travelTime,
-      avatarColor,
-    };
-  };
+  //   return {
+  //     userName,
+  //     travelTime,
+  //     avatarColor,
+  //   };
+  // };
 
   return (
     <>
-      {distanceSummaries?.map((station, index) => {
-        return (
-          <Container key={index}>
-            {/* <Card> */}
-            {/* <CardBody> */}
-            <Body>
-              <Indicator>01/03</Indicator>
-              <SharingButton onClick={() => handleKakaoSharingBtnClick(index)}>
-                <ShareIcon />
-                공유하기
-              </SharingButton>
-              <TitleWrapper>
-                <StationName>
-                  <Station.Container>
-                    <Station.BoldText>{station.stationName}</Station.BoldText>
-                  </Station.Container>
-                </StationName>
-                <AverageArrivalTime>
-                  도착하는데 평균{' '}
-                  <ArrivalTime>
-                    {convertToKoreanTime(station.averageTravelTime)}
-                  </ArrivalTime>{' '}
-                  걸려요!
-                </AverageArrivalTime>
-              </TitleWrapper>
-            </Body>
-            {/* <Box>
-              {station.itinerary?.map((user, index) => {
-                    const { userName, travelTime, avatarColor } =
-                      genUserArriveInfo(user, index);
-
-                    return (
-                      <User className="text-small" key={index}>
-                        <Avatar name={userName} color={avatarColor} />
-                        <UserArriveInfo>
-                          {user.region_name} {travelTime}
-                        </UserArriveInfo>
-                      </User>
-                    );
-                  })}
-            </Box> */}
-            {/* </CardBody> */}
-            {/* </Card> */}
-          </Container>
-        );
-      })}
+      <Container>
+        <Body>
+          <Indicator>
+            {stationIndex}/{stationLength}
+          </Indicator>
+          <SharingButton
+            onClick={() => handleKakaoSharingBtnClick(stationName, shareKey)}
+          >
+            <ShareIcon />
+            공유하기
+          </SharingButton>
+          <TitleWrapper>
+            <StationName>
+              <Station.Container>
+                <Station.BoldText>{stationName}</Station.BoldText>
+              </Station.Container>
+            </StationName>
+            <AverageArrivalTime>
+              도착하는데 평균{' '}
+              <ArrivalTime>
+                {convertToKoreanTime(station.averageTravelTime)}
+              </ArrivalTime>{' '}
+              걸려요!
+            </AverageArrivalTime>
+          </TitleWrapper>
+        </Body>
+      </Container>
     </>
   );
 }

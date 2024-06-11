@@ -40,6 +40,8 @@ export default function ResultBody() {
 
   const setBottomSheet = useSetAtom(bottomSheetState);
 
+  console.log('distanceSummaries:', distanceSummaries);
+
   const handleHotplaceBtnClick = (station: any) => {
     setBottomSheet(prevState => ({
       ...prevState,
@@ -62,75 +64,76 @@ export default function ResultBody() {
   }, [shareKey, data, setResult]);
 
   return (
-    <Container>
-      <Header>
-        <BackButton
-          isIconOnly
-          aria-label="Back"
-          onClick={() => router.push('/')}
+    <>
+      <Container>
+        <Header>
+          <BackButton
+            isIconOnly
+            aria-label="Back"
+            onClick={() => router.push('/')}
+          >
+            <ArrowBackIcon />
+          </BackButton>
+        </Header>
+
+        <Swiper spaceBetween={12} centeredSlides={true} className="mySwiper">
+          {distanceSummaries?.map((station, index) => {
+            return (
+              <SwiperSlide key={index}>
+                <DistanceSummary
+                  station={station}
+                  stationIndex={`0${index + 1}`}
+                  stationLength={`0${distanceSummaries.length}`}
+                  stationName={station.stationName}
+                  shareKey={station.shareKey}
+                />
+              </SwiperSlide>
+            );
+          })}
+        </Swiper>
+
+        <Swiper className="mapSwiepr">
+          {distanceSummaries?.map(station => {
+            return (
+              <>
+                <SwiperSlide>
+                  <ResultMap
+                    station={station}
+                    participants={station.participants}
+                    itinerary={station.itinerary}
+                    stationName={station.stationName}
+                  />
+                </SwiperSlide>
+              </>
+            );
+          })}
+        </Swiper>
+        <FloatingButton
+          radius="full"
+          size="lg"
+          color="success"
+          variant="shadow"
+          // onClick={() => handleHotplaceBtnClick(station)}
         >
-          <ArrowBackIcon />
-        </BackButton>
-      </Header>
-
-      {distanceSummaries?.map(station => {
-        return (
-          <>
-            <Swiper
-              spaceBetween={12}
-              centeredSlides={true}
-              className="mySwiper"
-            >
-              <SwiperSlide>
-                <DistanceSummary />
-              </SwiperSlide>
-              <SwiperSlide>
-                <DistanceSummary />
-              </SwiperSlide>
-              <SwiperSlide>
-                <DistanceSummary />
-              </SwiperSlide>
-            </Swiper>
-            <Swiper className="mapSwiepr">
-              <SwiperSlide>
-                <ResultMap
-                  station={station}
-                  participants={station.participants}
-                  itinerary={station.itinerary}
-                  stationName={station.stationName}
-                />
-              </SwiperSlide>
-              <SwiperSlide>
-                <ResultMap
-                  station={station}
-                  participants={station.participants}
-                  itinerary={station.itinerary}
-                  stationName={station.stationName}
-                />
-              </SwiperSlide>
-              <SwiperSlide>
-                <ResultMap
-                  station={station}
-                  participants={station.participants}
-                  itinerary={station.itinerary}
-                  stationName={station.stationName}
-                />
-              </SwiperSlide>
-            </Swiper>
-
-            <FloatingButton
-              radius="full"
-              size="lg"
-              color="success"
-              variant="shadow"
-              onClick={() => handleHotplaceBtnClick(station)}
-            >
-              {station.stationName} 핫플레이스는 어디?
-            </FloatingButton>
-          </>
-        );
-      })}
-    </Container>
+          명동 핫플레이스는 어디?
+        </FloatingButton>
+        {/* {distanceSummaries?.map(station => {
+          return (
+            <>
+              <FloatingButton
+                radius="full"
+                size="lg"
+                color="success"
+                variant="shadow"
+                onClick={() => handleHotplaceBtnClick(station)}
+              >
+                {station.stationName} 핫플레이스는 어디?
+              </FloatingButton>
+            </>
+          );
+        })} */}
+      </Container>
+    </>
   );
 }
 
@@ -146,7 +149,7 @@ const FloatingButton = styled(Button)`
   left: 50%;
   transform: translateX(-50%);
   font-weight: 600;
-  z-index: 10;
+  z-index: 100;
 `;
 
 const Header = styled.header`
