@@ -1,10 +1,20 @@
 import { api } from '@/axois';
 
+import MockAdapter from 'axios-mock-adapter';
+import mockData from './mock.json';
+
 import SearchForm from '@/model/search/SearchForm';
 
 import { SearchFormType } from './types';
 
+// Mock Adapter 인스턴스 생성
+const mock = new MockAdapter(api);
+
+// 특정 엔드포인트 모킹 설정
+mock.onPost('/location/points').reply(200, mockData);
+
 export default class SearchService {
+  mock = new MockAdapter(api);
   static async searchPlaces(searchForm: SearchFormType) {
     const requestBody = SearchForm.convertToRequestBody(searchForm);
 
