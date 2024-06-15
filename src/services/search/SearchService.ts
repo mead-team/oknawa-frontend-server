@@ -1,26 +1,36 @@
 import { api } from '@/axois';
 
-import MockAdapter from 'axios-mock-adapter';
-import mockData from './mock.json';
+// import MockAdapter from 'axios-mock-adapter';
+// import mockData from './mock.json';
 
 import SearchForm from '@/model/search/SearchForm';
 
-import { SearchFormType } from './types';
+import { MapIdType, SearchFormType } from './types';
 
 // Mock Adapter 인스턴스 생성
-const mock = new MockAdapter(api);
+// const mock = new MockAdapter(api);
 
 // 특정 엔드포인트 모킹 설정
-mock.onPost('/location/points').reply(200, mockData);
+// mock.onPost('/location/points').reply(200, mockData);
 
 export default class SearchService {
-  mock = new MockAdapter(api);
+  // mock = new MockAdapter(api);
   static async searchPlaces(searchForm: SearchFormType) {
     const requestBody = SearchForm.convertToRequestBody(searchForm);
 
     const { data } = await api.post('/location/points', { ...requestBody });
 
     console.log('searchPlaces:', data);
+
+    return data;
+  }
+
+  static async searchPolling(mapIdInfo: MapIdType) {
+    const { data } = await api.get(
+      `/location/points/${mapIdInfo.mapId}/polling`,
+    );
+
+    console.log('searchPolling:', data);
 
     return data;
   }

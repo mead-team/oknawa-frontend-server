@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 
 import SearchService from '@/services/search/SearchService';
-import { SearchFormType } from '@/services/search/types';
+import { MapIdType, SearchFormType } from '@/services/search/types';
 
 import { useSetAtom } from 'jotai';
 import { modalState } from '@/jotai/global/store';
@@ -33,6 +33,17 @@ export const usePlaceSearchMutation = () => {
         buttonLabel: '확인',
         contents: '지점을 찾을 수 없습니다.\n다시 검색해주세요.',
       });
+    },
+  });
+};
+
+export const usePlaceSearchMapIdMutation = () => {
+  return useMutation({
+    mutationKey: ['placeSearchMapId'],
+    mutationFn: (mapIdInfo: MapIdType) =>
+      SearchService.searchPolling(mapIdInfo),
+    onError: error => {
+      console.log('error 발생!', error);
     },
   });
 };

@@ -6,13 +6,16 @@ import { useFieldArray } from 'react-hook-form';
 import { styled } from 'styled-components';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import SearchLoading from './components/SearchLoading';
 import Address from '@/components/Address';
 
 import useSearchForm from '@/hooks/form/search/useSearchForm';
-import { usePlaceSearchMutation } from '@/hooks/mutation/search';
+import {
+  usePlaceSearchMutation,
+  usePlaceSearchMapIdMutation,
+} from '@/hooks/mutation/search';
 
 import {
   bottomSheetState,
@@ -24,6 +27,8 @@ import { resultState } from '@/jotai/result/store';
 import { CloseIcon } from '@/assets/icons/Close';
 import { media } from '@/styles/commonStyles';
 
+import { MapIdType, SearchFormType } from '@/services/search/types';
+
 const initialAddress = {
   fullAddress: '',
   latitude: 0,
@@ -32,16 +37,20 @@ const initialAddress = {
 
 export default function SearchBody() {
   const setBottomSheet = useSetAtom(bottomSheetState);
-  const setResult = useSetAtom(resultState);
+  // const setMapIdResult = useSetAtom(resultState);
+  // const setSearchResult = useSetAtom(resultState);
+  const [mapData, setMapData] = useState();
+  const [data, setData] = useState();
   const setSearchState = useSetAtom(searchState);
   const [searchList] = useAtom(searchState);
   const router = useRouter();
 
+  const { mutate: placeSearchMutate } = usePlaceSearchMutation();
   const {
-    mutate: placeSearchMutate,
+    mutate: placeSearchMapIdMutate,
     isPending,
     isSuccess,
-  } = usePlaceSearchMutation();
+  } = usePlaceSearchMapIdMutation();
 
   const {
     register,
@@ -78,12 +87,26 @@ export default function SearchBody() {
     remove(index);
   };
 
-  const handleSearchBtnClick = (searchForm: any) => {
+  const handleSearchBtnClick = async (searchForm: any) => {
     placeSearchMutate(searchForm, {
       onSuccess: data => {
-        setSearchState(searchForm.userSection);
-        router.push('/result');
-        setResult(data);
+        setMapData(data);
+
+        const mapIdInfo: MapIdType = {
+          mapId: data.map_id,
+          mapHostId: data.map_host_id,
+        };
+
+        placeSearchMapIdMutate(mapIdInfo, {
+          onSuccess: mapData => {
+            setSearchState(searchForm.userSection);
+            setData(mapData);
+            // router.push('/result');
+          },
+          onError: error => {
+            console.error('Error fetching map data:', error);
+          },
+        });
       },
     });
   };

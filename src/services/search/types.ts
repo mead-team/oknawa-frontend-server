@@ -11,3 +11,8 @@ interface UserSectionType {
 export interface SearchFormType {
   userSection?: UserSectionType[];
 }
+
+export interface MapIdType {
+  mapId: string;
+  mapHostId: string;
+}
