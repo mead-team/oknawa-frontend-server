@@ -1,12 +1,12 @@
 import { api } from '@/axois';
 
-import MockAdapter from 'axios-mock-adapter';
-import mockData from './mock.json';
+// import MockAdapter from 'axios-mock-adapter';
+// import mockData from './mock.json';
 
 import SearchForm from '@/model/search/SearchForm';
 
-import { SearchFormType } from './types';
 import { SearchState } from '@/jotai/global/store';
+import { MapIdType } from './types';
 
 // Mock Adapter 인스턴스 생성
 // const mock = new MockAdapter(api);
@@ -21,6 +21,16 @@ export default class SearchService {
     const { data } = await api.post('/location/points', { ...requestBody });
 
     console.log('searchPlaces:', data);
+
+    return data;
+  }
+
+  static async searchPolling(mapIdInfo: MapIdType) {
+    const { data } = await api.get(
+      `/location/points/${mapIdInfo.mapId}/polling`,
+    );
+
+    console.log('searchPolling:', data);
 
     return data;
   }
