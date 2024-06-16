@@ -1,6 +1,6 @@
 import { Chip } from '@nextui-org/react';
 import styled from 'styled-components';
-import { useAtom } from 'jotai';
+// import { useAtom } from 'jotai';
 import { useEffect, useRef, useState } from 'react';
 
 import PlaceItem from './PlaceItem';
@@ -9,7 +9,7 @@ import { useHotPlaceQuery } from '@/hooks/query/hot-place';
 
 import { HotPlaceCategory } from '@/services/hot-place/types';
 
-import { resultState } from '@/jotai/result/store';
+// import { resultState } from '@/jotai/result/store';
 
 import { RestaurantIcon } from '@/assets/icons/Restaurant';
 import { CafeIcon } from '@/assets/icons/Cafe';
@@ -21,15 +21,14 @@ const HOT_PLACE_CATEGORY: { title: string; category: HotPlaceCategory }[] = [
   { title: '술집', category: 'drink' },
 ];
 
-export default function HotPlaceModal() {
-  const [result] = useAtom(resultState);
+export default function HotPlaceModal({ station }: any) {
   const [category, setCategory] = useState<HotPlaceCategory>('food');
   const loaderRef = useRef(null);
 
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useHotPlaceQuery(category, {
-      x: result.end_x,
-      y: result.end_y,
+      x: station.station.end_x,
+      y: station.station.end_y,
     });
 
   const allPlaces = data?.pages.flatMap(page => page.documents) ?? [];

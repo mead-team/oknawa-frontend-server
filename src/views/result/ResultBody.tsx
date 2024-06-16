@@ -32,15 +32,11 @@ export default function ResultBody() {
 
   const [result, setResult] = useAtom(resultState);
 
-  // const stationName = result?.station_info.station_name.split(' ')[0];
-
   const { data } = usePlaceSearchWithShareKeyQuery(shareKey);
 
   const { distanceSummaries } = useDistanceSummary();
 
   const setBottomSheet = useSetAtom(bottomSheetState);
-
-  console.log('distanceSummaries:', distanceSummaries);
 
   const handleHotplaceBtnClick = (station: any) => {
     setBottomSheet(prevState => ({
@@ -79,7 +75,7 @@ export default function ResultBody() {
         <Swiper spaceBetween={12} centeredSlides={true} className="mySwiper">
           {distanceSummaries?.map((station, index) => {
             return (
-              <SwiperSlide key={index}>
+              <SwiperSlide key={`summary-${index}`}>
                 <DistanceSummary
                   station={station}
                   stationIndex={`0${index + 1}`}
@@ -93,10 +89,10 @@ export default function ResultBody() {
         </Swiper>
 
         <Swiper className="mapSwiepr">
-          {distanceSummaries?.map(station => {
+          {distanceSummaries?.map((station, index) => {
             return (
               <>
-                <SwiperSlide>
+                <SwiperSlide key={`map-${index}`}>
                   <ResultMap
                     station={station}
                     participants={station.participants}
@@ -108,16 +104,16 @@ export default function ResultBody() {
             );
           })}
         </Swiper>
-        <FloatingButton
+        {/* <FloatingButton
           radius="full"
           size="lg"
           color="success"
           variant="shadow"
-          // onClick={() => handleHotplaceBtnClick(station)}
+          onClick={() => handleHotplaceBtnClick(station)}
         >
           명동 핫플레이스는 어디?
-        </FloatingButton>
-        {/* {distanceSummaries?.map(station => {
+        </FloatingButton> */}
+        {distanceSummaries?.map(station => {
           return (
             <>
               <FloatingButton
@@ -131,7 +127,7 @@ export default function ResultBody() {
               </FloatingButton>
             </>
           );
-        })} */}
+        })}
       </Container>
     </>
   );

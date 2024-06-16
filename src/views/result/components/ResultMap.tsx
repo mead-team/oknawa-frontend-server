@@ -1,7 +1,6 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-// import { useAtomValue } from 'jotai';
 import styled from 'styled-components';
 import {
   CustomOverlayMap,
@@ -11,8 +10,6 @@ import {
 } from 'react-kakao-maps-sdk';
 
 import CenterMarker from './CenterMarker';
-
-import { ResultObject } from '@/jotai/result/store';
 
 const KAKAO_APP_KEY = process.env.NEXT_PUBLIC_KAKAOMAP_APP_KEY;
 
@@ -45,7 +42,7 @@ export default function ResultMap({
 
     const bounds = new kakao.maps.LatLngBounds();
 
-    participants?.forEach((user: any) => {
+    participants.participant?.forEach((user: any) => {
       const { start_y, start_x } = user;
       const position = new kakao.maps.LatLng(start_y, start_x);
       bounds.extend(position);
@@ -107,7 +104,7 @@ export default function ResultMap({
           isPanto
           onCreate={setMap}
         >
-          {participants?.map((user: any, index: number) => {
+          {participants.participant?.map((user: any, index: number) => {
             return (
               <MapMarker
                 key={index}
