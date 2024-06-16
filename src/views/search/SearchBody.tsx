@@ -23,11 +23,11 @@ import {
   searchState,
 } from '@/jotai/global/store';
 import { resultState } from '@/jotai/result/store';
+import { mapIdState } from '@/jotai/mapId/store';
 
 import { CloseIcon } from '@/assets/icons/Close';
 import { media } from '@/styles/commonStyles';
-
-import { MapIdType, SearchFormType } from '@/services/search/types';
+import { MapIdType } from '@/services/search/types';
 
 const initialAddress = {
   fullAddress: '',
@@ -37,20 +37,18 @@ const initialAddress = {
 
 export default function SearchBody() {
   const setBottomSheet = useSetAtom(bottomSheetState);
-  // const setMapIdResult = useSetAtom(resultState);
-  // const setSearchResult = useSetAtom(resultState);
-  const [mapData, setMapData] = useState();
-  const [data, setData] = useState();
+  const setMapIdInfoResult = useSetAtom(mapIdState);
+  const setSearchResult = useSetAtom(resultState);
   const setSearchState = useSetAtom(searchState);
   const [searchList] = useAtom(searchState);
   const router = useRouter();
 
-  const { mutate: placeSearchMutate } = usePlaceSearchMutation();
   const {
-    mutate: placeSearchMapIdMutate,
+    mutate: placeSearchMutate,
     isPending,
     isSuccess,
-  } = usePlaceSearchMapIdMutation();
+  } = usePlaceSearchMutation();
+  const { mutate: placeSearchMapIdMutate } = usePlaceSearchMapIdMutation();
 
   const {
     register,
@@ -87,10 +85,11 @@ export default function SearchBody() {
     remove(index);
   };
 
-  const handleSearchBtnClick = async (searchForm: any) => {
+  const handleSearchBtnClick = (searchForm: any) => {
     placeSearchMutate(searchForm, {
       onSuccess: data => {
-        setMapData(data);
+        setMapIdInfoResult(data);
+        setSearchState(searchForm.userSection);
 
         const mapIdInfo: MapIdType = {
           mapId: data.map_id,
@@ -98,10 +97,9 @@ export default function SearchBody() {
         };
 
         placeSearchMapIdMutate(mapIdInfo, {
-          onSuccess: mapData => {
-            setSearchState(searchForm.userSection);
-            setData(mapData);
-            // router.push('/result');
+          onSuccess: data => {
+            setSearchResult(data);
+            router.push('/result');
           },
           onError: error => {
             console.error('Error fetching map data:', error);
