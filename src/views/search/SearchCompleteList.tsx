@@ -21,7 +21,11 @@ export default function SearchCompleteList() {
   const [searchList, setSearchList] = useAtom(searchState);
   const setResult = useSetAtom(resultState);
 
-  const { mutate: placeSearchMutate, isPending } = usePlaceSearchMutation();
+  const {
+    mutate: placeSearchMutate,
+    isPending,
+    isSuccess,
+  } = usePlaceSearchMutation();
 
   const handleSearchBtnClick = () => {
     console.log('handleSearchBtnClick');
@@ -68,7 +72,7 @@ export default function SearchCompleteList() {
       <SubmitButton size="lg" color="success" onClick={handleSearchBtnClick}>
         이대로 추천 받기
       </SubmitButton>
-      {isPending && <SearchLoading />}
+      {(isPending || isSuccess) && <SearchLoading />}
     </Container>
   );
 }

@@ -50,11 +50,11 @@ export default function SearchView({ type }: SearchViewProps) {
   };
 
   const handleSearchBtnClick = (searchForm: any) => {
+    setSearchList(prevState => [...prevState, searchForm]);
+
     if (searchList.length >= 1) {
       router.push('/search/list');
-      setSearchList(prevState => [...prevState, searchForm]);
     } else {
-      setSearchList(prevState => [...prevState, searchForm]);
       reset();
     }
   };
