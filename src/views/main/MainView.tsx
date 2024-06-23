@@ -1,13 +1,23 @@
-import SearchTypeSelector from '@/components/SearchTypeSelector';
 import styled from 'styled-components';
+
+import SearchTypeSelector from '@/components/SearchTypeSelector';
+
+import { PeopleIcon } from '@/assets/icons/People';
+import { PlusIcon } from '@/assets/icons/Plus';
 
 export default function MainView() {
   return (
     <Container>
       <Title>{'출발지를 입력해주세요\n 중간 지점을 추천해드릴게요'}</Title>
       <SearchTypeSelectorBox>
-        <SearchTypeSelector type="individual" />
-        <SearchTypeSelector type="together" />
+        <SearchTypeSelector
+          type="individual"
+          icon={<PlusIcon width="42" height="42" />}
+        />
+        <SearchTypeSelector
+          type="together"
+          icon={<PeopleIcon width="42" height="42" />}
+        />
       </SearchTypeSelectorBox>
     </Container>
   );

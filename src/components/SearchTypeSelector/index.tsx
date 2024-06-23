@@ -2,12 +2,19 @@ import styled from 'styled-components';
 import Avatar from '../Avatar';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import { PeopleIcon } from '@/assets/icons/People';
+import { PlusIcon } from '@/assets/icons/Plus';
+import { ReactNode } from 'react';
 
 interface SearchTypeSelectorProps {
   type: 'individual' | 'together';
+  icon: ReactNode;
 }
 
-export default function SearchTypeSelector({ type }: SearchTypeSelectorProps) {
+export default function SearchTypeSelector({
+  type,
+  icon,
+}: SearchTypeSelectorProps) {
   const router = useRouter();
 
   const titleText = type === 'individual' ? '직접' : '함께';
@@ -35,9 +42,7 @@ export default function SearchTypeSelector({ type }: SearchTypeSelectorProps) {
 
   return (
     <Container onClick={handleButtonClick}>
-      <AvatarBox>
-        <Avatar color="#18C964" size="lg" />
-      </AvatarBox>
+      <AvatarBox>{icon}</AvatarBox>
       <Title>{`${titleText} \n입력하기`}</Title>
       <Description>{description}</Description>
     </Container>
