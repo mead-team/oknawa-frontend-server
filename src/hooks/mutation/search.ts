@@ -4,7 +4,7 @@ import SearchService from '@/services/search/SearchService';
 import { SearchFormType } from '@/services/search/types';
 
 import { useSetAtom } from 'jotai';
-import { modalState } from '@/jotai/global/store';
+import { SearchState, modalState } from '@/jotai/global/store';
 
 interface IModalProps {
   buttonLabel: string;
@@ -25,7 +25,7 @@ export const usePlaceSearchMutation = () => {
 
   return useMutation({
     mutationKey: ['placeSearch'],
-    mutationFn: (searchForm: SearchFormType) =>
+    mutationFn: (searchForm: SearchState[]) =>
       SearchService.searchPlaces(searchForm),
     onError: error => {
       console.log('error 발생!', error);

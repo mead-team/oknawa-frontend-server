@@ -9,7 +9,7 @@ interface ModalState {
   contents: string;
 }
 
-interface SearchState {
+export interface SearchState {
   name: string;
   address: {
     fullAddress: string;

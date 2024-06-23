@@ -1,6 +1,5 @@
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import styled from 'styled-components';
-import { FieldValues, UseFormSetValue } from 'react-hook-form';
 import { useResetAtom } from 'jotai/utils';
 import debounce from 'lodash/debounce';
 
@@ -46,6 +45,19 @@ export default function Address({ setValue, currentIndex }: AddressProps) {
     }
   }, 100);
 
+  const setUserInputValues = (place: KakaoPlace) => {
+    const { address_name, x, y, place_name } = place;
+
+    setValue('address', {
+      fullAddress: address_name,
+      latitude: y,
+      longitude: x,
+      regionName: place_name,
+    });
+
+    resetBottomSheet();
+  };
+
   const handleAddressChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
     debouncedSearch(e.target.value);
@@ -55,12 +67,7 @@ export default function Address({ setValue, currentIndex }: AddressProps) {
   const handlePlaceItemClick = (place: KakaoPlace) => {
     const { address_name, x, y, place_name } = place;
 
-    setValue(`userSection.${currentIndex}.address`, {
-      fullAddress: address_name,
-      latitude: y,
-      longitude: x,
-      regionName: place_name,
-    });
+    setUserInputValues(place);
 
     setSearchHistory([
       {
@@ -71,45 +78,11 @@ export default function Address({ setValue, currentIndex }: AddressProps) {
       },
       ...searchHistory,
     ]);
-
-    resetBottomSheet();
   };
 
   const handleInputClick = () => {
     setIsOpenDropItem(true);
   };
-
-  const handleSearchItemClick = (item: any) => {
-    const { fullAddress, latitude, longitude, regionName } = item;
-
-    setValue(`userSection.${currentIndex}.address`, {
-      fullAddress,
-      latitude,
-      longitude,
-      regionName,
-    });
-
-    resetBottomSheet();
-  };
-
-  // const handleOutsideClick = (e: MouseEvent) => {
-  //   if (
-  //     recentSearchRef.current &&
-  //     !recentSearchRef.current.contains(e.target)
-  //   ) {
-  //     setIsOpenDropItem(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (isOpenDropItem) {
-  //     document.addEventListener('click', handleOutsideClick);
-  //   }
-
-  //   return () => {
-  //     document.removeEventListener('click', handleOutsideClick);
-  //   };
-  // }, [isOpenDropItem]);
 
   return (
     <Container>
@@ -137,7 +110,7 @@ export default function Address({ setValue, currentIndex }: AddressProps) {
               return (
                 <RecentSearchItem
                   key={index}
-                  onClick={() => handleSearchItemClick(item)}
+                  onClick={() => setUserInputValues(item)}
                 >
                   <MagnifyIcon />
                   {item.regionName}
@@ -221,7 +194,7 @@ const RecentSearch = styled.div`
   font-size: 14px;
 
   :hover {
-    background-color: #f6f6f6;
+    background-color: #35353b;
   }
 `;
 
@@ -234,10 +207,15 @@ const RecentSearchItem = styled.p`
   color: white;
   cursor: pointer;
   font-size: 15px;
+
+  &:last-child {
+    border-bottom: none;
+  }
 `;
 
 const DividerLine = styled.div`
   width: 100%;
   height: 14px;
   background-color: #424249;
+  margin: 10px 0;
 `;

@@ -2,34 +2,30 @@
 
 import { Input } from '@nextui-org/react';
 import { useAtom, useSetAtom } from 'jotai';
-import { useFieldArray } from 'react-hook-form';
 import { styled } from 'styled-components';
 import { useRouter } from 'next/navigation';
-import { toast } from 'react-hot-toast';
 import { useEffect } from 'react';
 
-import SearchLoading from './components/SearchLoading';
 import Address from '@/components/Address';
 
 import useSearchForm from '@/hooks/form/search/useSearchForm';
-import { usePlaceSearchMutation } from '@/hooks/mutation/search';
 
-import {
-  bottomSheetState,
-  modalState,
-  searchState,
-} from '@/jotai/global/store';
-import { resultState } from '@/jotai/result/store';
+import { bottomSheetState, searchState } from '@/jotai/global/store';
 
-import { CloseIcon } from '@/assets/icons/Close';
-import { media } from '@/styles/commonStyles';
 import Button from '@/components/Button';
 import { ArrowBackIcon } from '@/assets/icons/ArrowBack';
 
-const initialAddress = {
-  fullAddress: '',
-  latitude: 0,
-  longitude: 0,
+const numberConfig: { [key: number]: string } = {
+  1: '첫',
+  2: '두',
+  3: '세',
+  4: '네',
+  5: '다섯',
+  6: '여섯',
+  7: '일곱',
+  8: '여덟',
+  9: '아홉',
+  10: '열',
 };
 
 interface SearchViewProps {
@@ -37,19 +33,12 @@ interface SearchViewProps {
 }
 
 export default function SearchView({ type }: SearchViewProps) {
-  const setBottomSheet = useSetAtom(bottomSheetState);
-  const setResult = useSetAtom(resultState);
-  const setSearchState = useSetAtom(searchState);
-  const [searchList, setSearchList] = useAtom(searchState);
   const router = useRouter();
 
-  const {
-    mutate: placeSearchMutate,
-    isPending,
-    isSuccess,
-  } = usePlaceSearchMutation();
+  const setBottomSheet = useSetAtom(bottomSheetState);
+  const [searchList, setSearchList] = useAtom(searchState);
 
-  const { register, setValue, handleSubmit, watch } = useSearchForm();
+  const { register, setValue, handleSubmit, watch, reset } = useSearchForm();
 
   const handleSearchAddressBtnClick = (index: number) => {
     setBottomSheet(prevState => ({
@@ -61,25 +50,34 @@ export default function SearchView({ type }: SearchViewProps) {
   };
 
   const handleSearchBtnClick = (searchForm: any) => {
-    placeSearchMutate(searchForm, {
-      onSuccess: data => {
-        setSearchState(searchForm.userSection);
-        router.push('/result');
-        setResult(data);
-      },
-    });
+    if (searchList.length >= 1) {
+      router.push('/search/list');
+      setSearchList(prevState => [...prevState, searchForm]);
+    } else {
+      setSearchList(prevState => [...prevState, searchForm]);
+      reset();
+    }
   };
-
-  useEffect(() => {
-    const image = new Image();
-    image.src = '/loading.gif';
-  }, []);
 
   const addressValue = watch('address');
   const nameValue = watch('name');
-  const titleText = `${searchList.length + 1}번째 출발지 정보를\n입력해주세요.`;
-  const buttonText = `${searchList.length + 2}번째 출발지 추가하기`;
+  const titleText = `${
+    numberConfig[searchList.length + 1]
+  }번째 출발지 정보를\n입력해주세요.`;
+  const buttonText =
+    searchList.length >= 1
+      ? '등록하기'
+      : `${numberConfig[searchList.length + 2]}번째 출발지 추가하기`;
   const isButtonDisabled = !nameValue || !addressValue?.fullAddress;
+
+  const handleClearName = () => setValue('name', '');
+  const handleClearAddress = () =>
+    setValue('address', {
+      fullAddress: '',
+      regionName: '',
+      latitude: 0,
+      longitude: 0,
+    });
 
   return (
     <Container onSubmit={handleSubmit(handleSearchBtnClick)}>
@@ -98,6 +96,8 @@ export default function SearchView({ type }: SearchViewProps) {
             size="sm"
             maxLength={5}
             {...register('name')}
+            onClear={handleClearName}
+            value={nameValue}
           />
           <ClickableArea
             onClick={() => handleSearchAddressBtnClick(searchList.length)}
@@ -108,12 +108,12 @@ export default function SearchView({ type }: SearchViewProps) {
               size="sm"
               isReadOnly
               value={addressValue?.regionName || ''}
+              onClear={handleClearAddress}
             />
           </ClickableArea>
         </Section>
         <Button label={buttonText} disabled={isButtonDisabled} type="submit" />
       </Wrapper>
-      {(isPending || isSuccess) && <SearchLoading />}
     </Container>
   );
 }
@@ -150,7 +150,6 @@ const PeopleCount = styled.span`
   font-size: 28px;
 `;
 
-// FIXME 공통 스타일
 const Title = styled.h1`
   margin-bottom: 16px;
   font-size: 28px;
