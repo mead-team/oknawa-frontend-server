@@ -23,19 +23,24 @@ Place.Title = Title;
 Place.SubTitle = SubTitle;
 
 const PlaceContainer = styled.li`
-  border-bottom: solid 1px rgba(0, 0, 0, 0.1);
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  padding-left: 8px;
+  border-bottom: solid 1px #35353b;
   &:last-child {
     border-bottom: none;
   }
 `;
 
 const TitleContainer = styled.h2`
-  font-size: 16px;
-  color: #000;
+  padding-top: 10px;
+  font-size: 15px;
+  color: white;
 `;
 
 const SubTitleContainer = styled.h3`
-  margin-bottom: 0.3rem;
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.5);
+  margin-bottom: 0.8rem;
+  font-size: 12px;
+  color: gray;
 `;

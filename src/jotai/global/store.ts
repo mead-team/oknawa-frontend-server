@@ -9,7 +9,7 @@ interface ModalState {
   contents: string;
 }
 
-interface SearchState {
+export interface SearchState {
   name: string;
   address: {
     fullAddress: string;
@@ -24,6 +24,7 @@ interface BottomSheetState {
   title: string | ReactNode;
   contents: ReactNode;
   height: number;
+  isFullContents: boolean;
 }
 
 const initialState: ModalState = {
@@ -38,6 +39,7 @@ const bottomSheetInitialState: BottomSheetState = {
   title: null,
   contents: null,
   height: 52,
+  isFullContents: false,
 };
 
 export const modalState = atomWithReset<ModalState>(initialState);

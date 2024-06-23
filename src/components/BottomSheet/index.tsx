@@ -12,7 +12,7 @@ export default function BottomSheet() {
   const [bottomSheet] = useAtom(bottomSheetState);
   const reset = useResetAtom(bottomSheetState);
 
-  const { isOpen, title, contents, height } = bottomSheet;
+  const { isOpen, title, contents, height, isFullContents } = bottomSheet;
 
   useEffect(() => {
     if (isOpen) {
@@ -40,12 +40,14 @@ export default function BottomSheet() {
 
   return (
     <Container onClick={handleOutsideClick}>
-      <Wrapper height={height}>
+      <Wrapper height={height} isFullContents={isFullContents}>
         <TitleBox>
           <Title>{title}</Title>
-          <CloseBtnBox onClick={handleCloseBtnClick}>
-            <CloseIcon />
-          </CloseBtnBox>
+          {!isFullContents && (
+            <CloseBtnBox onClick={handleCloseBtnClick}>
+              <CloseIcon />
+            </CloseBtnBox>
+          )}
         </TitleBox>
         <Contents>{contents}</Contents>
       </Wrapper>
@@ -76,15 +78,17 @@ const Container = styled.section`
   }
 `;
 
-const Wrapper = styled.div<{ height: number }>`
+const Wrapper = styled.div<{ height: number; isFullContents: boolean }>`
   display: flex;
   flex-direction: column;
   width: 100%;
   max-width: 500px;
   padding: 1rem;
   border-radius: 0.8rem 0.8rem 0 0;
-  background-color: #27272a;
-  height: ${({ height }) => `${height}%`};
+  background-color: ${({ isFullContents }) =>
+    isFullContents ? 'black' : '#27272a'};
+  height: ${({ isFullContents, height }) =>
+    isFullContents ? '100%' : `${height}%`};
   animation: slide_up 0.4s both;
 
   @keyframes slide_up {
