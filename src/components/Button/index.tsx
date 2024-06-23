@@ -3,25 +3,34 @@ import styled from 'styled-components';
 
 interface ButtonProps {
   label: string;
+  disabled?: boolean;
   children?: ReactNode;
+  type?: 'button' | 'submit' | 'reset';
 }
 
-export default function Button({ label = '버튼', children }: ButtonProps) {
+export default function Button({
+  label = '버튼',
+  disabled,
+  children,
+  type = 'button',
+}: ButtonProps) {
   return (
-    <Container>
+    <Container disabled={disabled} type={type}>
       <Text>{label}</Text>
       {children && children}
     </Container>
   );
 }
 
-const Container = styled.button`
+const Container = styled.button<{ disabled: boolean | undefined }>`
   display: flex;
   justify-content: center;
   gap: 8px;
   padding: 14px 0;
-  border: 1px solid gray;
+  border: ${({ disabled }) =>
+    disabled ? '1px solid #8D8D94' : '1px solid white'};
   border-radius: 9px;
+  color: ${({ disabled }) => (disabled ? '#8D8D94' : 'white')};
 `;
 
 const Text = styled.h1`

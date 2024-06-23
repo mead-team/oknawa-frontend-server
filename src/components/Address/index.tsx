@@ -13,18 +13,24 @@ import { KakaoPlace } from './types';
 import { bottomSheetState } from '@/jotai/global/store';
 import { useAtom } from 'jotai';
 import { searchHistoryState } from '@/jotai/search/store';
+import { ArrowBackIcon } from '@/assets/icons/ArrowBack';
+import { useRouter } from 'next/navigation';
+import { Input } from '@nextui-org/react';
+import { MapMarkerIcon } from '@/assets/icons/MapMarker';
+import { MagnifyIcon } from '@/assets/icons/Magnify';
 
 interface AddressProps {
-  setValue: UseFormSetValue<FieldValues>;
+  setValue: any;
   currentIndex: number;
 }
 
 export default function Address({ setValue, currentIndex }: AddressProps) {
+  const router = useRouter();
   const resetBottomSheet = useResetAtom(bottomSheetState);
   const [input, setInput] = useState('');
   const [isOpenDropItem, setIsOpenDropItem] = useState(false);
   const [searchHistory, setSearchHistory] = useAtom(searchHistoryState);
-  const recentSearchRef = useRef<any>(null);
+  // const recentSearchRef = useRef<any>(null);
 
   const { places, setPlaces, kakaoPlaceService, searchPlaceCB } =
     useKakaoPlaceService();
@@ -86,60 +92,74 @@ export default function Address({ setValue, currentIndex }: AddressProps) {
     resetBottomSheet();
   };
 
-  const handleOutsideClick = (e: MouseEvent) => {
-    if (
-      recentSearchRef.current &&
-      !recentSearchRef.current.contains(e.target)
-    ) {
-      setIsOpenDropItem(false);
-    }
-  };
+  // const handleOutsideClick = (e: MouseEvent) => {
+  //   if (
+  //     recentSearchRef.current &&
+  //     !recentSearchRef.current.contains(e.target)
+  //   ) {
+  //     setIsOpenDropItem(false);
+  //   }
+  // };
 
-  useEffect(() => {
-    if (isOpenDropItem) {
-      document.addEventListener('click', handleOutsideClick);
-    }
+  // useEffect(() => {
+  //   if (isOpenDropItem) {
+  //     document.addEventListener('click', handleOutsideClick);
+  //   }
 
-    return () => {
-      document.removeEventListener('click', handleOutsideClick);
-    };
-  }, [isOpenDropItem]);
+  //   return () => {
+  //     document.removeEventListener('click', handleOutsideClick);
+  //   };
+  // }, [isOpenDropItem]);
 
   return (
     <Container>
       <SearchForm>
-        <SearchInput
-          value={input}
-          onChange={handleAddressChange}
-          onClick={handleInputClick}
-          placeholder="출발지를 입력해주세요."
-          ref={recentSearchRef}
-        />
-        {/* TODO 컴포넌트 분리 */}
-        {isOpenDropItem && recentSearchesArray.length > 0 && (
+        <TopSection>
+          <IconBox onClick={() => resetBottomSheet()}>
+            <ArrowBackIcon />
+          </IconBox>
+          <SearchInput
+            isClearable
+            value={input}
+            placeholder="출발지를 입력해주세요."
+            size="sm"
+            onChange={handleAddressChange}
+            onClick={handleInputClick}
+            onClear={() => setInput('')}
+          />
+        </TopSection>
+      </SearchForm>
+      {isOpenDropItem && recentSearchesArray.length > 0 && (
+        <>
           <RecentSearch>
+            검색 히스토리
             {recentSearchesArray.map((item: any, index: any) => {
               return (
                 <RecentSearchItem
                   key={index}
                   onClick={() => handleSearchItemClick(item)}
                 >
+                  <MagnifyIcon />
                   {item.regionName}
                 </RecentSearchItem>
               );
             })}
           </RecentSearch>
-        )}
-      </SearchForm>
+          <DividerLine />
+        </>
+      )}
       {places.length > 0 ? (
         <PlacesList>
           {places.map(place => {
             return (
               <Place key={place.id} onClick={() => handlePlaceItemClick(place)}>
-                <Place.Title>{place.place_name}</Place.Title>
-                <Place.SubTitle>
-                  {place.road_address_name || place.address_name}
-                </Place.SubTitle>
+                <MapMarkerIcon />
+                <div>
+                  <Place.Title>{place.place_name}</Place.Title>
+                  <Place.SubTitle>
+                    {place.road_address_name || place.address_name}
+                  </Place.SubTitle>
+                </div>
               </Place>
             );
           })}
@@ -152,32 +172,36 @@ export default function Address({ setValue, currentIndex }: AddressProps) {
 }
 
 const Container = styled.div`
-  background-color: white;
+  background-color: black;
+  padding-top: 20px;
 `;
 
 const SearchForm = styled.section`
-  position: relative;
   display: flex;
   align-items: center;
-  padding: 0.8rem 1rem;
+  margin-bottom: 10px;
+  padding: 0.8rem 0.5rem;
 `;
 
-const SearchInput = styled.input`
+const TopSection = styled.div`
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  gap: 20px;
+`;
+
+const IconBox = styled.div``;
+
+const SearchInput = styled(Input)`
   width: 100%;
-  padding: 0.8rem;
-  background-color: #f6f6f6;
-  border-radius: 0.5rem;
-  color: black;
 `;
 
 const PlacesList = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  padding: 0.5rem 0.8rem;
   min-height: 50vh;
   :hover {
-    background-color: #f6f6f6;
+    background-color: #35353b;
   }
   cursor: pointer;
 `;
@@ -186,25 +210,15 @@ const NoData = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  color: rgba(0, 0, 0, 0.5);
   height: 50vh;
 `;
 
 const RecentSearch = styled.div`
-  position: absolute;
-  top: 75%;
-  left: 1rem;
-  right: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  width: calc(100% - 2rem);
-  padding: 0.5rem 0.8rem;
-  border-bottom-left-radius: 0.5rem;
-  border-bottom-right-radius: 0.5rem;
-  border: 1px solid gray;
-  background-color: white;
-  box-shadow: 0 0.4rem 0.8rem rgba(0, 0, 0, 0.1);
+  gap: 10px;
+  color: #82828a;
+  font-size: 14px;
 
   :hover {
     background-color: #f6f6f6;
@@ -212,6 +226,18 @@ const RecentSearch = styled.div`
 `;
 
 const RecentSearchItem = styled.p`
-  color: black;
+  display: flex;
+  gap: 15px;
+  padding-top: 10px;
+  padding: 5px 0 5px 8px;
+  border-bottom: solid 1px #35353b;
+  color: white;
   cursor: pointer;
+  font-size: 15px;
+`;
+
+const DividerLine = styled.div`
+  width: 100%;
+  height: 14px;
+  background-color: #424249;
 `;
