@@ -40,7 +40,8 @@ export default function SearchView({ type }: SearchViewProps) {
 
   const { register, setValue, handleSubmit, watch, reset } = useSearchForm();
 
-  const handleSearchAddressBtnClick = (index: number) => {
+  const handleSearchAddressBtnClick = (index: number, e: any) => {
+    e.preventDefault();
     setBottomSheet(prevState => ({
       ...prevState,
       isOpen: true,
@@ -82,7 +83,7 @@ export default function SearchView({ type }: SearchViewProps) {
   return (
     <Container onSubmit={handleSubmit(handleSearchBtnClick)}>
       <Wrapper>
-        <IconBox onClick={() => router.back()}>
+        <IconBox onClick={() => router.push('/')}>
           <ArrowBackIcon />
         </IconBox>
         <TitleBox>
@@ -100,7 +101,7 @@ export default function SearchView({ type }: SearchViewProps) {
             value={nameValue}
           />
           <ClickableArea
-            onClick={() => handleSearchAddressBtnClick(searchList.length)}
+            onClick={e => handleSearchAddressBtnClick(searchList.length, e)}
           >
             <Input
               isClearable

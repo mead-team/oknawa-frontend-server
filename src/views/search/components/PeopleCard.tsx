@@ -6,13 +6,15 @@ import styled from 'styled-components';
 interface PeopleCardProps {
   name: string;
   place: string;
-  iconClick: () => void;
+  onDeleteIconClick?: () => void;
+  onModifyIconClick?: () => void;
 }
 
 export default function PeopleCard({
   name,
   place,
-  iconClick,
+  onDeleteIconClick,
+  onModifyIconClick,
 }: PeopleCardProps) {
   return (
     <Container>
@@ -24,10 +26,10 @@ export default function PeopleCard({
         </div>
       </Wrapper>
       <IconsBox>
-        <Icon onClick={iconClick}>
+        <Icon onClick={onModifyIconClick}>
           <PencilIcon width="20" height="20" />
         </Icon>
-        <Icon onClick={iconClick}>
+        <Icon onClick={onDeleteIconClick}>
           <MinusIcon width="20" height="20" />
         </Icon>
       </IconsBox>
