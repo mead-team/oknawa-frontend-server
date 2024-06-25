@@ -1,5 +1,5 @@
 import { atom } from 'jotai';
-import { atomWithReset } from 'jotai/utils';
+import { atomWithReset, atomWithStorage, createJSONStorage } from 'jotai/utils';
 import { ReactNode } from 'react';
 
 interface ModalState {
@@ -48,4 +48,10 @@ export const searchState = atom<SearchState[]>([]);
 
 export const bottomSheetState = atomWithReset<BottomSheetState>(
   bottomSheetInitialState,
+);
+
+export const searchHistoryState = atomWithStorage(
+  'searchHistory',
+  initialState,
+  createJSONStorage(() => localStorage),
 );

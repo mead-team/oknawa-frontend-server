@@ -32,6 +32,8 @@ export default function ResultBody() {
 
   const [result, setResult] = useAtom(resultState);
 
+  console.log('ResultBody result:', result);
+
   const { data } = usePlaceSearchWithShareKeyQuery(shareKey);
 
   const { distanceSummaries } = useDistanceSummary();

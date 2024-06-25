@@ -2,7 +2,10 @@
 
 import { useRouter } from 'next/navigation';
 
-import { usePlaceSearchMutation } from '@/hooks/mutation/search';
+import {
+  usePlaceSearchMapIdMutation,
+  usePlaceSearchMutation,
+} from '@/hooks/mutation/search';
 import styled from 'styled-components';
 import { ArrowBackIcon } from '@/assets/icons/ArrowBack';
 import PeopleCard from './components/PeopleCard';
@@ -12,27 +15,58 @@ import { searchState } from '@/jotai/global/store';
 
 import { Button as FloatingButton } from '@nextui-org/react';
 import { resultState } from '@/jotai/result/store';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import SearchLoading from './components/SearchLoading';
+import { MapIdType } from '@/services/search/types';
 
 export default function SearchCompleteList() {
   const router = useRouter();
 
   const [searchList, setSearchList] = useAtom(searchState);
   const setResult = useSetAtom(resultState);
+  const [mapData, setMapData] = useState();
+  const [data, setData] = useState();
+  const setSearchState = useSetAtom(searchState);
 
+  const { mutate: placeSearchMutate } = usePlaceSearchMutation();
   const {
-    mutate: placeSearchMutate,
+    mutate: placeSearchMapIdMutate,
     isPending,
     isSuccess,
-  } = usePlaceSearchMutation();
+  } = usePlaceSearchMapIdMutation();
 
-  const handleSearchBtnClick = () => {
-    console.log('handleSearchBtnClick');
+  // const handleSearchBtnClick = () => {
+  //   console.log('searchList:', searchList);
+  //   placeSearchMutate(searchList, {
+  //     onSuccess: data => {
+  //       router.push('/result');
+  //       setResult(data);
+  //     },
+  //   });
+  // };
+
+  const handleSearchBtnClick = async () => {
+    console.log('searchList:', searchList);
     placeSearchMutate(searchList, {
       onSuccess: data => {
-        router.push('/result');
-        setResult(data);
+        setMapData(data);
+
+        const mapIdInfo: MapIdType = {
+          mapId: data.map_id,
+          mapHostId: data.map_host_id,
+        };
+
+        placeSearchMapIdMutate(mapIdInfo, {
+          onSuccess: mapData => {
+            setSearchState(searchList);
+            // setData(mapData);
+            setResult(mapData);
+            router.push('/result');
+          },
+          onError: error => {
+            console.error('Error fetching map data:', error);
+          },
+        });
       },
     });
   };
