@@ -4,6 +4,7 @@ import SearchForm from '@/model/search/SearchForm';
 
 import { SearchFormType } from './types';
 import { SearchState } from '@/jotai/global/store';
+import SearchFormWithTogether from '@/model/search-together/SearchFormWithTogether';
 
 export default class SearchService {
   static async searchPlaces(searchForm: SearchState[]) {
@@ -24,5 +25,19 @@ export default class SearchService {
     });
 
     return data;
+  }
+
+  static async makeRoom(searchForm: any) {
+    const requestBody = SearchFormWithTogether.convertToRequestBody(searchForm);
+
+    const { data } = await api.post('/location/together', { ...requestBody });
+
+    return data;
+  }
+
+  static async getInputStatusList(roomId: string) {
+    const res = await api.get(`/location/together/${roomId}/polling`);
+
+    return res.data;
   }
 }

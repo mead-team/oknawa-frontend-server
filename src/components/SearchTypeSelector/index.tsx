@@ -1,9 +1,5 @@
 import styled from 'styled-components';
-import Avatar from '../Avatar';
 import { useRouter } from 'next/navigation';
-import toast from 'react-hot-toast';
-import { PeopleIcon } from '@/assets/icons/People';
-import { PlusIcon } from '@/assets/icons/Plus';
 import { ReactNode } from 'react';
 
 interface SearchTypeSelectorProps {
@@ -25,19 +21,10 @@ export default function SearchTypeSelector({
 
   const handleButtonClick = () => {
     if (type === 'individual') {
-      router.push('/search/individual');
-    } else {
-      toast('서비스 준비중입니다.', {
-        duration: 900,
-        icon: '❗️',
-        style: {
-          borderRadius: '12px',
-          background: '#300B0B',
-          color: '#fff',
-          border: '1px solid #FF4D4D',
-        },
-      });
+      return router.push('/search/individual');
     }
+
+    return router.push('/search/together');
   };
 
   return (

@@ -36,3 +36,13 @@ export const usePlaceSearchMutation = () => {
     },
   });
 };
+
+export const useMakeRoomMutation = () => {
+  return useMutation({
+    mutationKey: ['roomMake'],
+    mutationFn: (searchForm: any) => SearchService.makeRoom(searchForm),
+    onError: error => {
+      console.log('error 발생!', error);
+    },
+  });
+};

@@ -14,6 +14,7 @@ import { bottomSheetState, searchState } from '@/jotai/global/store';
 
 import Button from '@/components/Button';
 import { ArrowBackIcon } from '@/assets/icons/ArrowBack';
+import { useMakeRoomMutation } from '@/hooks/mutation/search';
 
 const numberConfig: { [key: number]: string } = {
   1: '첫',
@@ -39,6 +40,9 @@ export default function SearchView({ type }: SearchViewProps) {
   const [searchList, setSearchList] = useAtom(searchState);
 
   const { register, setValue, handleSubmit, watch, reset } = useSearchForm();
+  const { mutate: makeRoomMutate } = useMakeRoomMutation();
+
+  const isIndividualView = type === 'individual';
 
   const handleSearchAddressBtnClick = (index: number, e: any) => {
     e.preventDefault();
@@ -51,7 +55,20 @@ export default function SearchView({ type }: SearchViewProps) {
   };
 
   const handleSearchBtnClick = (searchForm: any) => {
-    setSearchList(prevState => [...prevState, searchForm]);
+    if (isIndividualView) {
+      setSearchList(prevState => [...prevState, searchForm]);
+    }
+
+    if (!isIndividualView) {
+      makeRoomMutate(searchForm, {
+        onSuccess: data => {
+          localStorage.setItem('roomId', data.room_id);
+          localStorage.setItem('hostKey', data.room_host_id);
+          router.push('/search/list-together');
+        },
+      });
+      return;
+    }
 
     if (searchList.length >= 1) {
       router.push('/search/list');
@@ -62,16 +79,15 @@ export default function SearchView({ type }: SearchViewProps) {
 
   const addressValue = watch('address');
   const nameValue = watch('name');
-  const titleText = `${
-    numberConfig[searchList.length + 1]
-  }번째 출발지 정보를\n입력해주세요.`;
+  const titleText = isIndividualView
+    ? `${numberConfig[searchList.length + 1]}번째 출발지 정보를\n입력해주세요.`
+    : '먼저 자신의 출발지 정보를\n입력해주세요.';
   const buttonText =
     searchList.length >= 1
       ? '등록하기'
       : `${numberConfig[searchList.length + 2]}번째 출발지 추가하기`;
   const isButtonDisabled = !nameValue || !addressValue?.fullAddress;
 
-  const handleClearName = () => setValue('name', '');
   const handleClearAddress = () =>
     setValue('address', {
       fullAddress: '',
@@ -88,7 +104,7 @@ export default function SearchView({ type }: SearchViewProps) {
         </IconBox>
         <TitleBox>
           <Title>{titleText}</Title>
-          <PeopleCount>① ②</PeopleCount>
+          {isIndividualView && <PeopleCount>① ②</PeopleCount>}
         </TitleBox>
         <Section>
           <Input
@@ -97,7 +113,7 @@ export default function SearchView({ type }: SearchViewProps) {
             size="sm"
             maxLength={5}
             {...register('name')}
-            onClear={handleClearName}
+            onClear={() => setValue('name', '')}
             value={nameValue}
           />
           <ClickableArea
@@ -113,7 +129,15 @@ export default function SearchView({ type }: SearchViewProps) {
             />
           </ClickableArea>
         </Section>
-        <Button label={buttonText} disabled={isButtonDisabled} type="submit" />
+        {isIndividualView ? (
+          <Button
+            label={buttonText}
+            disabled={isButtonDisabled}
+            type="submit"
+          />
+        ) : (
+          <Button label="등록하기" type="submit" disabled={isButtonDisabled} />
+        )}
       </Wrapper>
     </Container>
   );
