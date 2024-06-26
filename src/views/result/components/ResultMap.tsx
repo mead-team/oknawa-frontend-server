@@ -78,6 +78,9 @@ export default function ResultMap({
     const bounds = getMapBounds()!;
 
     map.setBounds(bounds);
+
+    console.log('ResultMap - bounds:', map);
+    console.log('ResultMap - map:', map);
   }, [map, station, getMapBounds]);
 
   useEffect(() => {
@@ -99,7 +102,7 @@ export default function ResultMap({
     <>
       {loaded && (
         <Map
-          center={{ lat: station.end_y, lng: station.end_x }}
+          center={{ lat: station.station.end_y, lng: station.station.end_x }}
           level={3}
           isPanto
           onCreate={setMap}
