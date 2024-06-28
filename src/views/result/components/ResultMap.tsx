@@ -78,9 +78,6 @@ export default function ResultMap({
     const bounds = getMapBounds()!;
 
     map.setBounds(bounds);
-
-    console.log('ResultMap - bounds:', map);
-    console.log('ResultMap - map:', map);
   }, [map, station, getMapBounds]);
 
   useEffect(() => {

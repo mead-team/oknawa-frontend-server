@@ -72,6 +72,19 @@ export default function ResultBody() {
           </BackButton>
         </Header>
 
+        {distanceSummaries?.map((station, index) => {
+          return (
+            <DistanceSummary
+              station={station}
+              stationIndex={`0${index + 1}`}
+              stationLength={`0${distanceSummaries.length}`}
+              stationName={station.stationName}
+              shareKey={station.shareKey}
+              key={`summary-${index}`}
+            />
+          );
+        })}
+        {/* 
         <Swiper spaceBetween={12} centeredSlides={true} className="mySwiper">
           {distanceSummaries?.map((station, index) => {
             return (
@@ -86,7 +99,7 @@ export default function ResultBody() {
               </SwiperSlide>
             );
           })}
-        </Swiper>
+        </Swiper> */}
 
         <Swiper className="mapSwiepr">
           {distanceSummaries?.map((station, index) => {

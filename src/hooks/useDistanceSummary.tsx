@@ -64,9 +64,6 @@ export default function useDistanceSummary() {
 
   return {
     distanceSummaries,
-    // stationName,
-    // itinerary,
-    // averageTravelTime,
     initKakao,
     kakaoShareSendDefault,
   };
