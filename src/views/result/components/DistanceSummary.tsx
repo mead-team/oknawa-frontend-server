@@ -1,5 +1,7 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+
 import { convertToKoreanTime } from '@/utils/date';
 
 import useDistanceSummary from '@/hooks/useDistanceSummary';
@@ -30,11 +32,11 @@ import {
   LikeWrapper,
   PreffertWrapper,
   SharingButton,
-  Station,
   StationName,
   TitleWrapper,
   VoteTitle,
   VoteWrapper,
+  ChevronButton,
 } from '../style';
 
 export default function DistanceSummary({
@@ -43,7 +45,11 @@ export default function DistanceSummary({
   shareKey,
   stationIndex,
   stationLength,
+  onNext,
+  onPrev,
 }: any) {
+  const router = useRouter();
+
   const { initKakao, kakaoShareSendDefault } = useDistanceSummary();
 
   const handleKakaoSharingBtnClick = (stationName: any, shareKey: any) => {
@@ -84,11 +90,15 @@ export default function DistanceSummary({
     },
   ];
 
+  const clickHome = () => {
+    router.push('/');
+  };
+
   return (
     <>
       <Container>
         <Header>
-          <HomeButton>
+          <HomeButton onClick={clickHome}>
             <HomeIcon />
           </HomeButton>
           <SharingButton
@@ -101,11 +111,7 @@ export default function DistanceSummary({
         <Body>
           <ContentWrapper>
             <TitleWrapper>
-              <StationName>
-                <Station.Container>
-                  <Station.BoldText>{stationName}</Station.BoldText>
-                </Station.Container>
-              </StationName>
+              <StationName>{stationName}</StationName>
               <AverageArrivalTime>
                 도착하는데 평균{' '}
                 <ArrivalTime>
@@ -115,11 +121,15 @@ export default function DistanceSummary({
               </AverageArrivalTime>
             </TitleWrapper>
             <IndicatorWrapper>
-              <ChevronLeft />
+              <ChevronButton onClick={onPrev}>
+                <ChevronLeft />
+              </ChevronButton>
               <Indicator>
                 {stationIndex}/{stationLength}
               </Indicator>
-              <ChevronRight />
+              <ChevronButton onClick={onNext}>
+                <ChevronRight />
+              </ChevronButton>
             </IndicatorWrapper>
           </ContentWrapper>
           <PreffertWrapper>

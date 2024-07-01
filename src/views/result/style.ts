@@ -58,17 +58,8 @@ export const StationName = styled.p`
   display: flex;
   justify-content: space-between;
   font-size: 24px;
+  font-weight: 700;
 `;
-
-export const Station = {
-  Container: styled.span`
-    margin-right: 1px;
-    font-weight: 500;
-  `,
-  BoldText: styled.span`
-    font-weight: 700;
-  `,
-};
 
 export const AverageArrivalTime = styled.p`
   font-size: 18px;
@@ -92,6 +83,10 @@ export const Indicator = styled.div`
   font-size: 16px;
   font-weight: 500;
   letter-spacing: -0.003em;
+`;
+
+export const ChevronButton = styled.div`
+  cursor: pointer;
 `;
 
 export const PreffertWrapper = styled.div`

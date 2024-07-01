@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import useDistanceSummary from '@/hooks/useDistanceSummary';
 import { usePlaceSearchWithShareKeyQuery } from '@/hooks/query/search';
@@ -14,29 +14,32 @@ import DistanceSummary from './components/DistanceSummary';
 import HotPlaceModal from './components/HotPlaceModal';
 import ResultMap from './components/ResultMap';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { Button } from '@nextui-org/react';
 
-import { ArrowBackIcon } from '@/assets/icons/ArrowBack';
-
-import { Swiper, SwiperSlide } from 'swiper/react';
-
-import 'swiper/css';
-import 'swiper/css/pagination';
-
-import './styles.css';
-
 export default function ResultBody() {
-  const router = useRouter();
   const shareKey = useSearchParams().get('sharekey');
 
   const [result, setResult] = useAtom(resultState);
+  const setBottomSheet = useSetAtom(bottomSheetState);
+
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const { data } = usePlaceSearchWithShareKeyQuery(shareKey);
-
   const { distanceSummaries } = useDistanceSummary();
 
-  const setBottomSheet = useSetAtom(bottomSheetState);
+  const currentStation = distanceSummaries[currentIndex];
+
+  const handleNext = () => {
+    setCurrentIndex(prevIndex => (prevIndex + 1) % distanceSummaries.length);
+  };
+
+  const handlePrev = () => {
+    setCurrentIndex(
+      prevIndex =>
+        (prevIndex - 1 + distanceSummaries.length) % distanceSummaries.length,
+    );
+  };
 
   const handleHotplaceBtnClick = (station: any) => {
     setBottomSheet(prevState => ({
@@ -62,85 +65,30 @@ export default function ResultBody() {
   return (
     <>
       <Container>
-        <Header>
-          <BackButton
-            isIconOnly
-            aria-label="Back"
-            onClick={() => router.push('/')}
-          >
-            <ArrowBackIcon />
-          </BackButton>
-        </Header>
-
-        {distanceSummaries?.map((station, index) => {
-          return (
-            <DistanceSummary
-              station={station}
-              stationIndex={`0${index + 1}`}
-              stationLength={`0${distanceSummaries.length}`}
-              stationName={station.stationName}
-              shareKey={station.shareKey}
-              key={`summary-${index}`}
-            />
-          );
-        })}
-        {/* 
-        <Swiper spaceBetween={12} centeredSlides={true} className="mySwiper">
-          {distanceSummaries?.map((station, index) => {
-            return (
-              <SwiperSlide key={`summary-${index}`}>
-                <DistanceSummary
-                  station={station}
-                  stationIndex={`0${index + 1}`}
-                  stationLength={`0${distanceSummaries.length}`}
-                  stationName={station.stationName}
-                  shareKey={station.shareKey}
-                />
-              </SwiperSlide>
-            );
-          })}
-        </Swiper> */}
-
-        <Swiper className="mapSwiepr">
-          {distanceSummaries?.map((station, index) => {
-            return (
-              <>
-                <SwiperSlide key={`map-${index}`}>
-                  <ResultMap
-                    station={station}
-                    participants={station.participants}
-                    itinerary={station.itinerary}
-                    stationName={station.stationName}
-                  />
-                </SwiperSlide>
-              </>
-            );
-          })}
-        </Swiper>
-        {/* <FloatingButton
+        <DistanceSummary
+          station={currentStation}
+          stationIndex={`0${currentIndex + 1}`}
+          stationLength={`0${distanceSummaries.length}`}
+          stationName={currentStation.stationName}
+          shareKey={currentStation.shareKey}
+          onNext={handleNext}
+          onPrev={handlePrev}
+        />
+        <ResultMap
+          station={currentStation}
+          participants={currentStation.participants}
+          itinerary={currentStation.itinerary}
+          stationName={currentStation.stationName}
+        />
+        <FloatingButton
           radius="full"
           size="lg"
           color="success"
           variant="shadow"
-          onClick={() => handleHotplaceBtnClick(station)}
+          onClick={() => handleHotplaceBtnClick(currentStation)}
         >
-          명동 핫플레이스는 어디?
-        </FloatingButton> */}
-        {distanceSummaries?.map(station => {
-          return (
-            <>
-              <FloatingButton
-                radius="full"
-                size="lg"
-                color="success"
-                variant="shadow"
-                onClick={() => handleHotplaceBtnClick(station)}
-              >
-                {station.stationName} 핫플레이스는 어디?
-              </FloatingButton>
-            </>
-          );
-        })}
+          {currentStation.stationName} 핫플레이스는 어디?
+        </FloatingButton>
       </Container>
     </>
   );
@@ -159,19 +107,4 @@ const FloatingButton = styled(Button)`
   transform: translateX(-50%);
   font-weight: 600;
   z-index: 100;
-`;
-
-const Header = styled.header`
-  position: absolute;
-  top: 15px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 95%;
-  z-index: 10;
-`;
-
-const BackButton = styled(Button)`
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
 `;
