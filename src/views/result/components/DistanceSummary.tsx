@@ -38,6 +38,10 @@ import {
   VoteWrapper,
   ChevronButton,
 } from '../style';
+import VoteService from '@/services/vote/VoteService';
+import { useAtom } from 'jotai';
+import { mapIdState } from '@/jotai/mapId/store';
+import { useState } from 'react';
 
 export default function DistanceSummary({
   station,
@@ -45,6 +49,7 @@ export default function DistanceSummary({
   shareKey,
   stationIndex,
   stationLength,
+  participants,
   onNext,
   onPrev,
 }: any) {
@@ -52,43 +57,28 @@ export default function DistanceSummary({
 
   const { initKakao, kakaoShareSendDefault } = useDistanceSummary();
 
+  const [isButtonDisabled, setButtonDisabled] = useState(false);
+
   const handleKakaoSharingBtnClick = (stationName: any, shareKey: any) => {
     initKakao();
     kakaoShareSendDefault(stationName, shareKey);
   };
 
-  const likeItems = [
-    {
-      isActive: true,
-    },
-    {
-      isActive: true,
-    },
-    {
-      isActive: false,
-    },
-    {
-      isActive: false,
-    },
-    {
-      isActive: false,
-    },
-    {
-      isActive: false,
-    },
-    {
-      isActive: false,
-    },
-    {
-      isActive: false,
-    },
-    {
-      isActive: false,
-    },
-    {
-      isActive: false,
-    },
-  ];
+  console.log('participants.participant:', participants.participant);
+
+  const [mapIdInfo] = useAtom(mapIdState);
+
+  const handleVoteClick = async () => {
+    try {
+      const result = await VoteService.setVote(mapIdInfo, shareKey);
+
+      if (isButtonDisabled) return;
+
+      setButtonDisabled(true); // 버튼 비활성화
+    } catch (error) {
+      console.error('Error voting:', error);
+    }
+  };
 
   const clickHome = () => {
     router.push('/');
@@ -136,11 +126,11 @@ export default function DistanceSummary({
             <VoteWrapper>
               <VoteTitle>
                 <Label>선호도 결과</Label>
-                <Count>7표</Count>
+                <Count>{participants.participant.length}표</Count>
               </VoteTitle>
 
               <LikeWrapper>
-                {likeItems.map((item, index) => (
+                {participants.participant.map((item, index) => (
                   <LikeItem key={index}>
                     {item.isActive ? <LikeIconActive /> : <LikeIcon />}
                   </LikeItem>
@@ -148,7 +138,14 @@ export default function DistanceSummary({
               </LikeWrapper>
             </VoteWrapper>
             <ButtonWrapper>
-              <ButtonLine>
+              <ButtonLine
+                onClick={handleVoteClick}
+                style={{
+                  backgroundColor: isButtonDisabled ? '#D3D3D3' : 'initial',
+                  cursor: isButtonDisabled ? 'not-allowed' : 'pointer',
+                  pointerEvents: isButtonDisabled ? 'none' : 'auto',
+                }}
+              >
                 좋아요
                 <LikeIcon />
               </ButtonLine>

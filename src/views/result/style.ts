@@ -118,11 +118,12 @@ export const Count = styled.p`
 export const LikeWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
-  width: 106px;
+  gap: 8px;
+  /* width: 106px; */
 `;
 
 export const LikeItem = styled.div`
-  flex: 1 0 20%;
+  /* flex: 1 0 20%; */
 `;
 
 export const ButtonWrapper = styled.div`

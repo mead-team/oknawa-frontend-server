@@ -18,6 +18,7 @@ import { resultState } from '@/jotai/result/store';
 import { useEffect, useState } from 'react';
 import SearchLoading from './components/SearchLoading';
 import { MapIdType } from '@/services/search/types';
+import { mapIdState } from '@/jotai/mapId/store';
 
 export default function SearchCompleteList() {
   const router = useRouter();
@@ -27,6 +28,7 @@ export default function SearchCompleteList() {
   const [mapData, setMapData] = useState();
   const [data, setData] = useState();
   const setSearchState = useSetAtom(searchState);
+  const setMapIdInfo = useSetAtom(mapIdState);
 
   const { mutate: placeSearchMutate } = usePlaceSearchMutation();
   const {
@@ -55,6 +57,8 @@ export default function SearchCompleteList() {
           mapId: data.map_id,
           mapHostId: data.map_host_id,
         };
+
+        setMapIdInfo(mapIdInfo);
 
         placeSearchMapIdMutate(mapIdInfo, {
           onSuccess: mapData => {
