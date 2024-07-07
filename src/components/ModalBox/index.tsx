@@ -8,10 +8,13 @@ import {
   Container,
   Modal,
   ModalBody,
-  ModalButton,
+  ModalButtonWrapper,
   ModalContent,
   ModalHeader,
 } from './style';
+
+import Button from '../Button';
+import ButtonPrimary from '../ButtonPrimary';
 
 export default function ModalBox() {
   const [modal] = useAtom(modalState);
@@ -49,11 +52,24 @@ export default function ModalBox() {
         <ModalContent>
           {modal.title && <ModalHeader>{modal.title}</ModalHeader>}
           <ModalBody>{modal.contents}</ModalBody>
-          {modal.buttonLabel && (
-            <ModalButton onClick={handleCloseBtnClick}>
-              {modal.buttonLabel}
-            </ModalButton>
-          )}
+          <ModalButtonWrapper>
+            {modal.buttonLabel02 ? (
+              <>
+                <Button
+                  onClick={handleCloseBtnClick}
+                  label={modal.buttonLabel}
+                  widthFull
+                />
+                <ButtonPrimary label={modal.buttonLabel02} widthFull />
+              </>
+            ) : (
+              <Button
+                onClick={handleCloseBtnClick}
+                label={modal.buttonLabel}
+                widthFull
+              />
+            )}
+          </ModalButtonWrapper>
         </ModalContent>
       </Modal>
     </Container>

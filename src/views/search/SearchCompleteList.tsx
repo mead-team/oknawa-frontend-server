@@ -37,16 +37,6 @@ export default function SearchCompleteList() {
     isSuccess,
   } = usePlaceSearchMapIdMutation();
 
-  // const handleSearchBtnClick = () => {
-  //   console.log('searchList:', searchList);
-  //   placeSearchMutate(searchList, {
-  //     onSuccess: data => {
-  //       router.push('/result');
-  //       setResult(data);
-  //     },
-  //   });
-  // };
-
   const handleSearchBtnClick = async () => {
     console.log('searchList:', searchList);
     placeSearchMutate(searchList, {
@@ -63,7 +53,6 @@ export default function SearchCompleteList() {
         placeSearchMapIdMutate(mapIdInfo, {
           onSuccess: mapData => {
             setSearchState(searchList);
-            // setData(mapData);
             setResult(mapData);
             router.push('/result');
           },
@@ -104,6 +93,8 @@ export default function SearchCompleteList() {
         </Section>
         <Button
           label="출발지 추가하기 ⊕"
+          widthFull
+          size="large"
           onClick={() => router.push('/search/individual')}
         />
       </Wrapper>

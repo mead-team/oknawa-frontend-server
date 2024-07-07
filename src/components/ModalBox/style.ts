@@ -53,6 +53,12 @@ export const ModalBody = styled.div`
   white-space: pre-line;
 `;
 
+export const ModalButtonWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+`;
+
 export const ModalButton = styled.div`
   display: flex;
   flex-direction: column;

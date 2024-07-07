@@ -99,6 +99,8 @@ export const PreffertWrapper = styled.div`
 export const VoteWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
+  max-width: 106px;
   gap: 8px;
 `;
 
@@ -128,32 +130,8 @@ export const LikeItem = styled.div`
 
 export const ButtonWrapper = styled.div`
   display: flex;
+  width: fit-content;
   flex-direction: row;
   align-items: center;
   gap: 8px;
-`;
-export const ButtonLine = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 16px 12px 16px 16px;
-  height: 44px;
-  border-radius: 8px;
-  gap: 4px;
-  font-weight: 700;
-  color: #777780;
-  border: 1px solid #777780;
-  cursor: pointer;
-`;
-export const ButtonPrimary = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 44px;
-  border-radius: 8px;
-  padding: 16px;
-  font-weight: 700;
-  background-color: #18c964;
-  color: #101012;
-  cursor: pointer;
 `;

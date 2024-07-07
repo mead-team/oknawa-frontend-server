@@ -6,6 +6,7 @@ interface ModalState {
   isOpen: boolean;
   title?: string;
   buttonLabel?: string;
+  buttonLabel02?: string;
   contents: string;
 }
 
@@ -31,6 +32,7 @@ const initialState: ModalState = {
   isOpen: false,
   title: '',
   buttonLabel: '',
+  buttonLabel02: '',
   contents: '',
 };
 

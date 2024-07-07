@@ -112,7 +112,13 @@ export default function SearchView({ type }: SearchViewProps) {
             />
           </ClickableArea>
         </Section>
-        <Button label={buttonText} disabled={isButtonDisabled} type="submit" />
+        <Button
+          label={buttonText}
+          disabled={isButtonDisabled}
+          widthFull
+          size="large"
+          type="submit"
+        />
       </Wrapper>
     </Container>
   );

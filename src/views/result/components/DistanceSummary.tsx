@@ -4,13 +4,21 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useAtom } from 'jotai';
 
-import { convertToKoreanTime } from '@/utils/date';
+import { mapIdState } from '@/jotai/mapId/store';
+
 import useDistanceSummary from '@/hooks/useDistanceSummary';
+import useModal from '@/hooks/common/useModal';
+
+import VoteService from '@/services/vote/VoteService';
+
+import { convertToKoreanTime } from '@/utils/date';
+
 import { ShareIcon } from '@/assets/icons/Share';
 import { HomeIcon } from '@/assets/icons/Home';
 import { ChevronLeft } from '@/assets/icons/ChevronLeft';
 import { ChevronRight } from '@/assets/icons/ChevronRight';
 import { LikeIcon } from '@/assets/icons/Like';
+import { LikeIconInactive } from '@/assets/icons/LikeInactive';
 import { LikeIconActive } from '@/assets/icons/LikeActive';
 
 import {
@@ -18,8 +26,6 @@ import {
   ArrivalTime,
   AverageArrivalTime,
   Body,
-  ButtonLine,
-  ButtonPrimary,
   ButtonWrapper,
   ContentWrapper,
   Count,
@@ -38,9 +44,8 @@ import {
   VoteWrapper,
   ChevronButton,
 } from '../style';
-
-import VoteService from '@/services/vote/VoteService';
-import { mapIdState } from '@/jotai/mapId/store';
+import ButtonPrimary from '@/components/ButtonPrimary';
+import Button from '@/components/Button';
 
 export default function DistanceSummary({
   station,
@@ -59,6 +64,8 @@ export default function DistanceSummary({
   const [isButtonDisabled, setButtonDisabled] = useState(false);
   const [newParticipants, setNewParticipants] = useState<any[]>([]);
 
+  const { setModalContents } = useModal();
+
   useEffect(() => {
     const processParticipants = (participants: any) =>
       participants.map((participant: any) => ({
@@ -76,7 +83,7 @@ export default function DistanceSummary({
     kakaoShareSendDefault(stationName, shareKey);
   };
 
-  const handleVoteClick = async () => {
+  const clickVote = async () => {
     try {
       const result = await VoteService.setVote(mapIdInfo, shareKey);
 
@@ -87,6 +94,31 @@ export default function DistanceSummary({
       const updatedParticipants = [...participants];
       updatedParticipants[0].is_active = true;
       setNewParticipants(updatedParticipants);
+    } catch (error) {
+      console.error('Error voting:', error);
+    }
+  };
+  const clickVoteConfirm = async () => {
+    if (isButtonDisabled === false) {
+      setModalContents({
+        buttonLabel: '확인',
+        contents: '아직 투표를 안하셨어요!',
+      });
+      return;
+    } else {
+      setModalContents({
+        buttonLabel: '취소',
+        buttonLabel02: '확인',
+        contents: '진짜 이대로 확정하시겠어요?',
+      });
+      // confirmVote();
+    }
+  };
+
+  const confirmVote = async () => {
+    try {
+      const result = await VoteService.setVoteConfirm(mapIdInfo, shareKey);
+      console.error('confirm - result:', result);
     } catch (error) {
       console.error('Error voting:', error);
     }
@@ -143,24 +175,20 @@ export default function DistanceSummary({
             <LikeWrapper>
               {newParticipants.map((item: any, index: number) => (
                 <LikeItem key={index}>
-                  {item.is_active ? <LikeIconActive /> : <LikeIcon />}
+                  {item.is_active ? <LikeIconActive /> : <LikeIconInactive />}
                 </LikeItem>
               ))}
             </LikeWrapper>
           </VoteWrapper>
           <ButtonWrapper>
-            <ButtonLine
-              onClick={handleVoteClick}
-              style={{
-                backgroundColor: isButtonDisabled ? '#D3D3D3' : 'initial',
-                cursor: isButtonDisabled ? 'not-allowed' : 'pointer',
-                pointerEvents: isButtonDisabled ? 'none' : 'auto',
-              }}
+            <Button
+              label={'좋아요'}
+              onClick={clickVote}
+              disabled={isButtonDisabled}
             >
-              좋아요
-              <LikeIcon />
-            </ButtonLine>
-            <ButtonPrimary>확정하기</ButtonPrimary>
+              {isButtonDisabled ? <LikeIconInactive /> : <LikeIcon />}
+            </Button>
+            <ButtonPrimary label={'확정하기'} onClick={clickVoteConfirm} />
           </ButtonWrapper>
         </PreffertWrapper>
       </Body>
