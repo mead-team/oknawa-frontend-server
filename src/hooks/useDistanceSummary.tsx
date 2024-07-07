@@ -9,13 +9,13 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 export default function useDistanceSummary() {
   const [result] = useAtom(resultState);
 
-  const { station_info } = result;
+  const { station_info, request_info } = result;
 
   const distanceSummaries = station_info.map(station => {
     const stationName = station.station_name.split(' ')[0];
     const itinerary = station.itinerary;
     const shareKey = station.share_key;
-    const participants = station.request_info;
+    // const participants = station.request_info;
     const totalTravelTime = station.itinerary.reduce(
       (sum, itinerary) => sum + itinerary.itinerary.totalTime,
       0,
@@ -27,7 +27,7 @@ export default function useDistanceSummary() {
       stationName,
       itinerary,
       shareKey,
-      participants,
+      // participants,
       totalTravelTime,
       averageTravelTime,
     };
@@ -66,5 +66,6 @@ export default function useDistanceSummary() {
     distanceSummaries,
     initKakao,
     kakaoShareSendDefault,
+    participants: request_info.participant,
   };
 }

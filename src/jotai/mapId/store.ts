@@ -1,13 +1,13 @@
 import { atomWithStorage, createJSONStorage } from 'jotai/utils';
 
 export interface MapIdState {
-  map_id: string;
-  map_host_id: string;
+  mapId: string;
+  mapHostId: string;
 }
 
 const initialState: MapIdState = {
-  map_id: '',
-  map_host_id: '',
+  mapId: '',
+  mapHostId: '',
 };
 
 export const mapIdState = atomWithStorage<MapIdState>(

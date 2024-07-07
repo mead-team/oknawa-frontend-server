@@ -42,7 +42,7 @@ export default function ResultMap({
 
     const bounds = new kakao.maps.LatLngBounds();
 
-    participants.participant?.forEach((user: any) => {
+    participants.forEach((user: any) => {
       const { start_y, start_x } = user;
       const position = new kakao.maps.LatLng(start_y, start_x);
       bounds.extend(position);
@@ -104,7 +104,7 @@ export default function ResultMap({
           isPanto
           onCreate={setMap}
         >
-          {participants.participant?.map((user: any, index: number) => {
+          {participants.map((user: any, index: number) => {
             return (
               <MapMarker
                 key={index}

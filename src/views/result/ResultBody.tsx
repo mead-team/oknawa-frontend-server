@@ -26,7 +26,7 @@ export default function ResultBody() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const { data } = usePlaceSearchWithShareKeyQuery(shareKey);
-  const { distanceSummaries } = useDistanceSummary();
+  const { distanceSummaries, participants } = useDistanceSummary();
 
   const currentStation = distanceSummaries[currentIndex];
 
@@ -70,14 +70,14 @@ export default function ResultBody() {
           stationIndex={`0${currentIndex + 1}`}
           stationLength={`0${distanceSummaries.length}`}
           stationName={currentStation.stationName}
-          participants={currentStation.participants}
+          participants={participants}
           shareKey={currentStation.shareKey}
           onNext={handleNext}
           onPrev={handlePrev}
         />
         <ResultMap
           station={currentStation}
-          participants={currentStation.participants}
+          participants={participants}
           itinerary={currentStation.itinerary}
           stationName={currentStation.stationName}
         />
