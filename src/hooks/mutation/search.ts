@@ -1,27 +1,14 @@
 import { useMutation } from '@tanstack/react-query';
 
 import SearchService from '@/services/search/SearchService';
-import { MapIdType, SearchFormType } from '@/services/search/types';
+import { MapIdType } from '@/services/search/types';
 
-import { useSetAtom } from 'jotai';
-import { SearchState, modalState } from '@/jotai/global/store';
+import { SearchState } from '@/jotai/global/store';
 
-interface IModalProps {
-  buttonLabel: string;
-  contents: string;
-}
+import useModal from '@/hooks/common/useModal';
 
 export const usePlaceSearchMutation = () => {
-  const setModal = useSetAtom(modalState);
-
-  const setModalContents = ({ buttonLabel, contents }: IModalProps) => {
-    setModal(pervState => ({
-      ...pervState,
-      isOpen: true,
-      buttonLabel: buttonLabel,
-      contents: contents,
-    }));
-  };
+  const { setModalContents } = useModal();
 
   return useMutation({
     mutationKey: ['placeSearch'],
