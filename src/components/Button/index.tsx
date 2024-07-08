@@ -1,5 +1,5 @@
-import { ReactNode } from 'react';
-import styled from 'styled-components';
+import { ReactNode, CSSProperties } from 'react';
+import styled, { css } from 'styled-components';
 
 interface ButtonProps {
   label?: string;
@@ -8,6 +8,7 @@ interface ButtonProps {
   size?: 'small' | 'medium' | 'large';
   children?: ReactNode;
   type?: 'button' | 'submit' | 'reset';
+  style?: CSSProperties;
   onClick?: () => void;
 }
 
@@ -18,6 +19,7 @@ export default function Button({
   children,
   size = 'medium',
   type = 'button',
+  style,
   onClick,
 }: ButtonProps) {
   return (
@@ -27,6 +29,7 @@ export default function Button({
       onClick={onClick}
       widthFull={widthFull}
       size={size}
+      style={style}
     >
       {children && children}
       <Text>{label}</Text>
@@ -38,6 +41,7 @@ const Container = styled.button<{
   disabled: boolean | undefined;
   widthFull?: boolean;
   size: 'small' | 'medium' | 'large';
+  style?: CSSProperties;
 }>`
   display: flex;
   justify-content: center;
@@ -61,6 +65,7 @@ const Container = styled.button<{
     disabled ? '1px solid #8D8D94' : '1px solid white'};
   border-radius: 8px;
   color: ${({ disabled }) => (disabled ? '#8D8D94' : 'white')};
+  ${({ style }) => style && css(style)}
 `;
 
 const Text = styled.h1`

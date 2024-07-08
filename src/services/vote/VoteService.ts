@@ -14,4 +14,20 @@ export default class VoteService {
 
     return data;
   }
+  static async setVoteConfirm(mapIdInfo: MapIdType, shareKey: string) {
+    const { data } = await api.post(
+      `/location/points/${mapIdInfo.mapId}/confirm`,
+      { mapIdInfo },
+      {
+        params: {
+          map_host_id: mapIdInfo.mapHostId,
+          share_key: shareKey,
+        },
+      },
+    );
+
+    console.log('vote-confirm msg:', data.msg);
+
+    return data;
+  }
 }

@@ -87,12 +87,10 @@ export default function DistanceSummary({
     try {
       const result = await VoteService.setVote(mapIdInfo, shareKey);
 
-      if (isButtonDisabled) return;
-
-      setButtonDisabled(true);
+      setButtonDisabled(!isButtonDisabled);
 
       const updatedParticipants = [...participants];
-      updatedParticipants[0].is_active = true;
+      updatedParticipants[0].is_active = !updatedParticipants[0].is_active;
       setNewParticipants(updatedParticipants);
     } catch (error) {
       console.error('Error voting:', error);
@@ -111,11 +109,10 @@ export default function DistanceSummary({
         buttonLabel02: '확인',
         contents: '진짜 이대로 확정하시겠어요?',
       });
-      // confirmVote();
     }
   };
 
-  const confirmVote = async () => {
+  const handleVoteConfirm = async () => {
     try {
       const result = await VoteService.setVoteConfirm(mapIdInfo, shareKey);
       console.error('confirm - result:', result);
@@ -182,9 +179,14 @@ export default function DistanceSummary({
           </VoteWrapper>
           <ButtonWrapper>
             <Button
-              label={'좋아요'}
+              label={isButtonDisabled ? '좋아요 취소' : '좋아요'}
               onClick={clickVote}
-              disabled={isButtonDisabled}
+              style={{
+                border: isButtonDisabled
+                  ? '1px solid #8D8D94'
+                  : '1px solid white',
+                color: isButtonDisabled ? '#8D8D94' : 'white',
+              }}
             >
               {isButtonDisabled ? <LikeIconInactive /> : <LikeIcon />}
             </Button>
