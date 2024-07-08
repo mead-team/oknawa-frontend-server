@@ -15,7 +15,7 @@ export default function useDistanceSummary() {
     const stationName = station.station_name.split(' ')[0];
     const itinerary = station.itinerary;
     const shareKey = station.share_key;
-    // const participants = station.request_info;
+    const stationParticipants = station.request_info.participant;
     const totalTravelTime = station.itinerary.reduce(
       (sum, itinerary) => sum + itinerary.itinerary.totalTime,
       0,
@@ -27,7 +27,7 @@ export default function useDistanceSummary() {
       stationName,
       itinerary,
       shareKey,
-      // participants,
+      stationParticipants,
       totalTravelTime,
       averageTravelTime,
     };

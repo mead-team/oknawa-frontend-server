@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useAtom } from 'jotai';
 
 import { mapIdState } from '@/jotai/mapId/store';
+import { newParticipantsState } from '@/jotai/result/store';
 
 import useDistanceSummary from '@/hooks/useDistanceSummary';
 import useModal from '@/hooks/common/useModal';
@@ -54,6 +55,7 @@ export default function DistanceSummary({
   stationIndex,
   stationLength,
   participants,
+  stationParticipants,
   onNext,
   onPrev,
 }: any) {
@@ -62,9 +64,11 @@ export default function DistanceSummary({
   const [mapIdInfo] = useAtom(mapIdState);
 
   const [isButtonDisabled, setButtonDisabled] = useState(false);
-  const [newParticipants, setNewParticipants] = useState<any[]>([]);
+  const [newParticipants, setNewParticipants] = useAtom(newParticipantsState);
 
   const { setModalContents } = useModal();
+
+  console.log('newParticipants:', newParticipants);
 
   useEffect(() => {
     const processParticipants = (participants: any) =>
@@ -73,10 +77,10 @@ export default function DistanceSummary({
         is_active: false,
       }));
 
-    if (participants && participants.length > 0) {
-      setNewParticipants(processParticipants(participants));
+    if (stationParticipants && stationParticipants.length > 0) {
+      setNewParticipants(processParticipants(stationParticipants));
     }
-  }, [participants]);
+  }, [stationParticipants, setNewParticipants]);
 
   const handleKakaoSharingBtnClick = (stationName: any, shareKey: any) => {
     initKakao();
@@ -89,13 +93,14 @@ export default function DistanceSummary({
 
       setButtonDisabled(!isButtonDisabled);
 
-      const updatedParticipants = [...participants];
+      const updatedParticipants = [...newParticipants];
       updatedParticipants[0].is_active = !updatedParticipants[0].is_active;
       setNewParticipants(updatedParticipants);
     } catch (error) {
       console.error('Error voting:', error);
     }
   };
+
   const clickVoteConfirm = async () => {
     if (isButtonDisabled === false) {
       setModalContents({

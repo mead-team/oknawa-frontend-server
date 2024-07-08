@@ -62,3 +62,21 @@ export const resultState = atomWithStorage<ResultState>(
   initialState,
   createJSONStorage(() => sessionStorage),
 );
+
+interface NewParticipant {
+  name: string;
+  is_active: boolean;
+}
+
+const initialNewParticipant: NewParticipant = {
+  name: '',
+  is_active: false,
+};
+
+const initialNewParticipants: NewParticipant[] = [initialNewParticipant];
+
+export const newParticipantsState = atomWithStorage<NewParticipant[]>(
+  'newParticipants',
+  initialNewParticipants,
+  createJSONStorage(() => sessionStorage),
+);

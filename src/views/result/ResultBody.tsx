@@ -71,6 +71,7 @@ export default function ResultBody() {
           stationLength={`0${distanceSummaries.length}`}
           stationName={currentStation.stationName}
           participants={participants}
+          stationParticipants={currentStation.stationParticipants}
           shareKey={currentStation.shareKey}
           onNext={handleNext}
           onPrev={handlePrev}
