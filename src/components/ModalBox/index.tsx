@@ -60,7 +60,11 @@ export default function ModalBox() {
                   label={modal.buttonLabel}
                   widthFull
                 />
-                <ButtonPrimary label={modal.buttonLabel02} widthFull />
+                <ButtonPrimary
+                  label={modal.buttonLabel02}
+                  onClick={modal.onConfirm}
+                  widthFull
+                />
               </>
             ) : (
               <Button

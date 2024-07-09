@@ -113,6 +113,7 @@ export default function DistanceSummary({
         buttonLabel: '취소',
         buttonLabel02: '확인',
         contents: '진짜 이대로 확정하시겠어요?',
+        onConfirm: handleVoteConfirm,
       });
     }
   };
@@ -121,6 +122,10 @@ export default function DistanceSummary({
     try {
       const result = await VoteService.setVoteConfirm(mapIdInfo, shareKey);
       console.error('confirm - result:', result);
+      setModalContents({
+        buttonLabel: '확인',
+        contents: '이번 약속 지역이 확정되었어요!',
+      });
     } catch (error) {
       console.error('Error voting:', error);
     }

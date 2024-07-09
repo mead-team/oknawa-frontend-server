@@ -6,6 +6,7 @@ interface IModalProps {
   buttonLabel: string;
   buttonLabel02?: string;
   contents: string;
+  onConfirm?: () => void;
 }
 
 export default function useModal() {
@@ -14,6 +15,7 @@ export default function useModal() {
   const setModalContents = ({
     buttonLabel,
     buttonLabel02,
+    onConfirm,
     contents,
   }: IModalProps) => {
     setModal(prevState => ({
@@ -22,6 +24,7 @@ export default function useModal() {
       buttonLabel,
       buttonLabel02,
       contents,
+      onConfirm,
     }));
   };
 

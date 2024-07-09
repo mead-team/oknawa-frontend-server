@@ -8,6 +8,7 @@ interface ModalState {
   buttonLabel?: string;
   buttonLabel02?: string;
   contents: string;
+  onConfirm?: () => void;
 }
 
 export interface SearchState {
