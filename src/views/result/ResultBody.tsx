@@ -52,12 +52,13 @@ export default function ResultBody() {
         </>
       ),
       contents: <HotPlaceModal station={station} />,
-      height: 70,
+      height: 60,
     }));
   };
 
   useEffect(() => {
     if (shareKey && data) {
+      console.log('shareKey 분기의 data:', data);
       setResult(data);
     }
   }, [shareKey, data, setResult]);
@@ -104,9 +105,9 @@ const Container = styled.main`
 
 const FloatingButton = styled(Button)`
   position: fixed;
-  bottom: 48px;
+  bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
   font-weight: 600;
-  z-index: 100;
+  z-index: 2;
 `;
