@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+
 import { useEffect, useState } from 'react';
 import { useAtom } from 'jotai';
 
@@ -54,21 +55,20 @@ export default function DistanceSummary({
   shareKey,
   stationIndex,
   stationLength,
-  participants,
   stationParticipants,
   onNext,
   onPrev,
 }: any) {
   const router = useRouter();
+
   const { initKakao, kakaoShareSendDefault } = useDistanceSummary();
   const [mapIdInfo] = useAtom(mapIdState);
 
+  const [fullUrl, setFullUrl] = useState('');
   const [isButtonDisabled, setButtonDisabled] = useState(false);
   const [newParticipants, setNewParticipants] = useAtom(newParticipantsState);
 
   const { setModalContents } = useModal();
-
-  console.log('newParticipants:', newParticipants);
 
   useEffect(() => {
     const processParticipants = (participants: any) =>
@@ -82,9 +82,26 @@ export default function DistanceSummary({
     }
   }, [stationParticipants, setNewParticipants]);
 
-  const handleKakaoSharingBtnClick = (stationName: any, shareKey: any) => {
-    initKakao();
-    kakaoShareSendDefault(stationName, shareKey);
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setFullUrl(window.location.href);
+    }
+  }, []);
+
+  // const handleKakaoSharingBtnClick = (stationName: any, shareKey: any) => {
+  //   initKakao();
+  //   kakaoShareSendDefault(stationName, shareKey);
+  // };
+
+  const clickInvitation = async () => {
+    const link = `${fullUrl}?mapId=${mapIdInfo.mapId}&mapHostId=${mapIdInfo.mapHostId}`;
+    try {
+      await navigator.clipboard.writeText(link);
+      alert(`링크가 클립보드에 복사되었습니다! ${link}`);
+    } catch (err) {
+      console.error('클립보드에 복사 실패:', err);
+      alert('링크를 클립보드에 복사하는데 실패했습니다.');
+    }
   };
 
   const clickVote = async () => {
@@ -142,10 +159,11 @@ export default function DistanceSummary({
           <HomeIcon />
         </HomeButton>
         <SharingButton
-          onClick={() => handleKakaoSharingBtnClick(stationName, shareKey)}
+          // onClick={() => handleKakaoSharingBtnClick(stationName, shareKey)}
+          onClick={clickInvitation}
         >
           <ShareIcon />
-          공유하기
+          초대하기
         </SharingButton>
       </Header>
       <Body>
@@ -176,7 +194,9 @@ export default function DistanceSummary({
           <VoteWrapper>
             <VoteTitle>
               <Label>선호도 결과</Label>
-              <Count>{newParticipants.length}표</Count>
+              <Count>
+                {newParticipants?.filter(item => item.is_active).length || 0}표
+              </Count>
             </VoteTitle>
 
             <LikeWrapper>
