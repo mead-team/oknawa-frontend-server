@@ -15,7 +15,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
             refetchOnWindowFocus: false,
           },
         },
-      })
+      }),
   );
 
   return (
@@ -23,7 +23,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <NextThemesProvider attribute="class" defaultTheme="dark">
         <QueryClientProvider client={queryClient}>
           {children}
-          <ReactQueryDevtools initialIsOpen={false} position="bottom" />
+          {/* <ReactQueryDevtools initialIsOpen={false} position="bottom" /> */}
         </QueryClientProvider>
       </NextThemesProvider>
     </NextUIProvider>

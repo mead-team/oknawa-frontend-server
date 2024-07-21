@@ -1,6 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import SearchService from '@/services/search/SearchService';
+import { MapIdType } from '@/services/search/types';
 
 export const usePlaceSearchWithShareKeyQuery = (shareKey?: string | null) => {
   const { data, isLoading } = useQuery({
@@ -12,5 +13,28 @@ export const usePlaceSearchWithShareKeyQuery = (shareKey?: string | null) => {
   return {
     data,
     isLoading,
+  };
+};
+
+export const usePlaceSearchMapIdQuery = (mapIdInfo: MapIdType) => {
+  const queryClient = useQueryClient();
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['placeSearchMapId', mapIdInfo.mapId],
+    queryFn: () => SearchService.searchPolling(mapIdInfo),
+    refetchInterval: 2000,
+  });
+
+  const clearRefetchInterval = () => {
+    queryClient.setQueryDefaults(['placeSearchMapId', mapIdInfo.mapId], {
+      refetchInterval: false,
+    });
+    console.log('종료 성공!');
+  };
+
+  return {
+    data,
+    isLoading,
+    clearRefetchInterval,
   };
 };
