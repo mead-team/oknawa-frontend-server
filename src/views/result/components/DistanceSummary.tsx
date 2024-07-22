@@ -97,10 +97,12 @@ export default function DistanceSummary({
     const link = `${fullUrl}?mapId=${mapIdInfo.mapId}&mapHostId=${mapIdInfo.mapHostId}`;
     try {
       await navigator.clipboard.writeText(link);
-      alert(`링크가 클립보드에 복사되었습니다! ${link}`);
+      setModalContents({
+        buttonLabel: '확인',
+        contents: '링크가 복사되었습니다!',
+      });
     } catch (err) {
       console.error('클립보드에 복사 실패:', err);
-      alert('링크를 클립보드에 복사하는데 실패했습니다.');
     }
   };
 
