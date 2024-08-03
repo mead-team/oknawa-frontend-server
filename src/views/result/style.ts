@@ -135,3 +135,28 @@ export const ButtonWrapper = styled.div`
   align-items: center;
   gap: 8px;
 `;
+
+export const TailWrapper = styled.div`
+  position: absolute;
+  bottom: -16px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 16px;
+`;
+
+export const Tail = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 64px;
+  background-color: #151518;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  cursor: pointer;
+  position: relative;
+
+  svg {
+    position: absolute;
+    bottom: 0px;
+  }
+`;

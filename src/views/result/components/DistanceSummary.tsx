@@ -45,9 +45,13 @@ import {
   VoteTitle,
   VoteWrapper,
   ChevronButton,
+  Tail,
+  TailWrapper,
 } from '../style';
 import ButtonPrimary from '@/components/ButtonPrimary';
 import Button from '@/components/Button';
+import { ChevronBottom } from '@/assets/icons/ChevronBottom';
+import { ChevronTop } from '@/assets/icons/ChevronTop';
 
 export default function DistanceSummary({
   station,
@@ -66,6 +70,8 @@ export default function DistanceSummary({
 
   const [fullUrl, setFullUrl] = useState('');
   const [isButtonDisabled, setButtonDisabled] = useState(false);
+  const [isExpandTail, setExpandTail] = useState(false);
+
   const [newParticipants, setNewParticipants] = useAtom(newParticipantsState);
 
   const { setModalContents } = useModal();
@@ -154,6 +160,10 @@ export default function DistanceSummary({
     router.push('/');
   };
 
+  const clickTail = () => {
+    setExpandTail(!isExpandTail);
+  };
+
   return (
     <Container>
       <Header>
@@ -226,6 +236,11 @@ export default function DistanceSummary({
           </ButtonWrapper>
         </PreffertWrapper>
       </Body>
+      <TailWrapper>
+        <Tail onClick={clickTail}>
+          {isExpandTail ? <ChevronTop /> : <ChevronBottom />}
+        </Tail>
+      </TailWrapper>
     </Container>
   );
 }
