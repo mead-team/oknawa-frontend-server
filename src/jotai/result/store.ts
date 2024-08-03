@@ -63,6 +63,19 @@ export const resultState = atomWithStorage<ResultState>(
   createJSONStorage(() => sessionStorage),
 );
 
+interface ShareKeyState {
+  share_key: string;
+}
+const initialShareKeyState: ShareKeyState = {
+  share_key: '',
+};
+
+export const shareKeyState = atomWithStorage<ShareKeyState>(
+  'shareKey',
+  initialShareKeyState,
+  createJSONStorage(() => sessionStorage),
+);
+
 interface NewParticipant {
   name: string;
   is_active: boolean;

@@ -63,6 +63,8 @@ import { ChevronBottom } from '@/assets/icons/ChevronBottom';
 import { ChevronTop } from '@/assets/icons/ChevronTop';
 import { Clock } from '@/assets/icons/Clock';
 import { Check } from '@/assets/icons/Check';
+import { useResetAtom } from 'jotai/utils';
+import { modalState } from '@/jotai/global/store';
 
 export default function DistanceSummary({
   station,
@@ -84,6 +86,7 @@ export default function DistanceSummary({
   const [isExpandTail, setExpandTail] = useState(true);
 
   const [newParticipants, setNewParticipants] = useAtom(newParticipantsState);
+  const reset = useResetAtom(modalState);
 
   const { setModalContents } = useModal();
 
@@ -138,7 +141,7 @@ export default function DistanceSummary({
   };
 
   const clickVoteConfirm = async () => {
-    if (isButtonDisabled === false) {
+    if (isButtonDisabled === true) {
       setModalContents({
         buttonLabel: '확인',
         contents: '아직 투표를 안하셨어요!',
@@ -154,6 +157,11 @@ export default function DistanceSummary({
     }
   };
 
+  const moveToFinal = () => {
+    router.replace('/result/confirm');
+    reset();
+  };
+
   const handleVoteConfirm = async () => {
     try {
       const result = await VoteService.setVoteConfirm(mapIdInfo, shareKey);
@@ -161,6 +169,7 @@ export default function DistanceSummary({
       setModalContents({
         buttonLabel: '확인',
         contents: '이번 약속 지역이 확정되었어요!',
+        onConfirm: moveToFinal,
       });
     } catch (error) {
       console.error('Error voting:', error);

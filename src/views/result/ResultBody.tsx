@@ -1,15 +1,16 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 
 import useDistanceSummary from '@/hooks/useDistanceSummary';
 import {
   usePlaceSearchMapIdQuery,
   usePlaceSearchWithShareKeyQuery,
 } from '@/hooks/query/search';
+import { usePlaceSearchMapIdMutation } from '@/hooks/mutation/search';
 
 import { useAtom, useSetAtom } from 'jotai';
-import { resultState } from '@/jotai/result/store';
+import { resultState, shareKeyState } from '@/jotai/result/store';
 import { bottomSheetState } from '@/jotai/global/store';
 
 import styled from 'styled-components';
@@ -19,32 +20,26 @@ import ResultMap from './components/ResultMap';
 
 import { useSearchParams } from 'next/navigation';
 import { Button } from '@nextui-org/react';
-import { usePlaceSearchMapIdMutation } from '@/hooks/mutation/search';
+
 import { MapIdType } from '@/services/search/types';
 import { mapIdState } from '@/jotai/mapId/store';
 
 export default function ResultBody() {
-  const shareKey = useSearchParams().get('sharekey');
+  // const shareKey = useSearchParams().get('sharekey');
+
   const queryMapId = useSearchParams().get('mapId');
   const queryMapHostId = useSearchParams().get('mapHostId');
 
   const setBottomSheet = useSetAtom(bottomSheetState);
   const setResult = useSetAtom(resultState);
-
+  const setConfirmedShareKey = useSetAtom(shareKeyState);
   const [mapId] = useAtom(mapIdState);
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // const { data } = usePlaceSearchWithShareKeyQuery(shareKey);
-
   const { distanceSummaries, participants } = useDistanceSummary();
 
   const currentStation = distanceSummaries[currentIndex];
-
-  console.log('distanceSummaries:', distanceSummaries);
-  console.log('currentStation:', currentStation);
-  console.log('순수 participants:', participants);
-  console.log('mapId:', mapId);
 
   const { mutate: placeSearchMapIdMutate } = usePlaceSearchMapIdMutation();
 
@@ -53,9 +48,12 @@ export default function ResultBody() {
 
   console.log('data:', data);
 
-  if (data?.confirmed) {
-    clearRefetchInterval();
-  }
+  useEffect(() => {
+    if (data?.confirmed) {
+      setConfirmedShareKey(data.confirmed);
+      clearRefetchInterval();
+    }
+  }, [data, setConfirmedShareKey, clearRefetchInterval]);
 
   const handleNext = () => {
     setCurrentIndex(prevIndex => (prevIndex + 1) % distanceSummaries.length);
@@ -83,23 +81,31 @@ export default function ResultBody() {
     }));
   };
 
+  // 공유하기로 확인할 최종 장소 페이지
   // useEffect(() => {
   //   if (shareKey && data) {
   //     console.log('shareKey 분기의 data:', data);
   //     setResult(data);
   //   }
-  // }, [shareKey, data, setResult]);)
+  // }, [shareKey, data, setResult]);
 
   // useEffect(() => {
-  //   placeSearchMapIdMutate(mapId, {
-  //     onSuccess: mapData => {
-  //       setResult(mapData);
-  //     },
-  //     onError: error => {
-  //       console.error('Error fetching map data:', error);
-  //     },
-  //   });
-  // }, [mapId, placeSearchMapIdMutate, setResult]);
+  //   if (data?.confirmed) {
+  //     console.log('shareKey:', data?.confirmed);
+  //     const shareKey = data?.confirmed;
+  //   }
+  // });
+
+  useEffect(() => {
+    placeSearchMapIdMutate(mapId, {
+      onSuccess: mapData => {
+        setResult(mapData);
+      },
+      onError: error => {
+        console.error('Error fetching map data:', error);
+      },
+    });
+  }, [mapId, placeSearchMapIdMutate, setResult]);
 
   useEffect(() => {
     if (queryMapId) {
@@ -124,8 +130,8 @@ export default function ResultBody() {
 
   return (
     <>
-      {data?.confirmed ? (
-        <div>아하?</div>
+      {/* {data?.confirmed ? (
+        <div>shareKey:{data?.confirmed}</div>
       ) : (
         <Container>
           <DistanceSummary
@@ -155,7 +161,35 @@ export default function ResultBody() {
             {currentStation.stationName} 핫플레이스는 어디?
           </FloatingButton>
         </Container>
-      )}
+      )} */}
+      <Container>
+        <DistanceSummary
+          station={currentStation}
+          stationIndex={`0${currentIndex + 1}`}
+          stationLength={`0${distanceSummaries.length}`}
+          stationName={currentStation.stationName}
+          participants={participants}
+          stationParticipants={currentStation.stationParticipants}
+          shareKey={currentStation.shareKey}
+          onNext={handleNext}
+          onPrev={handlePrev}
+        />
+        <ResultMap
+          station={currentStation}
+          participants={participants}
+          itinerary={currentStation.itinerary}
+          stationName={currentStation.stationName}
+        />
+        <FloatingButton
+          radius="full"
+          size="lg"
+          color="success"
+          variant="shadow"
+          onClick={() => handleHotplaceBtnClick(currentStation)}
+        >
+          {currentStation.stationName} 핫플레이스는 어디?
+        </FloatingButton>
+      </Container>
     </>
   );
 }

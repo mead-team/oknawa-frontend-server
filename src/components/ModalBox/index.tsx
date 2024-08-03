@@ -68,7 +68,9 @@ export default function ModalBox() {
               </>
             ) : (
               <Button
-                onClick={handleCloseBtnClick}
+                onClick={
+                  modal.onConfirm ? modal.onConfirm : handleCloseBtnClick
+                }
                 label={modal.buttonLabel}
                 widthFull
               />
