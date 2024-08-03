@@ -27,7 +27,7 @@ import {
   Container,
   ArrivalTime,
   AverageArrivalTime,
-  Body,
+  ExpandBody,
   ButtonWrapper,
   ContentWrapper,
   Count,
@@ -47,11 +47,22 @@ import {
   ChevronButton,
   Tail,
   TailWrapper,
+  FoldBody,
+  FoldLabel,
+  FoldLabelWrapper,
+  DividerVertical,
+  ChevronWrapper,
+  LeftWrapper,
+  RightWrapper,
+  LikeButton,
+  ConfirmButton,
 } from '../style';
 import ButtonPrimary from '@/components/ButtonPrimary';
 import Button from '@/components/Button';
 import { ChevronBottom } from '@/assets/icons/ChevronBottom';
 import { ChevronTop } from '@/assets/icons/ChevronTop';
+import { Clock } from '@/assets/icons/Clock';
+import { Check } from '@/assets/icons/Check';
 
 export default function DistanceSummary({
   station,
@@ -70,7 +81,7 @@ export default function DistanceSummary({
 
   const [fullUrl, setFullUrl] = useState('');
   const [isButtonDisabled, setButtonDisabled] = useState(false);
-  const [isExpandTail, setExpandTail] = useState(false);
+  const [isExpandTail, setExpandTail] = useState(true);
 
   const [newParticipants, setNewParticipants] = useAtom(newParticipantsState);
 
@@ -178,64 +189,111 @@ export default function DistanceSummary({
           초대하기
         </SharingButton>
       </Header>
-      <Body>
-        <ContentWrapper>
-          <TitleWrapper>
-            <StationName>{stationName}</StationName>
-            <AverageArrivalTime>
-              도착하는데 평균{' '}
-              <ArrivalTime>
-                {convertToKoreanTime(station.averageTravelTime)}
-              </ArrivalTime>{' '}
-              걸려요!
-            </AverageArrivalTime>
-          </TitleWrapper>
-          <IndicatorWrapper>
-            <ChevronButton onClick={onPrev}>
-              <ChevronLeft />
-            </ChevronButton>
-            <Indicator>
-              {stationIndex}/{stationLength}
-            </Indicator>
-            <ChevronButton onClick={onNext}>
-              <ChevronRight />
-            </ChevronButton>
-          </IndicatorWrapper>
-        </ContentWrapper>
-        <PreffertWrapper>
-          <VoteWrapper>
-            <VoteTitle>
-              <Label>선호도 결과</Label>
-              <Count>
-                {newParticipants?.filter(item => item.is_active).length || 0}표
-              </Count>
-            </VoteTitle>
+      {isExpandTail ? (
+        <ExpandBody>
+          <ContentWrapper>
+            <TitleWrapper>
+              <StationName>{stationName}</StationName>
+              <AverageArrivalTime>
+                도착하는데 평균{' '}
+                <ArrivalTime>
+                  {convertToKoreanTime(station.averageTravelTime)}
+                </ArrivalTime>{' '}
+                걸려요!
+              </AverageArrivalTime>
+            </TitleWrapper>
+            <IndicatorWrapper>
+              <ChevronButton onClick={onPrev}>
+                <ChevronLeft />
+              </ChevronButton>
+              <Indicator>
+                {stationIndex}/{stationLength}
+              </Indicator>
+              <ChevronButton onClick={onNext}>
+                <ChevronRight />
+              </ChevronButton>
+            </IndicatorWrapper>
+          </ContentWrapper>
+          <PreffertWrapper>
+            <VoteWrapper>
+              <VoteTitle>
+                <Label>선호도 결과</Label>
+                <Count>
+                  {newParticipants?.filter(item => item.is_active).length || 0}
+                  표
+                </Count>
+              </VoteTitle>
 
-            <LikeWrapper>
-              {newParticipants.map((item: any, index: number) => (
-                <LikeItem key={index}>
-                  {item.is_active ? <LikeIconActive /> : <LikeIconInactive />}
-                </LikeItem>
-              ))}
-            </LikeWrapper>
-          </VoteWrapper>
-          <ButtonWrapper>
-            <Button
-              label={isButtonDisabled ? '좋아요 취소' : '좋아요'}
-              onClick={clickVote}
-              style={{
-                border: isButtonDisabled
-                  ? '1px solid #8D8D94'
-                  : '1px solid white',
-                color: isButtonDisabled ? '#8D8D94' : 'white',
-              }}
-            >
-              {isButtonDisabled ? <LikeIconInactive /> : <LikeIcon />}
-            </Button>
-            <ButtonPrimary label={'확정하기'} onClick={clickVoteConfirm} />
-          </ButtonWrapper>
-        </PreffertWrapper>
-      </Body>
+              <LikeWrapper>
+                {newParticipants.map((item: any, index: number) => (
+                  <LikeItem key={index}>
+                    {item.is_active ? <LikeIconActive /> : <LikeIconInactive />}
+                  </LikeItem>
+                ))}
+              </LikeWrapper>
+            </VoteWrapper>
+            <ButtonWrapper>
+              <Button
+                label={isButtonDisabled ? '좋아요 취소' : '좋아요'}
+                onClick={clickVote}
+                style={{
+                  border: isButtonDisabled
+                    ? '1px solid #8D8D94'
+                    : '1px solid white',
+                  color: isButtonDisabled ? '#8D8D94' : 'white',
+                }}
+              >
+                {isButtonDisabled ? <LikeIconInactive /> : <LikeIcon />}
+              </Button>
+              <ButtonPrimary label={'확정하기'} onClick={clickVoteConfirm} />
+            </ButtonWrapper>
+          </PreffertWrapper>
+        </ExpandBody>
+      ) : (
+        <FoldBody>
+          <ContentWrapper isExpand={isExpandTail}>
+            <LeftWrapper>
+              <ChevronWrapper onClick={onPrev}>
+                <ChevronLeft />
+              </ChevronWrapper>
+              <TitleWrapper>
+                <StationName isExpand={isExpandTail}>{stationName}</StationName>
+                <FoldLabelWrapper>
+                  <FoldLabel>
+                    <Clock />
+                    <ArrivalTime isExpand={isExpandTail}>
+                      {convertToKoreanTime(station.averageTravelTime)}
+                    </ArrivalTime>
+                  </FoldLabel>
+                  <DividerVertical />
+                  <FoldLabel>
+                    <LikeIconInactive />
+                    <Count>
+                      {newParticipants?.filter(item => item.is_active).length ||
+                        0}
+                      표
+                    </Count>
+                  </FoldLabel>
+                </FoldLabelWrapper>
+              </TitleWrapper>
+            </LeftWrapper>
+            <RightWrapper>
+              <ButtonWrapper>
+                <LikeButton onClick={clickVote}>
+                  {isButtonDisabled ? <LikeIconActive /> : <LikeIconInactive />}
+                </LikeButton>
+                <ConfirmButton onClick={clickVoteConfirm}>
+                  <Check />
+                </ConfirmButton>
+              </ButtonWrapper>
+              <ChevronWrapper onClick={onNext}>
+                <ChevronRight />
+              </ChevronWrapper>
+            </RightWrapper>
+          </ContentWrapper>
+        </FoldBody>
+      )}
+
       <TailWrapper>
         <Tail onClick={clickTail}>
           {isExpandTail ? <ChevronTop /> : <ChevronBottom />}
