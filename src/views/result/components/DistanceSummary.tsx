@@ -80,7 +80,7 @@ export default function DistanceSummary({
   const [mapIdInfo] = useAtom(mapIdState);
 
   const [fullUrl, setFullUrl] = useState('');
-  const [isButtonDisabled, setButtonDisabled] = useState(false);
+  const [isButtonDisabled, setButtonDisabled] = useState(true);
   const [isExpandTail, setExpandTail] = useState(true);
 
   const [newParticipants, setNewParticipants] = useAtom(newParticipantsState);
@@ -234,16 +234,16 @@ export default function DistanceSummary({
             </VoteWrapper>
             <ButtonWrapper>
               <Button
-                label={isButtonDisabled ? '좋아요 취소' : '좋아요'}
+                label={'좋아요'}
                 onClick={clickVote}
                 style={{
                   border: isButtonDisabled
-                    ? '1px solid #8D8D94'
-                    : '1px solid white',
-                  color: isButtonDisabled ? '#8D8D94' : 'white',
+                    ? '1px solid #777780'
+                    : '1px solid var(--primary)',
+                  color: isButtonDisabled ? '#777780' : 'var(--primary)',
                 }}
               >
-                {isButtonDisabled ? <LikeIconInactive /> : <LikeIcon />}
+                {isButtonDisabled ? <LikeIconInactive /> : <LikeIconActive />}
               </Button>
               <ButtonPrimary label={'확정하기'} onClick={clickVoteConfirm} />
             </ButtonWrapper>
@@ -280,7 +280,7 @@ export default function DistanceSummary({
             <RightWrapper>
               <ButtonWrapper>
                 <LikeButton onClick={clickVote}>
-                  {isButtonDisabled ? <LikeIconActive /> : <LikeIconInactive />}
+                  {isButtonDisabled ? <LikeIconInactive /> : <LikeIconActive />}
                 </LikeButton>
                 <ConfirmButton onClick={clickVoteConfirm}>
                   <Check />
