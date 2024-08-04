@@ -2,34 +2,59 @@
 
 import { useEffect, useState } from 'react';
 
-import useDistanceSummary from '@/hooks/useDistanceSummary';
-import { usePlaceSearchWithShareKeyQuery } from '@/hooks/query/search';
-
 import { useAtom, useSetAtom } from 'jotai';
-import { resultState, shareKeyState } from '@/jotai/result/store';
+import { shareKeyState } from '@/jotai/result/store';
 import { bottomSheetState } from '@/jotai/global/store';
 
 import styled from 'styled-components';
-import DistanceSummary from '../result/components/DistanceSummary';
-import HotPlaceModal from '../result/components/HotPlaceModal';
-import ResultMap from '../result/components/ResultMap';
+import DistanceSummary from './components/DistanceSummary';
+import HotPlaceModal from './components/HotPlaceModal';
+import ResultMap from './components/ResultMap';
 
 import { useSearchParams } from 'next/navigation';
 import { Button } from '@nextui-org/react';
+import { usePlaceSearchWithShareKeyMutation } from '@/hooks/mutation/search';
 
 export default function ResultConfirmBody() {
-  // const shareKey = useSearchParams().get('sharekey');
+  const shareKey = useSearchParams().get('sharekey');
 
   const setBottomSheet = useSetAtom(bottomSheetState);
-  const setResult = useSetAtom(resultState);
-  const [shareKey] = useAtom(shareKeyState);
-  console.log('shareKey state:', shareKey);
+  const [data, setData] = useState();
 
-  const { data } = usePlaceSearchWithShareKeyQuery(shareKey);
+  const [confirmShareKey] = useAtom(shareKeyState);
+  console.log('shareKey state:', confirmShareKey);
+  console.log('url shareKey:', shareKey);
 
-  console.log('shareKey data:', data);
+  const { mutate: placeSearchWithShareKey } =
+    usePlaceSearchWithShareKeyMutation();
 
-  const { distanceSummaries, participants } = useDistanceSummary();
+  useEffect(() => {
+    if (shareKey) {
+      placeSearchWithShareKey(shareKey, {
+        onSuccess: data => {
+          setData(data);
+        },
+        onError: error => {
+          console.error('Error fetching map data:', error);
+        },
+      });
+    } else {
+      placeSearchWithShareKey(confirmShareKey, {
+        onSuccess: data => {
+          setData(data);
+        },
+        onError: error => {
+          console.error('Error fetching map data:', error);
+        },
+      });
+    }
+  }, [placeSearchWithShareKey, shareKey, confirmShareKey]);
+
+  const totalTravelTime = data?.itinerary.reduce(
+    (sum, itinerary) => sum + itinerary.itinerary.totalTime,
+    0,
+  );
+  const averageTravelTime = totalTravelTime / data?.itinerary.length;
 
   const handleHotplaceBtnClick = (station: any) => {
     setBottomSheet(prevState => ({
@@ -37,7 +62,7 @@ export default function ResultConfirmBody() {
       isOpen: true,
       title: (
         <>
-          <span style={{ fontWeight: '800' }}>{station.stationName}</span>의
+          <span style={{ fontWeight: '800' }}>{station.station_name}</span>의
           <div>핫플레이스를 추천해요!</div>
         </>
       ),
@@ -46,40 +71,31 @@ export default function ResultConfirmBody() {
     }));
   };
 
-  // 공유하기로 확인할 최종 장소 페이지
-  // useEffect(() => {
-  //   if (shareKey && data) {
-  //     console.log('shareKey 분기의 data:', data);
-  //     setResult(data);
-  //   }
-  // }, [shareKey, data, setResult]);
-
   return (
     <>
-      {/* <div>{shareKey}</div> */}
       <Container>
         <DistanceSummary
-          // station={data.station.name}
-          stationName={data.station_name}
-          participants={data.itinerary}
-          // stationParticipants={currentStation.stationParticipants}
-          shareKey={data.share_key}
+          stationName={data?.station_name}
+          shareKey={data?.share_key}
+          averageTravelTime={averageTravelTime}
         />
-        {/* <ResultMap
-          station={currentStation}
-          participants={participants}
-          itinerary={currentStation.itinerary}
-          stationName={currentStation.stationName}
+        <ResultMap
+          participants={data?.request_info?.participant}
+          itinerary={data?.itinerary}
+          stationName={data?.station_name}
+          end_x={data?.end_x}
+          end_y={data?.end_y}
         />
+
         <FloatingButton
           radius="full"
           size="lg"
           color="success"
           variant="shadow"
-          onClick={() => handleHotplaceBtnClick(currentStation)}
+          onClick={() => handleHotplaceBtnClick(data)}
         >
-          {currentStation.stationName} 핫플레이스는 어디?
-        </FloatingButton> */}
+          {data?.station_name} 핫플레이스는 어디?
+        </FloatingButton>
       </Container>
     </>
   );

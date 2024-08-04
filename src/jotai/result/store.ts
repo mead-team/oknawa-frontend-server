@@ -71,7 +71,7 @@ const initialShareKeyState: ShareKeyState = {
 };
 
 export const shareKeyState = atomWithStorage<ShareKeyState>(
-  'shareKey',
+  'confirmShareKey',
   initialShareKeyState,
   createJSONStorage(() => sessionStorage),
 );

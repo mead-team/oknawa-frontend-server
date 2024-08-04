@@ -2,15 +2,17 @@
 
 import { use, useEffect, useState } from 'react';
 
-import useDistanceSummary from '@/hooks/useDistanceSummary';
 import {
   usePlaceSearchMapIdQuery,
   usePlaceSearchWithShareKeyQuery,
 } from '@/hooks/query/search';
+
+import useDistanceSummary from '@/hooks/useDistanceSummary';
 import { usePlaceSearchMapIdMutation } from '@/hooks/mutation/search';
 
 import { useAtom, useSetAtom } from 'jotai';
 import { resultState, shareKeyState } from '@/jotai/result/store';
+import { mapIdState } from '@/jotai/mapId/store';
 import { bottomSheetState } from '@/jotai/global/store';
 
 import styled from 'styled-components';
@@ -22,7 +24,6 @@ import { useSearchParams } from 'next/navigation';
 import { Button } from '@nextui-org/react';
 
 import { MapIdType } from '@/services/search/types';
-import { mapIdState } from '@/jotai/mapId/store';
 
 export default function ResultBody() {
   // const shareKey = useSearchParams().get('sharekey');
@@ -46,7 +47,7 @@ export default function ResultBody() {
   const { data, isLoading, clearRefetchInterval } =
     usePlaceSearchMapIdQuery(mapId);
 
-  console.log('data:', data);
+  console.log('mapId:', mapId);
 
   useEffect(() => {
     if (data?.confirmed) {
@@ -96,16 +97,16 @@ export default function ResultBody() {
   //   }
   // });
 
-  useEffect(() => {
-    placeSearchMapIdMutate(mapId, {
-      onSuccess: mapData => {
-        setResult(mapData);
-      },
-      onError: error => {
-        console.error('Error fetching map data:', error);
-      },
-    });
-  }, [mapId, placeSearchMapIdMutate, setResult]);
+  // useEffect(() => {
+  //   placeSearchMapIdMutate(mapId, {
+  //     onSuccess: mapData => {
+  //       setResult(mapData);
+  //     },
+  //     onError: error => {
+  //       console.error('Error fetching map data:', error);
+  //     },
+  //   });
+  // }, [mapId, placeSearchMapIdMutate, setResult]);
 
   useEffect(() => {
     if (queryMapId) {
@@ -130,38 +131,6 @@ export default function ResultBody() {
 
   return (
     <>
-      {/* {data?.confirmed ? (
-        <div>shareKey:{data?.confirmed}</div>
-      ) : (
-        <Container>
-          <DistanceSummary
-            station={currentStation}
-            stationIndex={`0${currentIndex + 1}`}
-            stationLength={`0${distanceSummaries.length}`}
-            stationName={currentStation.stationName}
-            participants={participants}
-            stationParticipants={currentStation.stationParticipants}
-            shareKey={currentStation.shareKey}
-            onNext={handleNext}
-            onPrev={handlePrev}
-          />
-          <ResultMap
-            station={currentStation}
-            participants={participants}
-            itinerary={currentStation.itinerary}
-            stationName={currentStation.stationName}
-          />
-          <FloatingButton
-            radius="full"
-            size="lg"
-            color="success"
-            variant="shadow"
-            onClick={() => handleHotplaceBtnClick(currentStation)}
-          >
-            {currentStation.stationName} 핫플레이스는 어디?
-          </FloatingButton>
-        </Container>
-      )} */}
       <Container>
         <DistanceSummary
           station={currentStation}

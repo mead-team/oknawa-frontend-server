@@ -34,3 +34,11 @@ export const usePlaceSearchMapIdMutation = () => {
     },
   });
 };
+
+export const usePlaceSearchWithShareKeyMutation = () => {
+  return useMutation({
+    mutationKey: ['placeSearchWithShareKey'],
+    mutationFn: (shareKey?: string | null) =>
+      SearchService.searchPlacesWithShareKey(shareKey),
+  });
+};
