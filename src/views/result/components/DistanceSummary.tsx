@@ -3,25 +3,36 @@
 import { useRouter } from 'next/navigation';
 
 import { useEffect, useState } from 'react';
-import { useAtom } from 'jotai';
 
+import { useAtom, useSetAtom } from 'jotai';
 import { mapIdState } from '@/jotai/mapId/store';
 import { newParticipantsState } from '@/jotai/result/store';
+import { resultConfirmState } from '@/jotai/result-confirm/store';
+import { modalState } from '@/jotai/global/store';
 
-import useDistanceSummary from '@/hooks/useDistanceSummary';
+import { useResetAtom } from 'jotai/utils';
+
+import { usePlaceSearchWithShareKeyMutation } from '@/hooks/mutation/search';
 import useModal from '@/hooks/common/useModal';
 
 import VoteService from '@/services/vote/VoteService';
-
-import { convertToKoreanTime } from '@/utils/date';
 
 import { ShareIcon } from '@/assets/icons/Share';
 import { HomeIcon } from '@/assets/icons/Home';
 import { ChevronLeft } from '@/assets/icons/ChevronLeft';
 import { ChevronRight } from '@/assets/icons/ChevronRight';
-import { LikeIcon } from '@/assets/icons/Like';
 import { LikeIconInactive } from '@/assets/icons/LikeInactive';
 import { LikeIconActive } from '@/assets/icons/LikeActive';
+
+import { ChevronBottom } from '@/assets/icons/ChevronBottom';
+import { ChevronTop } from '@/assets/icons/ChevronTop';
+import { Clock } from '@/assets/icons/Clock';
+import { Check } from '@/assets/icons/Check';
+
+import ButtonPrimary from '@/components/ButtonPrimary';
+import Button from '@/components/Button';
+
+import { convertToKoreanTime } from '@/utils/date';
 
 import {
   Container,
@@ -57,14 +68,6 @@ import {
   LikeButton,
   ConfirmButton,
 } from '../style';
-import ButtonPrimary from '@/components/ButtonPrimary';
-import Button from '@/components/Button';
-import { ChevronBottom } from '@/assets/icons/ChevronBottom';
-import { ChevronTop } from '@/assets/icons/ChevronTop';
-import { Clock } from '@/assets/icons/Clock';
-import { Check } from '@/assets/icons/Check';
-import { useResetAtom } from 'jotai/utils';
-import { modalState } from '@/jotai/global/store';
 
 export default function DistanceSummary({
   station,
@@ -78,7 +81,6 @@ export default function DistanceSummary({
 }: any) {
   const router = useRouter();
 
-  const { initKakao, kakaoShareSendDefault } = useDistanceSummary();
   const [mapIdInfo] = useAtom(mapIdState);
 
   const [fullUrl, setFullUrl] = useState('');
@@ -86,9 +88,14 @@ export default function DistanceSummary({
   const [isExpandTail, setExpandTail] = useState(true);
 
   const [newParticipants, setNewParticipants] = useAtom(newParticipantsState);
+
   const reset = useResetAtom(modalState);
+  const setResultConfirm = useSetAtom(resultConfirmState);
 
   const { setModalContents } = useModal();
+
+  const { mutate: placeSearchWithShareKey } =
+    usePlaceSearchWithShareKeyMutation();
 
   useEffect(() => {
     const processParticipants = (participants: any) =>
@@ -108,11 +115,6 @@ export default function DistanceSummary({
     }
   }, []);
 
-  // const handleKakaoSharingBtnClick = (stationName: any, shareKey: any) => {
-  //   initKakao();
-  //   kakaoShareSendDefault(stationName, shareKey);
-  // };
-
   const clickInvitation = async () => {
     const link = `${fullUrl}?mapId=${mapIdInfo.mapId}&mapHostId=${mapIdInfo.mapHostId}`;
     try {
@@ -128,7 +130,7 @@ export default function DistanceSummary({
 
   const clickVote = async () => {
     try {
-      const result = await VoteService.setVote(mapIdInfo, shareKey);
+      await VoteService.setVote(mapIdInfo, shareKey);
 
       setButtonDisabled(!isButtonDisabled);
 
@@ -158,6 +160,14 @@ export default function DistanceSummary({
   };
 
   const moveToFinal = () => {
+    placeSearchWithShareKey(shareKey, {
+      onSuccess: data => {
+        setResultConfirm(data);
+      },
+      onError: error => {
+        console.error('Error fetching map data:', error);
+      },
+    });
     router.replace('/result/confirm');
     reset();
   };
@@ -190,10 +200,7 @@ export default function DistanceSummary({
         <HomeButton onClick={clickHome}>
           <HomeIcon />
         </HomeButton>
-        <SharingButton
-          // onClick={() => handleKakaoSharingBtnClick(stationName, shareKey)}
-          onClick={clickInvitation}
-        >
+        <SharingButton onClick={clickInvitation}>
           <ShareIcon />
           초대하기
         </SharingButton>

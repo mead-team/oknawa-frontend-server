@@ -26,6 +26,7 @@ import {
   StationName,
   TitleWrapper,
 } from '../style';
+import { useEffect, useState } from 'react';
 
 export default function DistanceSummary({
   stationName,
@@ -36,9 +37,32 @@ export default function DistanceSummary({
 
   const { initKakao, kakaoShareSendDefault } = useDistanceSummary();
 
-  const handleKakaoSharingBtnClick = (stationName: any, shareKey: any) => {
-    initKakao();
-    kakaoShareSendDefault(stationName, shareKey);
+  const [fullUrl, setFullUrl] = useState('');
+
+  const { setModalContents } = useModal();
+
+  // const handleKakaoSharingBtnClick = (stationName: any, shareKey: any) => {
+  //   initKakao();
+  //   kakaoShareSendDefault(stationName, shareKey);
+  // };
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setFullUrl(window.location.href);
+    }
+  }, []);
+
+  const clickInvitation = async () => {
+    const link = `${fullUrl}?sharekey=${shareKey}`;
+    try {
+      await navigator.clipboard.writeText(link);
+      setModalContents({
+        buttonLabel: '확인',
+        contents: '링크가 복사되었습니다!',
+      });
+    } catch (err) {
+      console.error('클립보드에 복사 실패:', err);
+    }
   };
 
   const clickHome = () => {
@@ -52,7 +76,8 @@ export default function DistanceSummary({
           <HomeIcon />
         </HomeButton>
         <SharingButton
-          onClick={() => handleKakaoSharingBtnClick(stationName, shareKey)}
+          // onClick={() => handleKakaoSharingBtnClick(stationName, shareKey)}
+          onClick={clickInvitation}
         >
           <ShareIcon />
           공유하기

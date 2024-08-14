@@ -1,17 +1,13 @@
 'use client';
 
-import { use, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import {
-  usePlaceSearchMapIdQuery,
-  usePlaceSearchWithShareKeyQuery,
-} from '@/hooks/query/search';
-
-import useDistanceSummary from '@/hooks/useDistanceSummary';
+import { usePlaceSearchMapIdQuery } from '@/hooks/query/search';
 import { usePlaceSearchMapIdMutation } from '@/hooks/mutation/search';
+import useDistanceSummary from '@/hooks/useDistanceSummary';
 
 import { useAtom, useSetAtom } from 'jotai';
-import { resultState, shareKeyState } from '@/jotai/result/store';
+import { resultState } from '@/jotai/result/store';
 import { mapIdState } from '@/jotai/mapId/store';
 import { bottomSheetState } from '@/jotai/global/store';
 
@@ -26,14 +22,11 @@ import { Button } from '@nextui-org/react';
 import { MapIdType } from '@/services/search/types';
 
 export default function ResultBody() {
-  // const shareKey = useSearchParams().get('sharekey');
-
   const queryMapId = useSearchParams().get('mapId');
   const queryMapHostId = useSearchParams().get('mapHostId');
 
   const setBottomSheet = useSetAtom(bottomSheetState);
   const setResult = useSetAtom(resultState);
-  const setConfirmedShareKey = useSetAtom(shareKeyState);
   const [mapId] = useAtom(mapIdState);
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -44,17 +37,13 @@ export default function ResultBody() {
 
   const { mutate: placeSearchMapIdMutate } = usePlaceSearchMapIdMutation();
 
-  const { data, isLoading, clearRefetchInterval } =
-    usePlaceSearchMapIdQuery(mapId);
-
-  console.log('mapId:', mapId);
+  const { data, clearRefetchInterval } = usePlaceSearchMapIdQuery(mapId);
 
   useEffect(() => {
     if (data?.confirmed) {
-      setConfirmedShareKey(data.confirmed);
       clearRefetchInterval();
     }
-  }, [data, setConfirmedShareKey, clearRefetchInterval]);
+  }, [data, clearRefetchInterval]);
 
   const handleNext = () => {
     setCurrentIndex(prevIndex => (prevIndex + 1) % distanceSummaries.length);
@@ -82,37 +71,8 @@ export default function ResultBody() {
     }));
   };
 
-  // 공유하기로 확인할 최종 장소 페이지
-  // useEffect(() => {
-  //   if (shareKey && data) {
-  //     console.log('shareKey 분기의 data:', data);
-  //     setResult(data);
-  //   }
-  // }, [shareKey, data, setResult]);
-
-  // useEffect(() => {
-  //   if (data?.confirmed) {
-  //     console.log('shareKey:', data?.confirmed);
-  //     const shareKey = data?.confirmed;
-  //   }
-  // });
-
-  // useEffect(() => {
-  //   placeSearchMapIdMutate(mapId, {
-  //     onSuccess: mapData => {
-  //       setResult(mapData);
-  //     },
-  //     onError: error => {
-  //       console.error('Error fetching map data:', error);
-  //     },
-  //   });
-  // }, [mapId, placeSearchMapIdMutate, setResult]);
-
   useEffect(() => {
     if (queryMapId) {
-      console.log('queryMapId:', queryMapId);
-      console.log('queryMapHostId:', queryMapHostId);
-
       const mapIdInfo: MapIdType = {
         mapId: queryMapId ?? '',
         mapHostId: queryMapHostId ?? '',
