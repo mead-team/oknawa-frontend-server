@@ -4,7 +4,6 @@ import { Input } from '@nextui-org/react';
 import { useAtom, useSetAtom } from 'jotai';
 import { styled } from 'styled-components';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 
 import Address from '@/components/Address';
 
@@ -93,7 +92,7 @@ export default function SearchView({ type }: SearchViewProps) {
           <Input
             isClearable
             placeholder="이름을 입력해주세요."
-            size="sm"
+            size="lg"
             maxLength={5}
             {...register('name')}
             onClear={handleClearName}
@@ -105,7 +104,7 @@ export default function SearchView({ type }: SearchViewProps) {
             <Input
               isClearable
               placeholder="출발지를 입력해주세요."
-              size="sm"
+              size="lg"
               isReadOnly
               value={addressValue?.regionName || ''}
               onClear={handleClearAddress}

@@ -95,7 +95,7 @@ export default function Address({ setValue, currentIndex }: AddressProps) {
             isClearable
             value={input}
             placeholder="출발지를 입력해주세요."
-            size="sm"
+            size="lg"
             onChange={handleAddressChange}
             onClick={handleInputClick}
             onClear={() => setInput('')}

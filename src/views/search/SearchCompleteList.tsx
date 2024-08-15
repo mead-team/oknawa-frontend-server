@@ -2,35 +2,37 @@
 
 import { useRouter } from 'next/navigation';
 
+import { useEffect } from 'react';
+
 import {
   usePlaceSearchMapIdMutation,
   usePlaceSearchMutation,
 } from '@/hooks/mutation/search';
 
 import styled from 'styled-components';
-import { ArrowBackIcon } from '@/assets/icons/ArrowBack';
-import PeopleCard from './components/PeopleCard';
+
 import Button from '@/components/Button';
+import PeopleCard from './components/PeopleCard';
+import SearchLoading from './components/SearchLoading';
+import { ArrowBackIcon } from '@/assets/icons/ArrowBack';
+
 import { useAtom, useSetAtom } from 'jotai';
 import { searchState } from '@/jotai/global/store';
 
 import { Button as FloatingButton } from '@nextui-org/react';
+
 import { resultState } from '@/jotai/result/store';
-import { useEffect } from 'react';
-import SearchLoading from './components/SearchLoading';
-import { MapIdType } from '@/services/search/types';
 import { mapIdState } from '@/jotai/mapId/store';
+
+import { MapIdType } from '@/services/search/types';
 
 export default function SearchCompleteList() {
   const router = useRouter();
 
   const [searchList] = useAtom(searchState);
   const setResult = useSetAtom(resultState);
-  // const [mapData, setMapData] = useState();
   const setSearchState = useSetAtom(searchState);
   const setMapIdInfo = useSetAtom(mapIdState);
-  // const setMapId = useSetAtom(mapIdState);
-  // const setMapHostId = useSetAtom(mapIdState);
 
   const { mutate: placeSearchMutate } = usePlaceSearchMutation();
   const {
@@ -42,8 +44,6 @@ export default function SearchCompleteList() {
   const handleSearchBtnClick = async () => {
     placeSearchMutate(searchList, {
       onSuccess: data => {
-        // setMapData(data);
-
         const mapIdInfo: MapIdType = {
           mapId: data.map_id,
           mapHostId: data.map_host_id,
