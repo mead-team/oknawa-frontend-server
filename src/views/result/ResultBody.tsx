@@ -32,7 +32,7 @@ export default function ResultBody() {
   const currentStation = distanceSummaries[currentIndex];
 
   const { data, clearRefetchInterval } = usePlaceSearchMapIdQuery(
-    mapIdInfo.mapId === '' ? queryMapId : mapIdInfo.mapId,
+    (mapIdInfo.mapId || queryMapId) ?? '',
   );
 
   useEffect(() => {
@@ -86,6 +86,7 @@ export default function ResultBody() {
           shareKey={currentStation.shareKey}
           onNext={handleNext}
           onPrev={handlePrev}
+          l
         />
         <ResultMap
           station={currentStation}
