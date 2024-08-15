@@ -27,8 +27,7 @@ export const usePlaceSearchMutation = () => {
 export const usePlaceSearchMapIdMutation = () => {
   return useMutation({
     mutationKey: ['placeSearchMapId'],
-    mutationFn: (mapIdInfo: MapIdType) =>
-      SearchService.searchPolling(mapIdInfo),
+    mutationFn: (mapId: string) => SearchService.searchPolling(mapId),
     onError: error => {
       console.log('error 발생!', error);
     },

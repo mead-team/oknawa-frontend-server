@@ -3,10 +3,10 @@ import { api } from '@/axois';
 import { MapIdType } from '../search/types';
 
 export default class VoteService {
-  static async setVote(mapIdInfo: MapIdType, shareKey: string) {
+  static async setVote(mapId: string, shareKey: string) {
     const { data } = await api.post(
-      `/location/points/${mapIdInfo.mapId}/vote`,
-      { mapIdInfo },
+      `/location/points/${mapId}/vote`,
+      { mapId },
       { params: { share_key: shareKey } },
     );
 

@@ -6,6 +6,7 @@ import {
   usePlaceSearchMapIdMutation,
   usePlaceSearchMutation,
 } from '@/hooks/mutation/search';
+
 import styled from 'styled-components';
 import { ArrowBackIcon } from '@/assets/icons/ArrowBack';
 import PeopleCard from './components/PeopleCard';
@@ -15,7 +16,7 @@ import { searchState } from '@/jotai/global/store';
 
 import { Button as FloatingButton } from '@nextui-org/react';
 import { resultState } from '@/jotai/result/store';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import SearchLoading from './components/SearchLoading';
 import { MapIdType } from '@/services/search/types';
 import { mapIdState } from '@/jotai/mapId/store';
@@ -23,12 +24,13 @@ import { mapIdState } from '@/jotai/mapId/store';
 export default function SearchCompleteList() {
   const router = useRouter();
 
-  const [searchList, setSearchList] = useAtom(searchState);
+  const [searchList] = useAtom(searchState);
   const setResult = useSetAtom(resultState);
-  const [mapData, setMapData] = useState();
-  const [data, setData] = useState();
+  // const [mapData, setMapData] = useState();
   const setSearchState = useSetAtom(searchState);
   const setMapIdInfo = useSetAtom(mapIdState);
+  // const setMapId = useSetAtom(mapIdState);
+  // const setMapHostId = useSetAtom(mapIdState);
 
   const { mutate: placeSearchMutate } = usePlaceSearchMutation();
   const {
@@ -38,10 +40,9 @@ export default function SearchCompleteList() {
   } = usePlaceSearchMapIdMutation();
 
   const handleSearchBtnClick = async () => {
-    console.log('searchList:', searchList);
     placeSearchMutate(searchList, {
       onSuccess: data => {
-        setMapData(data);
+        // setMapData(data);
 
         const mapIdInfo: MapIdType = {
           mapId: data.map_id,
@@ -50,7 +51,7 @@ export default function SearchCompleteList() {
 
         setMapIdInfo(mapIdInfo);
 
-        placeSearchMapIdMutate(mapIdInfo, {
+        placeSearchMapIdMutate(data.map_id, {
           onSuccess: mapData => {
             setSearchState(searchList);
             setResult(mapData);

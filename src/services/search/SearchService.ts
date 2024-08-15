@@ -16,10 +16,8 @@ export default class SearchService {
     return data;
   }
 
-  static async searchPolling(mapIdInfo: MapIdType) {
-    const { data } = await api.get(
-      `/location/points/${mapIdInfo.mapId}/polling`,
-    );
+  static async searchPolling(mapId: string) {
+    const { data } = await api.get(`/location/points/${mapId}/polling`);
 
     console.log('searchPolling:', data);
 

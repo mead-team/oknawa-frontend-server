@@ -16,17 +16,17 @@ export const usePlaceSearchWithShareKeyQuery = (shareKey?: string | null) => {
   };
 };
 
-export const usePlaceSearchMapIdQuery = (mapIdInfo: MapIdType) => {
+export const usePlaceSearchMapIdQuery = (mapId: string) => {
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
-    queryKey: ['placeSearchMapId', mapIdInfo.mapId],
-    queryFn: () => SearchService.searchPolling(mapIdInfo),
+    queryKey: ['placeSearchMapId', mapId],
+    queryFn: () => SearchService.searchPolling(mapId),
     refetchInterval: 2000,
   });
 
   const clearRefetchInterval = () => {
-    queryClient.setQueryDefaults(['placeSearchMapId', mapIdInfo.mapId], {
+    queryClient.setQueryDefaults(['placeSearchMapId', mapId], {
       refetchInterval: false,
     });
     console.log('종료 성공!');

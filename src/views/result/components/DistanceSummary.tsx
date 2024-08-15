@@ -116,7 +116,7 @@ export default function DistanceSummary({
   }, []);
 
   const clickInvitation = async () => {
-    const link = `${fullUrl}?mapId=${mapIdInfo.mapId}&mapHostId=${mapIdInfo.mapHostId}`;
+    const link = `${fullUrl}?mapId=${mapIdInfo.mapId}`;
     try {
       await navigator.clipboard.writeText(link);
       setModalContents({
@@ -130,7 +130,7 @@ export default function DistanceSummary({
 
   const clickVote = async () => {
     try {
-      await VoteService.setVote(mapIdInfo, shareKey);
+      await VoteService.setVote(mapIdInfo.mapId, shareKey);
 
       setButtonDisabled(!isButtonDisabled);
 
@@ -261,7 +261,9 @@ export default function DistanceSummary({
               >
                 {isButtonDisabled ? <LikeIconInactive /> : <LikeIconActive />}
               </Button>
-              <ButtonPrimary label={'확정하기'} onClick={clickVoteConfirm} />
+              {mapIdInfo.mapHostId && (
+                <ButtonPrimary label={'확정하기'} onClick={clickVoteConfirm} />
+              )}
             </ButtonWrapper>
           </PreffertWrapper>
         </ExpandBody>
@@ -298,9 +300,11 @@ export default function DistanceSummary({
                 <LikeButton onClick={clickVote}>
                   {isButtonDisabled ? <LikeIconInactive /> : <LikeIconActive />}
                 </LikeButton>
-                <ConfirmButton onClick={clickVoteConfirm}>
-                  <Check />
-                </ConfirmButton>
+                {mapIdInfo.mapHostId && (
+                  <ConfirmButton onClick={clickVoteConfirm}>
+                    <Check />
+                  </ConfirmButton>
+                )}
               </ButtonWrapper>
               <ChevronWrapper onClick={onNext}>
                 <ChevronRight />

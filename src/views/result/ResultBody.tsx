@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 
 import { usePlaceSearchMapIdQuery } from '@/hooks/query/search';
-import { usePlaceSearchMapIdMutation } from '@/hooks/mutation/search';
 import useDistanceSummary from '@/hooks/useDistanceSummary';
 
 import { useAtom, useSetAtom } from 'jotai';
@@ -19,15 +18,12 @@ import ResultMap from './components/ResultMap';
 import { useSearchParams } from 'next/navigation';
 import { Button } from '@nextui-org/react';
 
-import { MapIdType } from '@/services/search/types';
-
 export default function ResultBody() {
   const queryMapId = useSearchParams().get('mapId');
-  const queryMapHostId = useSearchParams().get('mapHostId');
 
+  const [mapIdInfo] = useAtom(mapIdState);
   const setBottomSheet = useSetAtom(bottomSheetState);
   const setResult = useSetAtom(resultState);
-  const [mapId] = useAtom(mapIdState);
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -35,9 +31,15 @@ export default function ResultBody() {
 
   const currentStation = distanceSummaries[currentIndex];
 
-  const { mutate: placeSearchMapIdMutate } = usePlaceSearchMapIdMutation();
+  const { data, clearRefetchInterval } = usePlaceSearchMapIdQuery(
+    mapIdInfo.mapId === '' ? queryMapId : mapIdInfo.mapId,
+  );
 
-  const { data, clearRefetchInterval } = usePlaceSearchMapIdQuery(mapId);
+  useEffect(() => {
+    if (data) {
+      setResult(data);
+    }
+  }, [data, setResult]);
 
   useEffect(() => {
     if (data?.confirmed) {
@@ -70,24 +72,6 @@ export default function ResultBody() {
       height: 60,
     }));
   };
-
-  useEffect(() => {
-    if (queryMapId) {
-      const mapIdInfo: MapIdType = {
-        mapId: queryMapId ?? '',
-        mapHostId: queryMapHostId ?? '',
-      };
-
-      placeSearchMapIdMutate(mapIdInfo, {
-        onSuccess: mapData => {
-          setResult(mapData);
-        },
-        onError: error => {
-          console.error('Error fetching map data:', error);
-        },
-      });
-    }
-  }, [queryMapId, queryMapHostId, placeSearchMapIdMutate, setResult]);
 
   return (
     <>
