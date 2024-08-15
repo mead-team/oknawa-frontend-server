@@ -269,17 +269,19 @@ export default function DistanceSummary({
         </ExpandBody>
       ) : (
         <FoldBody>
-          <ContentWrapper isExpand={isExpandTail}>
+          <ContentWrapper $isExpand={isExpandTail}>
             <LeftWrapper>
               <ChevronWrapper onClick={onPrev}>
                 <ChevronLeft />
               </ChevronWrapper>
               <TitleWrapper>
-                <StationName isExpand={isExpandTail}>{stationName}</StationName>
+                <StationName $isExpand={isExpandTail}>
+                  {stationName}
+                </StationName>
                 <FoldLabelWrapper>
                   <FoldLabel>
                     <Clock />
-                    <ArrivalTime isExpand={isExpandTail}>
+                    <ArrivalTime $isExpand={isExpandTail}>
                       {convertToKoreanTime(station.averageTravelTime)}
                     </ArrivalTime>
                   </FoldLabel>

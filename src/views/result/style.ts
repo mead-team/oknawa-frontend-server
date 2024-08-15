@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 interface ExpandProps {
-  isExpand?: boolean;
+  $isExpand?: boolean;
 }
 interface disabledProps {
   isDisabled?: boolean;
@@ -52,8 +52,8 @@ export const ContentWrapper = styled.div<ExpandProps>`
   width: 100%;
   flex-direction: row;
   justify-content: space-between;
-  padding-bottom: ${({ isExpand }) => isExpand && '20px'};
-  border-bottom: ${({ isExpand }) => isExpand && '1px solid #1c1c20;'};
+  padding-bottom: ${({ $isExpand }) => $isExpand && '20px'};
+  border-bottom: ${({ $isExpand }) => $isExpand && '1px solid #1c1c20;'};
 `;
 
 export const TitleWrapper = styled.div`
@@ -65,8 +65,8 @@ export const TitleWrapper = styled.div`
 export const StationName = styled.p<ExpandProps>`
   display: flex;
   justify-content: space-between;
-  font-size: ${({ isExpand }) => (isExpand ? '24px' : '18px')};
-  font-weight: ${({ isExpand }) => (isExpand ? '700' : '600')};
+  font-size: ${({ $isExpand }) => ($isExpand ? '24px' : '18px')};
+  font-weight: ${({ $isExpand }) => ($isExpand ? '700' : '600')};
 `;
 
 export const AverageArrivalTime = styled.p`
@@ -74,9 +74,9 @@ export const AverageArrivalTime = styled.p`
 `;
 
 export const ArrivalTime = styled.span<ExpandProps>`
-  color: ${({ isExpand }) => (isExpand ? 'var(--primary)' : '#D0D0D0')};
-  font-weight: ${({ isExpand }) => (isExpand ? '700' : '500')};
-  font-size: ${({ isExpand }) => (isExpand ? '18px' : ' 14px')};
+  color: ${({ $isExpand }) => ($isExpand ? 'var(--primary)' : '#D0D0D0')};
+  font-weight: ${({ $isExpand }) => ($isExpand ? '700' : '500')};
+  font-size: ${({ $isExpand }) => ($isExpand ? '18px' : ' 14px')};
 `;
 
 export const IndicatorWrapper = styled.div`
@@ -142,7 +142,7 @@ export const ButtonWrapper = styled.div<ExpandProps>`
   width: fit-content;
   flex-direction: row;
   align-items: center;
-  gap: ${({ isExpand }) => (isExpand ? '8px' : '12px')};
+  gap: ${({ $isExpand }) => ($isExpand ? '8px' : '12px')};
 `;
 
 export const FoldBody = styled.div`
@@ -242,16 +242,16 @@ export const Tail = styled.div`
 `;
 
 ContentWrapper.defaultProps = {
-  isExpand: true,
+  $isExpand: true,
 };
 
 StationName.defaultProps = {
-  isExpand: true,
+  $isExpand: true,
 };
 ArrivalTime.defaultProps = {
-  isExpand: true,
+  $isExpand: true,
 };
 
 ButtonWrapper.defaultProps = {
-  isExpand: true,
+  $isExpand: true,
 };

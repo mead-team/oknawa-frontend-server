@@ -10,9 +10,9 @@ export const ChevronTop = () => {
       <path
         d="M19 14.5L12 10L5 14.5"
         stroke="white"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
