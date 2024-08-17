@@ -67,6 +67,7 @@ import {
   LikeButton,
   ConfirmButton,
 } from '../style';
+import styled from 'styled-components';
 
 export default function DistanceSummary({
   station,
@@ -262,7 +263,6 @@ export default function DistanceSummary({
                 <Label>선호도 결과</Label>
                 <Count>{vote}표</Count>
               </VoteTitle>
-
               <LikeWrapper>
                 {voteCount.map((item: boolean, index: number) => (
                   <LikeItem key={index}>
@@ -272,18 +272,13 @@ export default function DistanceSummary({
               </LikeWrapper>
             </VoteWrapper>
             <ButtonWrapper>
-              <Button
+              <LikeButtonWithVote
                 label={'좋아요'}
                 onClick={clickVote}
-                style={{
-                  border: isVote
-                    ? '1px solid var(--primary)'
-                    : '1px solid #777780',
-                  color: isVote ? 'var(--primary)' : '#777780',
-                }}
+                isVote={isVote}
               >
                 {isVote ? <LikeIconActive /> : <LikeIconInactive />}
-              </Button>
+              </LikeButtonWithVote>
               {mapIdInfo.mapHostId && (
                 <ButtonPrimary label={'확정하기'} onClick={clickVoteConfirm} />
               )}
@@ -343,3 +338,9 @@ export default function DistanceSummary({
     </Container>
   );
 }
+
+const LikeButtonWithVote = styled(Button)<{ isVote: boolean }>`
+  border: ${({ isVote }) =>
+    isVote ? '1px solid var(--primary)' : '1px solid #777780'};
+  color: ${({ isVote }) => (isVote ? ' var(--primary)' : '#777780')};
+`;

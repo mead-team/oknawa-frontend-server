@@ -29,7 +29,7 @@ import { MapIdType } from '@/services/search/types';
 export default function SearchCompleteList() {
   const router = useRouter();
 
-  const [searchList] = useAtom(searchState);
+  const [searchList, setSearchList] = useAtom(searchState);
   const setResult = useSetAtom(resultState);
   const setSearchState = useSetAtom(searchState);
   const setMapIdInfo = useSetAtom(mapIdState);
