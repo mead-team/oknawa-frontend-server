@@ -2,14 +2,9 @@ import { api } from '@/axois';
 
 import SearchForm from '@/model/search/SearchForm';
 
-<<<<<<< HEAD
-import { SearchState } from '@/jotai/global/store';
-import { MapIdType } from './types';
-=======
 import { SubmitDeparturePointRequestBody } from './types';
 import { SearchState } from '@/jotai/global/store';
 import SearchFormWithTogether from '@/model/search-together/SearchFormWithTogether';
->>>>>>> main
 
 export default class SearchService {
   static async searchPlaces(searchForm: SearchState[]) {
