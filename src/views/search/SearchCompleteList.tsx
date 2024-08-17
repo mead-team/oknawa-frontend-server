@@ -28,7 +28,6 @@ export default function SearchCompleteList() {
   } = usePlaceSearchMutation();
 
   const handleSearchBtnClick = () => {
-    console.log('handleSearchBtnClick');
     placeSearchMutate(searchList, {
       onSuccess: data => {
         router.push('/result');

@@ -2,29 +2,57 @@
 
 import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
-import { useAtom } from 'jotai';
+import { useSetAtom } from 'jotai';
 import { Link, CirclePlus } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { Button as FloatingButton } from '@nextui-org/react';
 
 import { ArrowBackIcon } from '@/assets/icons/ArrowBack';
 import { searchState } from '@/jotai/global/store';
 import { useInputStatusListQuery } from '@/hooks/query/search';
 import PeopleCard from './components/PeopleCard';
 import Button from '@/components/Button';
+import { baseUrl } from '@/hooks/useDistanceSummary';
+import SearchLoading from './components/SearchLoading';
+import { usePlaceSearchMutation } from '@/hooks/mutation/search';
+import { resultState } from '@/jotai/result/store';
 
 export default function SearchCompleteListWithTogetherView() {
   const router = useRouter();
 
-  const [searchList, setSearchList] = useAtom(searchState);
+  const setSearchList = useSetAtom(searchState);
+  const setResult = useSetAtom(resultState);
 
   const roomId = localStorage.getItem('roomId');
+  const hostKey = localStorage.getItem('hostKey');
 
   const { participant: participants } = useInputStatusListQuery(roomId || '');
+  const {
+    mutate: placeSearchMutate,
+    isPending,
+    isSuccess,
+  } = usePlaceSearchMutation();
 
-  const handleInviteBtnClick = () => {};
+  const handleInviteBtnClick = () => {
+    navigator.clipboard
+      .writeText(`${baseUrl}/search/together?roomId=${roomId}`)
+      .then(() => {
+        toast.success('링크가 복사되었습니다.');
+      });
+  };
 
   const handleAddBtnClick = () => {
     setSearchList(participants);
     router.push('/search/together');
+  };
+
+  const handleSearchBtnClick = () => {
+    placeSearchMutate(participants, {
+      onSuccess: data => {
+        router.push('/result');
+        setResult(data);
+      },
+    });
   };
 
   return (
@@ -47,6 +75,9 @@ export default function SearchCompleteListWithTogetherView() {
                 key={index}
                 name={participant.name}
                 place={participant.region_name}
+                index={index}
+                type="together"
+                isKing={Boolean(hostKey)}
               />
             );
           })}
@@ -68,6 +99,15 @@ export default function SearchCompleteListWithTogetherView() {
           </Button>
         </ButtonWrapper>
       </Wrapper>
+      <SubmitButton
+        size="lg"
+        color="success"
+        onClick={handleSearchBtnClick}
+        isDisabled={participants?.length < 2}
+      >
+        만나기 편한 장소 추천받기
+      </SubmitButton>
+      {(isPending || isSuccess) && <SearchLoading />}
     </Container>
   );
 }
@@ -123,4 +163,8 @@ const ButtonWrapper = styled.div`
   display: flex;
   gap: 10px;
   margin-top: 20px;
+`;
+
+const SubmitButton = styled(FloatingButton)`
+  font-weight: 600;
 `;

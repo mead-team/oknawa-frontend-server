@@ -19,6 +19,7 @@ export const useInputStatusListQuery = (roomId: string) => {
   const { data, isLoading } = useQuery({
     queryKey: ['inputStatusList', roomId],
     queryFn: () => SearchService.getInputStatusList(roomId),
+    refetchInterval: 5000,
   });
 
   const participant = data?.participant;

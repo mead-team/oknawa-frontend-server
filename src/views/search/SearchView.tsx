@@ -3,14 +3,11 @@
 import { Input } from '@nextui-org/react';
 import { useAtom, useSetAtom } from 'jotai';
 import { styled } from 'styled-components';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import Address from '@/components/Address';
-
 import useSearchForm from '@/hooks/form/search/useSearchForm';
-
 import { bottomSheetState, searchState } from '@/jotai/global/store';
-
 import Button from '@/components/Button';
 import { ArrowBackIcon } from '@/assets/icons/ArrowBack';
 import {
@@ -37,6 +34,7 @@ interface SearchViewProps {
 
 export default function SearchView({ type }: SearchViewProps) {
   const router = useRouter();
+  const shareRoomId = useSearchParams().get('roomId');
 
   const setBottomSheet = useSetAtom(bottomSheetState);
   const [searchList, setSearchList] = useAtom(searchState);
@@ -65,7 +63,7 @@ export default function SearchView({ type }: SearchViewProps) {
     }
 
     if (!isIndividualView) {
-      if (roomId && searchList.length > 0) {
+      if (shareRoomId) {
         submitDeparturePointMutate(
           {
             requestBody: {
@@ -74,7 +72,25 @@ export default function SearchView({ type }: SearchViewProps) {
               start_x: searchForm.address.latitude,
               start_y: searchForm.address.longitude,
             },
-            roomId,
+            roomId: shareRoomId,
+          },
+          {
+            onSuccess: data => {
+              localStorage.setItem('roomId', shareRoomId);
+              router.push('/search/list-together');
+            },
+          },
+        );
+      } else if (roomId && searchList.length > 0) {
+        submitDeparturePointMutate(
+          {
+            requestBody: {
+              name: searchForm.name,
+              region_name: searchForm.address.regionName,
+              start_x: searchForm.address.latitude,
+              start_y: searchForm.address.longitude,
+            },
+            roomId: roomId,
           },
           {
             onSuccess: () => {
