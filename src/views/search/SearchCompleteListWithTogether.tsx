@@ -47,6 +47,10 @@ export default function SearchCompleteListWithTogetherView() {
   };
 
   const handleSearchBtnClick = () => {
+    if (!hostKey) {
+      return toast.error('방장만 결과 버튼을 클릭할 수 있습니다!');
+    }
+
     placeSearchMutate(participants, {
       onSuccess: data => {
         router.push('/result');
