@@ -203,14 +203,13 @@ const Container = styled.form`
   flex-direction: column;
   justify-content: space-between;
   padding: 35px 19px 20px;
-  min-height: 100vh;
+  min-height: 100dvh;
 `;
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 13px;
-  margin-top: 50px;
   padding-bottom: 120px;
 `;
 
