@@ -42,13 +42,17 @@ export default function SearchCompleteListWithTogetherView() {
   };
 
   const handleAddBtnClick = () => {
+    if (!hostKey) {
+      return toast.error('방장의 권한입니다.');
+    }
+
     setSearchList(participants);
     router.push('/search/together');
   };
 
   const handleSearchBtnClick = () => {
     if (!hostKey) {
-      return toast.error('방장만 결과 버튼을 클릭할 수 있습니다!');
+      return toast.error('방장의 권한입니다.');
     }
 
     placeSearchMutate(participants, {
