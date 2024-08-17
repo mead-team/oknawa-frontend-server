@@ -7,6 +7,7 @@ interface ButtonProps {
   children?: ReactNode;
   type?: 'button' | 'submit' | 'reset';
   onClick?: () => void;
+  className?: string;
 }
 
 export default function Button({
@@ -15,9 +16,15 @@ export default function Button({
   children,
   type = 'button',
   onClick,
+  className,
 }: ButtonProps) {
   return (
-    <Container disabled={disabled} type={type} onClick={onClick}>
+    <Container
+      disabled={disabled}
+      type={type}
+      onClick={onClick}
+      className={className}
+    >
       <Text>{label}</Text>
       {children && children}
     </Container>

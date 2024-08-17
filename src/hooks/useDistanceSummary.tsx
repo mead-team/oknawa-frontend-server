@@ -4,7 +4,7 @@ import { resultState } from '@/jotai/result/store';
 
 import { ErrorNotify } from '@/types/error';
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+export const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function useDistanceSummary() {
   const [result] = useAtom(resultState);

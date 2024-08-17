@@ -1,35 +1,51 @@
 import { MinusIcon } from '@/assets/icons/Minus';
 import { PencilIcon } from '@/assets/icons/Pencil';
+import { Crown } from 'lucide-react';
 import Avatar from '@/components/Avatar';
 import styled from 'styled-components';
 
 interface PeopleCardProps {
   name: string;
   place: string;
-  iconClick: () => void;
+  onDeleteIconClick?: () => void;
+  onModifyIconClick?: () => void;
+  index?: number;
+  type?: 'individual' | 'together';
+  isKing?: boolean;
 }
 
 export default function PeopleCard({
   name,
   place,
-  iconClick,
+  onDeleteIconClick,
+  onModifyIconClick,
+  index,
+  type = 'individual',
+  isKing = false,
 }: PeopleCardProps) {
   return (
     <Container>
       <Wrapper>
         <Avatar color="white" size="lg" />
         <div>
-          <Name>{name}</Name>
+          <Name>
+            {type === 'together' && index === 0 && <Crown color="#18C964" />}
+            {name}
+          </Name>
           <Place>{place}</Place>
         </div>
       </Wrapper>
       <IconsBox>
-        <Icon onClick={iconClick}>
-          <PencilIcon width="20" height="20" />
-        </Icon>
-        <Icon onClick={iconClick}>
-          <MinusIcon width="20" height="20" />
-        </Icon>
+        {type === 'together' && isKing && (
+          <Icon onClick={onModifyIconClick}>
+            <PencilIcon width="20" height="20" />
+          </Icon>
+        )}
+        {onDeleteIconClick && (
+          <Icon onClick={onDeleteIconClick}>
+            <MinusIcon width="20" height="20" />
+          </Icon>
+        )}
       </IconsBox>
     </Container>
   );
@@ -51,6 +67,8 @@ const Wrapper = styled.div`
 `;
 
 const Name = styled.p`
+  display: flex;
+  gap: 4px;
   font-weight: 600;
 `;
 

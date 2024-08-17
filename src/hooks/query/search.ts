@@ -14,3 +14,16 @@ export const usePlaceSearchWithShareKeyQuery = (shareKey?: string | null) => {
     isLoading,
   };
 };
+
+export const useInputStatusListQuery = (roomId: string) => {
+  const { data, isLoading } = useQuery({
+    queryKey: ['inputStatusList', roomId],
+    queryFn: () => SearchService.getInputStatusList(roomId),
+    refetchInterval: 5000,
+  });
+
+  const participant = data?.participant;
+  const roomIdFromBack = data?.room_id;
+
+  return { data, participant, isLoading };
+};

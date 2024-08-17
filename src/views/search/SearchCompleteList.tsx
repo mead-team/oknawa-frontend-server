@@ -28,13 +28,20 @@ export default function SearchCompleteList() {
   } = usePlaceSearchMutation();
 
   const handleSearchBtnClick = () => {
-    console.log('handleSearchBtnClick');
     placeSearchMutate(searchList, {
       onSuccess: data => {
         router.push('/result');
         setResult(data);
       },
     });
+  };
+
+  const handleDeleteIconClick = (index: number) => {
+    setSearchList(prevList => prevList.filter((_, i) => i !== index));
+  };
+
+  const handleModifyIconClick = () => {
+    console.log('handleModifyIconClick');
   };
 
   useEffect(() => {
@@ -59,7 +66,8 @@ export default function SearchCompleteList() {
                 key={index}
                 name={search.name}
                 place={search.address.regionName}
-                iconClick={() => console.log('hello')}
+                onDeleteIconClick={() => handleDeleteIconClick(index)}
+                onModifyIconClick={handleModifyIconClick}
               />
             );
           })}
@@ -69,7 +77,12 @@ export default function SearchCompleteList() {
           onClick={() => router.push('/search/individual')}
         />
       </Wrapper>
-      <SubmitButton size="lg" color="success" onClick={handleSearchBtnClick}>
+      <SubmitButton
+        size="lg"
+        color="success"
+        onClick={handleSearchBtnClick}
+        isDisabled={searchList.length < 2}
+      >
         이대로 추천 받기
       </SubmitButton>
       {(isPending || isSuccess) && <SearchLoading />}

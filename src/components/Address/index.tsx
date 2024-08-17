@@ -80,6 +80,11 @@ export default function Address({ setValue, currentIndex }: AddressProps) {
     ]);
   };
 
+  const handleHistoryItemClick = (item: any) => {
+    setValue('address', item);
+    resetBottomSheet();
+  };
+
   const handleInputClick = () => {
     setIsOpenDropItem(true);
   };
@@ -110,7 +115,7 @@ export default function Address({ setValue, currentIndex }: AddressProps) {
               return (
                 <RecentSearchItem
                   key={index}
-                  onClick={() => setUserInputValues(item)}
+                  onClick={() => handleHistoryItemClick(item)}
                 >
                   <MagnifyIcon />
                   {item.regionName}
