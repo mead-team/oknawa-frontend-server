@@ -14,6 +14,7 @@ import {
   useMakeRoomMutation,
   useSubmitDeparturePointMutation,
 } from '@/hooks/mutation/search';
+import { roomState } from '@/jotai/global/room';
 
 const numberConfig: { [key: number]: string } = {
   1: '첫',
@@ -38,14 +39,13 @@ export default function SearchView({ type }: SearchViewProps) {
 
   const setBottomSheet = useSetAtom(bottomSheetState);
   const [searchList, setSearchList] = useAtom(searchState);
+  const [storageRoomData, setStorageRoomData] = useAtom(roomState);
 
   const { register, setValue, handleSubmit, watch, reset } = useSearchForm();
   const { mutate: makeRoomMutate } = useMakeRoomMutation();
   const { mutate: submitDeparturePointMutate } =
     useSubmitDeparturePointMutation();
 
-  const storageRoomId =
-    typeof window !== 'undefined' ? localStorage.getItem('roomId') : '';
   const isIndividualView = type === 'individual';
 
   const handleSearchAddressBtnClick = (index: number, e: any) => {
@@ -77,12 +77,12 @@ export default function SearchView({ type }: SearchViewProps) {
           },
           {
             onSuccess: () => {
-              localStorage.setItem('roomId', shareRoomId);
+              setStorageRoomData({ roomId: shareRoomId, hostId: '' });
               router.push('/search/list-together');
             },
           },
         );
-      } else if (storageRoomId && searchList.length > 0) {
+      } else if (storageRoomData.roomId && searchList.length > 0) {
         submitDeparturePointMutate(
           {
             requestBody: {
@@ -91,7 +91,7 @@ export default function SearchView({ type }: SearchViewProps) {
               start_x: searchForm.address.latitude,
               start_y: searchForm.address.longitude,
             },
-            roomId: storageRoomId,
+            roomId: storageRoomData.roomId,
           },
           {
             onSuccess: () => {
@@ -102,8 +102,10 @@ export default function SearchView({ type }: SearchViewProps) {
       } else {
         makeRoomMutate(searchForm, {
           onSuccess: data => {
-            localStorage.setItem('roomId', data?.room_id);
-            localStorage.setItem('hostKey', data?.room_host_id);
+            setStorageRoomData({
+              roomId: data?.room_id,
+              hostId: data?.room_host_id,
+            });
             router.push('/search/list-together');
           },
         });

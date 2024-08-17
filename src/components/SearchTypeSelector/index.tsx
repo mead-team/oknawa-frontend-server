@@ -1,6 +1,9 @@
 import styled from 'styled-components';
 import { useRouter } from 'next/navigation';
 import { ReactNode } from 'react';
+import { useAtomValue } from 'jotai';
+
+import { roomState } from '@/jotai/global/room';
 
 interface SearchTypeSelectorProps {
   type: 'individual' | 'together';
@@ -13,6 +16,8 @@ export default function SearchTypeSelector({
 }: SearchTypeSelectorProps) {
   const router = useRouter();
 
+  const storageRoomData = useAtomValue(roomState);
+
   const titleText = type === 'individual' ? '직접' : '함께';
   const description =
     type === 'individual'
@@ -22,6 +27,10 @@ export default function SearchTypeSelector({
   const handleButtonClick = () => {
     if (type === 'individual') {
       return router.push('/search/individual');
+    }
+
+    if (type === 'together' && storageRoomData.roomId) {
+      return router.push('/search/list-together');
     }
 
     return router.push('/search/together');

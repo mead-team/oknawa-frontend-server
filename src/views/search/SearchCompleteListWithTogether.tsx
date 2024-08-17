@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
-import { useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { Link, CirclePlus } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { Button as FloatingButton } from '@nextui-org/react';
@@ -16,17 +16,18 @@ import { baseUrl } from '@/hooks/useDistanceSummary';
 import SearchLoading from './components/SearchLoading';
 import { usePlaceSearchMutation } from '@/hooks/mutation/search';
 import { resultState } from '@/jotai/result/store';
-import { useEffect, useState } from 'react';
+import { roomState } from '@/jotai/global/room';
 
 export default function SearchCompleteListWithTogetherView() {
   const router = useRouter();
 
   const setSearchList = useSetAtom(searchState);
   const setResult = useSetAtom(resultState);
-  const [roomId, setRoomId] = useState('');
-  const [hostKey, setHostKey] = useState('');
+  const storageRoomData = useAtomValue(roomState);
 
-  const { participant: participants } = useInputStatusListQuery(roomId || '');
+  const { participant: participants } = useInputStatusListQuery(
+    storageRoomData.roomId || '',
+  );
   const {
     mutate: placeSearchMutate,
     isPending,
@@ -35,14 +36,14 @@ export default function SearchCompleteListWithTogetherView() {
 
   const handleInviteBtnClick = () => {
     navigator.clipboard
-      .writeText(`${baseUrl}/search/together?roomId=${roomId}`)
+      .writeText(`${baseUrl}/search/together?roomId=${storageRoomData.roomId}`)
       .then(() => {
         toast.success('링크가 복사되었습니다.');
       });
   };
 
   const handleAddBtnClick = () => {
-    if (!hostKey) {
+    if (!storageRoomData.hostId) {
       return toast.error('방장의 권한입니다.');
     }
 
@@ -51,7 +52,7 @@ export default function SearchCompleteListWithTogetherView() {
   };
 
   const handleSearchBtnClick = () => {
-    if (!hostKey) {
+    if (!storageRoomData.hostId) {
       return toast.error('방장의 권한입니다.');
     }
 
@@ -62,16 +63,6 @@ export default function SearchCompleteListWithTogetherView() {
       },
     });
   };
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const roomId = localStorage.getItem('roomId');
-      const hostKey = localStorage.getItem('hostKey');
-
-      setRoomId(roomId as string);
-      setHostKey(hostKey as string);
-    }
-  }, []);
 
   return (
     <Container>
@@ -95,7 +86,7 @@ export default function SearchCompleteListWithTogetherView() {
                 place={participant.region_name}
                 index={index}
                 type="together"
-                isKing={Boolean(hostKey)}
+                isKing={Boolean(storageRoomData.hostId)}
               />
             );
           })}
