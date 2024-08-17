@@ -48,12 +48,12 @@ export default function useDistanceSummary() {
       window.Kakao.Share.sendDefault({
         objectType: 'feed',
         content: {
-          title: `오늘은 ${stationName} 에서 만나요!`,
+          title: `오늘은 ${stationName}에서 만나요!`,
           description: '약속 장소를 확인해보세요!',
           imageUrl: process.env.NEXT_PUBLIC_KAKAO_SHARE_IMAGE,
           link: {
-            webUrl: `${baseUrl}/result?sharekey=${shareKey}`,
-            mobileWebUrl: `${baseUrl}/result?sharekey=${shareKey}`,
+            webUrl: `${baseUrl}/result/confirm?sharekey=${shareKey}`,
+            mobileWebUrl: `${baseUrl}/result/confirm?sharekey=${shareKey}`,
           },
         },
       });

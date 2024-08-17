@@ -25,11 +25,15 @@ export default function ResultConfirmBody() {
   const { mutate: placeSearchWithShareKey } =
     usePlaceSearchWithShareKeyMutation();
 
-  const totalTravelTime = resultConfirm?.itinerary.reduce(
+  const { station_name, share_key, itinerary, request_info, end_x, end_y } =
+    resultConfirm;
+
+  const totalTravelTime = itinerary.reduce(
     (sum, itinerary) => sum + itinerary.itinerary.totalTime,
     0,
   );
-  const averageTravelTime = totalTravelTime / resultConfirm?.itinerary.length;
+  const averageTravelTime = totalTravelTime / itinerary.length;
+  const stationName = station_name.split(' ')[0];
 
   const handleHotplaceBtnClick = (station: any) => {
     setBottomSheet(prevState => ({
@@ -37,7 +41,7 @@ export default function ResultConfirmBody() {
       isOpen: true,
       title: (
         <>
-          <span style={{ fontWeight: '800' }}>{station.station_name}</span>의
+          <span style={{ fontWeight: '800' }}>{stationName}</span>의
           <div>핫플레이스를 추천해요!</div>
         </>
       ),
@@ -47,7 +51,7 @@ export default function ResultConfirmBody() {
   };
 
   useEffect(() => {
-    if (shareKey && resultConfirm.station_name === '') {
+    if (shareKey && station_name === '') {
       placeSearchWithShareKey(shareKey, {
         onSuccess: data => {
           setResultConfirm(data);
@@ -57,22 +61,22 @@ export default function ResultConfirmBody() {
         },
       });
     }
-  }, [shareKey, resultConfirm, placeSearchWithShareKey, setResultConfirm]);
+  }, [shareKey, station_name, placeSearchWithShareKey, setResultConfirm]);
 
   return (
     <>
       <Container>
         <DistanceSummary
-          stationName={resultConfirm?.station_name}
-          shareKey={resultConfirm?.share_key}
+          stationName={stationName}
+          shareKey={share_key}
           averageTravelTime={averageTravelTime}
         />
         <ResultMap
-          participants={resultConfirm?.request_info?.participant}
-          itinerary={resultConfirm?.itinerary}
-          stationName={resultConfirm?.station_name}
-          end_x={resultConfirm?.end_x}
-          end_y={resultConfirm?.end_y}
+          participants={request_info?.participant}
+          itinerary={itinerary}
+          stationName={station_name}
+          end_x={end_x}
+          end_y={end_y}
         />
 
         <FloatingButton
@@ -82,7 +86,7 @@ export default function ResultConfirmBody() {
           variant="shadow"
           onClick={() => handleHotplaceBtnClick(resultConfirm)}
         >
-          {resultConfirm?.station_name} 핫플레이스는 어디?
+          {stationName} 핫플레이스는 어디?
         </FloatingButton>
       </Container>
     </>
