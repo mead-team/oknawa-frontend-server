@@ -193,7 +193,17 @@ export default function DistanceSummary({
   };
 
   const clickHome = () => {
+    setModalContents({
+      buttonLabel: '취소',
+      buttonLabel02: '확인',
+      contents: '홈으로 돌아가시겠어요?',
+      onConfirm: goToHome,
+    });
+  };
+
+  const goToHome = () => {
     router.push('/');
+    reset();
   };
 
   const clickTail = () => {

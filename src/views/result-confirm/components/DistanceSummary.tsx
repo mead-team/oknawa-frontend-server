@@ -27,6 +27,8 @@ import {
   TitleWrapper,
 } from '../style';
 import { useEffect, useState } from 'react';
+import { useResetAtom } from 'jotai/utils';
+import { modalState } from '@/jotai/global/store';
 
 export default function DistanceSummary({
   stationName,
@@ -36,6 +38,8 @@ export default function DistanceSummary({
   const router = useRouter();
 
   const { initKakao, kakaoShareSendDefault } = useDistanceSummary();
+
+  const reset = useResetAtom(modalState);
 
   const [fullUrl, setFullUrl] = useState('');
 
@@ -66,7 +70,17 @@ export default function DistanceSummary({
   };
 
   const clickHome = () => {
+    setModalContents({
+      buttonLabel: '취소',
+      buttonLabel02: '확인',
+      contents: '홈으로 돌아가시겠어요?',
+      onConfirm: goToHome,
+    });
+  };
+
+  const goToHome = () => {
     router.push('/');
+    reset();
   };
 
   return (
