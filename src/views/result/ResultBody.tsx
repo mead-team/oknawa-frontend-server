@@ -42,6 +42,10 @@ export default function ResultBody() {
   }, [data, setResult]);
 
   useEffect(() => {
+    if (queryMapId) localStorage.removeItem('isVote');
+  }, []);
+
+  useEffect(() => {
     if (data?.confirmed) {
       clearRefetchInterval();
     }
@@ -84,9 +88,9 @@ export default function ResultBody() {
           participants={participants}
           stationParticipants={currentStation.stationParticipants}
           shareKey={currentStation.shareKey}
+          vote={currentStation.vote}
           onNext={handleNext}
           onPrev={handlePrev}
-          l
         />
         <ResultMap
           station={currentStation}

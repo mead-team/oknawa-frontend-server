@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 
 import { useAtom, useSetAtom } from 'jotai';
 import { mapIdState } from '@/jotai/mapId/store';
-import { newParticipantsState } from '@/jotai/result/store';
 import { resultConfirmState } from '@/jotai/result-confirm/store';
 import { modalState } from '@/jotai/global/store';
 
@@ -76,21 +75,18 @@ export default function DistanceSummary({
   stationIndex,
   stationLength,
   stationParticipants,
+  vote,
   onNext,
   onPrev,
 }: any) {
   const router = useRouter();
 
   const [mapIdInfo] = useAtom(mapIdState);
+  const setResultConfirm = useSetAtom(resultConfirmState);
+  const reset = useResetAtom(modalState);
 
   const [fullUrl, setFullUrl] = useState('');
-  const [isButtonDisabled, setButtonDisabled] = useState(true);
   const [isExpandTail, setExpandTail] = useState(true);
-
-  const [newParticipants, setNewParticipants] = useAtom(newParticipantsState);
-
-  const reset = useResetAtom(modalState);
-  const setResultConfirm = useSetAtom(resultConfirmState);
 
   const queryMapId = useSearchParams().get('mapId');
 
@@ -99,17 +95,7 @@ export default function DistanceSummary({
   const { mutate: placeSearchWithShareKey } =
     usePlaceSearchWithShareKeyMutation();
 
-  useEffect(() => {
-    const processParticipants = (participants: any) =>
-      participants.map((participant: any) => ({
-        name: participant.name,
-        is_active: false,
-      }));
-
-    if (stationParticipants && stationParticipants.length > 0) {
-      setNewParticipants(processParticipants(stationParticipants));
-    }
-  }, [stationParticipants, setNewParticipants]);
+  const isVote = localStorage.getItem('isVote') === 'true';
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -118,37 +104,56 @@ export default function DistanceSummary({
   }, []);
 
   const clickInvitation = async () => {
-    const link = `${fullUrl}?mapId=${mapIdInfo.mapId}`;
-    try {
-      await navigator.clipboard.writeText(link);
-      setModalContents({
-        buttonLabel: '확인',
-        contents: '링크가 복사되었습니다!',
-      });
-    } catch (err) {
-      console.error('클립보드에 복사 실패:', err);
+    if (queryMapId) {
+      const link = `${fullUrl}`;
+      try {
+        await navigator.clipboard.writeText(link);
+        setModalContents({
+          buttonLabel: '확인',
+          contents: '링크가 복사되었습니다!',
+        });
+      } catch (err) {
+        console.error('클립보드에 복사 실패:', err);
+      }
+    } else {
+      const link = `${fullUrl}?mapId=${mapIdInfo.mapId}`;
+      try {
+        await navigator.clipboard.writeText(link);
+        setModalContents({
+          buttonLabel: '확인',
+          contents: '링크가 복사되었습니다!',
+        });
+      } catch (err) {
+        console.error('클립보드에 복사 실패:', err);
+      }
     }
   };
 
   const clickVote = async () => {
+    if (!isVote) {
+      setModalContents({
+        buttonLabel: '취소',
+        buttonLabel02: '투표하기',
+        contents: '투표하시겠어요?\n수정이 불가능합니다.',
+        onConfirm: handleVote,
+      });
+    }
+  };
+  const handleVote = async () => {
+    reset();
     try {
       await VoteService.setVote(
         (mapIdInfo.mapId || queryMapId) ?? '',
         shareKey,
       );
-
-      setButtonDisabled(!isButtonDisabled);
-
-      const updatedParticipants = [...newParticipants];
-      updatedParticipants[0].is_active = !updatedParticipants[0].is_active;
-      setNewParticipants(updatedParticipants);
     } catch (error) {
       console.error('Error voting:', error);
     }
+    localStorage.setItem('isVote', 'true');
   };
 
   const clickVoteConfirm = async () => {
-    if (isButtonDisabled === true) {
+    if (!isVote) {
       setModalContents({
         buttonLabel: '확인',
         contents: '아직 투표를 안하셨어요!',
@@ -168,6 +173,7 @@ export default function DistanceSummary({
     placeSearchWithShareKey(shareKey, {
       onSuccess: data => {
         setResultConfirm(data);
+        localStorage.removeItem('isVote');
       },
       onError: error => {
         console.error('Error fetching map data:', error);
@@ -210,6 +216,10 @@ export default function DistanceSummary({
     setExpandTail(!isExpandTail);
   };
 
+  const voteCount = Array(stationParticipants.length)
+    .fill(true, 0, vote)
+    .fill(false, vote);
+
   return (
     <Container>
       <Header>
@@ -250,16 +260,13 @@ export default function DistanceSummary({
             <VoteWrapper>
               <VoteTitle>
                 <Label>선호도 결과</Label>
-                <Count>
-                  {newParticipants?.filter(item => item.is_active).length || 0}
-                  표
-                </Count>
+                <Count>{vote}표</Count>
               </VoteTitle>
 
               <LikeWrapper>
-                {newParticipants.map((item: any, index: number) => (
+                {voteCount.map((item: boolean, index: number) => (
                   <LikeItem key={index}>
-                    {item.is_active ? <LikeIconActive /> : <LikeIconInactive />}
+                    {item ? <LikeIconActive /> : <LikeIconInactive />}
                   </LikeItem>
                 ))}
               </LikeWrapper>
@@ -269,13 +276,13 @@ export default function DistanceSummary({
                 label={'좋아요'}
                 onClick={clickVote}
                 style={{
-                  border: isButtonDisabled
-                    ? '1px solid #777780'
-                    : '1px solid var(--primary)',
-                  color: isButtonDisabled ? '#777780' : 'var(--primary)',
+                  border: isVote
+                    ? '1px solid var(--primary)'
+                    : '1px solid #777780',
+                  color: isVote ? 'var(--primary)' : '#777780',
                 }}
               >
-                {isButtonDisabled ? <LikeIconInactive /> : <LikeIconActive />}
+                {isVote ? <LikeIconActive /> : <LikeIconInactive />}
               </Button>
               {mapIdInfo.mapHostId && (
                 <ButtonPrimary label={'확정하기'} onClick={clickVoteConfirm} />
@@ -304,11 +311,7 @@ export default function DistanceSummary({
                   <DividerVertical />
                   <FoldLabel>
                     <LikeIconInactive />
-                    <Count>
-                      {newParticipants?.filter(item => item.is_active).length ||
-                        0}
-                      표
-                    </Count>
+                    <Count>{vote}표</Count>
                   </FoldLabel>
                 </FoldLabelWrapper>
               </TitleWrapper>
@@ -316,7 +319,7 @@ export default function DistanceSummary({
             <RightWrapper>
               <ButtonWrapper>
                 <LikeButton onClick={clickVote}>
-                  {isButtonDisabled ? <LikeIconInactive /> : <LikeIconActive />}
+                  {isVote ? <LikeIconActive /> : <LikeIconInactive />}
                 </LikeButton>
                 {mapIdInfo.mapHostId && (
                   <ConfirmButton onClick={clickVoteConfirm}>

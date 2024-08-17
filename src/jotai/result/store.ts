@@ -31,6 +31,7 @@ interface ResultObject {
   share_key: string;
   itinerary: ItineraryItem[];
   request_info: RequestInfo;
+  vote: number;
 }
 
 const InitialRequestInfo: RequestInfo = {
@@ -45,6 +46,7 @@ const initialResultObject: ResultObject = {
   share_key: '',
   itinerary: [],
   request_info: InitialRequestInfo,
+  vote: 0,
 };
 
 interface ResultState {
@@ -73,23 +75,5 @@ const initialShareKeyState: ShareKeyState = {
 export const shareKeyState = atomWithStorage<ShareKeyState>(
   'confirmShareKey',
   initialShareKeyState,
-  createJSONStorage(() => sessionStorage),
-);
-
-interface NewParticipant {
-  name: string;
-  is_active: boolean;
-}
-
-const initialNewParticipant: NewParticipant = {
-  name: '',
-  is_active: false,
-};
-
-const initialNewParticipants: NewParticipant[] = [initialNewParticipant];
-
-export const newParticipantsState = atomWithStorage<NewParticipant[]>(
-  'newParticipants',
-  initialNewParticipants,
   createJSONStorage(() => sessionStorage),
 );

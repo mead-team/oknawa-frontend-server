@@ -20,6 +20,7 @@ export default function useDistanceSummary() {
       (sum, itinerary) => sum + itinerary.itinerary.totalTime,
       0,
     );
+    const vote = station.vote;
     const averageTravelTime = totalTravelTime / itinerary.length;
 
     return {
@@ -30,6 +31,7 @@ export default function useDistanceSummary() {
       stationParticipants,
       totalTravelTime,
       averageTravelTime,
+      vote,
     };
   });
 

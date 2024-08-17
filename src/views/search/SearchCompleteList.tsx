@@ -56,6 +56,7 @@ export default function SearchCompleteList() {
             setSearchState(searchList);
             setResult(mapData);
             router.push('/result');
+            localStorage.removeItem('isVote');
           },
           onError: error => {
             console.error('Error fetching map data:', error);
