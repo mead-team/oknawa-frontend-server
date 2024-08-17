@@ -14,16 +14,22 @@ import PeopleCard from './components/PeopleCard';
 import Button from '@/components/Button';
 import { baseUrl } from '@/hooks/useDistanceSummary';
 import SearchLoading from './components/SearchLoading';
-import { usePlaceSearchMutation } from '@/hooks/mutation/search';
+import {
+  usePlaceSearchMapIdMutation,
+  usePlaceSearchMutation,
+} from '@/hooks/mutation/search';
 import { resultState } from '@/jotai/result/store';
 import { roomState } from '@/jotai/global/room';
+import { MapIdType } from '@/services/search/types';
+import { mapIdState } from '@/jotai/mapId/store';
 
 export default function SearchCompleteListWithTogetherView() {
   const router = useRouter();
 
-  const setSearchList = useSetAtom(searchState);
+  const [searchList, setSearchList] = useAtom(searchState);
   const setResult = useSetAtom(resultState);
   const [storageRoomData, setStorageRoomData] = useAtom(roomState);
+  const setMapIdInfo = useSetAtom(mapIdState);
 
   const { participant: participants } = useInputStatusListQuery(
     storageRoomData.roomId || '',
@@ -33,6 +39,7 @@ export default function SearchCompleteListWithTogetherView() {
     isPending,
     isSuccess,
   } = usePlaceSearchMutation();
+  const { mutate: placeSearchMapIdMutate } = usePlaceSearchMapIdMutation();
 
   const handleInviteBtnClick = () => {
     navigator.clipboard
@@ -77,8 +84,24 @@ export default function SearchCompleteListWithTogetherView() {
 
     placeSearchMutate(transformedParticipants, {
       onSuccess: data => {
-        router.push('/result');
-        setResult(data);
+        const mapIdInfo: MapIdType = {
+          mapId: data.map_id,
+          mapHostId: data.map_host_id,
+        };
+
+        setMapIdInfo(mapIdInfo);
+
+        placeSearchMapIdMutate(data.map_id, {
+          onSuccess: mapData => {
+            setSearchList(searchList);
+            setResult(mapData);
+            router.push('/result');
+            localStorage.removeItem('isVote');
+          },
+          onError: error => {
+            console.error('Error fetching map data:', error);
+          },
+        });
       },
     });
   };

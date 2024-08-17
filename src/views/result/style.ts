@@ -14,14 +14,14 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-  z-index: 99999999;
+  z-index: 8888;
 `;
 
 export const Header = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding: 72px 20px 0 8px;
+  padding: 42px 20px 0 8px;
 `;
 
 export const HomeButton = styled.button`

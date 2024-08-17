@@ -165,7 +165,7 @@ export default function SearchView({ type }: SearchViewProps) {
           <Input
             isClearable
             placeholder="이름을 입력해주세요."
-            size="lg"
+            size="sm"
             maxLength={5}
             {...register('name')}
             onClear={() => setValue('name', '')}
@@ -177,7 +177,7 @@ export default function SearchView({ type }: SearchViewProps) {
             <Input
               isClearable
               placeholder="출발지를 입력해주세요."
-              size="lg"
+              size="sm"
               isReadOnly
               value={addressValue?.regionName || ''}
               onClear={handleClearAddress}
@@ -189,9 +189,15 @@ export default function SearchView({ type }: SearchViewProps) {
             label={buttonText}
             disabled={isButtonDisabled}
             type="submit"
+            $widthFull
           />
         ) : (
-          <Button label="등록하기" type="submit" disabled={isButtonDisabled} />
+          <Button
+            label="등록하기"
+            type="submit"
+            disabled={isButtonDisabled}
+            $widthFull
+          />
         )}
       </Wrapper>
     </Container>
