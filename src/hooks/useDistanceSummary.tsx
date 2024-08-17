@@ -8,7 +8,32 @@ export const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function useDistanceSummary() {
   const [result] = useAtom(resultState);
-  const { station_name, itinerary, share_key } = result;
+
+  const { station_info, request_info } = result;
+
+  const distanceSummaries = station_info.map(station => {
+    const stationName = station.station_name.split(' ')[0];
+    const itinerary = station.itinerary;
+    const shareKey = station.share_key;
+    const stationParticipants = station.request_info.participant;
+    const totalTravelTime = station.itinerary.reduce(
+      (sum, itinerary) => sum + itinerary.itinerary.totalTime,
+      0,
+    );
+    const vote = station.vote;
+    const averageTravelTime = totalTravelTime / itinerary.length;
+
+    return {
+      station,
+      stationName,
+      itinerary,
+      shareKey,
+      stationParticipants,
+      totalTravelTime,
+      averageTravelTime,
+      vote,
+    };
+  });
 
   const initKakao = () => {
     if (window.Kakao && !window.Kakao.isInitialized()) {
@@ -20,17 +45,17 @@ export default function useDistanceSummary() {
     }
   };
 
-  const kakaoShareSendDefault = () => {
+  const kakaoShareSendDefault = (stationName: any, shareKey: any) => {
     try {
       window.Kakao.Share.sendDefault({
         objectType: 'feed',
         content: {
-          title: `오늘은 ${station_name} 에서 만나요!`,
-          description: '약속장소를 확인해보세요!',
+          title: `오늘은 ${stationName}에서 만나요!`,
+          description: '약속 장소를 확인해보세요!',
           imageUrl: process.env.NEXT_PUBLIC_KAKAO_SHARE_IMAGE,
           link: {
-            webUrl: `${baseUrl}/result?sharekey=${share_key}`,
-            mobileWebUrl: `${baseUrl}/result?sharekey=${share_key}`,
+            webUrl: `${baseUrl}/result/confirm?sharekey=${shareKey}`,
+            mobileWebUrl: `${baseUrl}/result/confirm?sharekey=${shareKey}`,
           },
         },
       });
@@ -39,20 +64,10 @@ export default function useDistanceSummary() {
     }
   };
 
-  const stationName = station_name.split(' ')[0];
-
-  const totalTravelTime = itinerary.reduce(
-    (sum, user) => sum + user.itinerary.totalTime,
-    0,
-  );
-
-  const averageTravelTime = totalTravelTime / itinerary.length;
-
   return {
-    stationName,
-    averageTravelTime,
-    itinerary,
+    distanceSummaries,
     initKakao,
     kakaoShareSendDefault,
+    participants: request_info.participant,
   };
 }

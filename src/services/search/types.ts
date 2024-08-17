@@ -18,3 +18,8 @@ export interface SubmitDeparturePointRequestBody {
   start_x: 0;
   start_y: 0;
 }
+
+export interface MapIdType {
+  mapId: string;
+  mapHostId: string;
+}

@@ -26,6 +26,8 @@ export const Container = styled.section`
 export const Modal = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
+  max-width: 360px;
   padding: 24px;
   background-color: #27272a;
   box-shadow: 0px 4px 24px rgba(0, 0, 0, 08);
@@ -48,9 +50,15 @@ export const ModalBody = styled.div`
   flex-direction: column;
   padding: 32px;
   text-align: center;
-  line-height: 150%;
+  line-height: 160%;
   font-size: 20px;
   white-space: pre-line;
+`;
+
+export const ModalButtonWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
 `;
 
 export const ModalButton = styled.div`

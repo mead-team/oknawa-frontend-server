@@ -1,104 +1,128 @@
 'use client';
 
-import { Button } from '@nextui-org/react';
-import styled from 'styled-components';
-import { useEffect } from 'react';
-import { useAtom, useSetAtom } from 'jotai';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
+import { usePlaceSearchMapIdQuery } from '@/hooks/query/search';
+import useDistanceSummary from '@/hooks/useDistanceSummary';
+
+import { useAtom, useSetAtom } from 'jotai';
+import { resultState } from '@/jotai/result/store';
+import { mapIdState } from '@/jotai/mapId/store';
+import { bottomSheetState } from '@/jotai/global/store';
+
+import styled from 'styled-components';
 import DistanceSummary from './components/DistanceSummary';
 import HotPlaceModal from './components/HotPlaceModal';
 import ResultMap from './components/ResultMap';
 
-import { usePlaceSearchWithShareKeyQuery } from '@/hooks/query/search';
-
-import { resultState } from '@/jotai/result/store';
-import { bottomSheetState } from '@/jotai/global/store';
-
-import { ArrowBackIcon } from '@/assets/icons/ArrowBack';
+import { useSearchParams } from 'next/navigation';
+import { Button } from '@nextui-org/react';
 
 export default function ResultBody() {
-  const router = useRouter();
-  const shareKey = useSearchParams().get('sharekey');
+  const queryMapId = useSearchParams().get('mapId');
 
-  const [result, setResult] = useAtom(resultState);
+  const [mapIdInfo] = useAtom(mapIdState);
   const setBottomSheet = useSetAtom(bottomSheetState);
-  const stationName = result?.station_name.split(' ')[0];
+  const setResult = useSetAtom(resultState);
 
-  const { data } = usePlaceSearchWithShareKeyQuery(shareKey);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  const handleHotplaceBtnClick = () => {
+  const { distanceSummaries, participants } = useDistanceSummary();
+
+  const currentStation = distanceSummaries[currentIndex];
+
+  const { data, clearRefetchInterval } = usePlaceSearchMapIdQuery(
+    (mapIdInfo.mapId || queryMapId) ?? '',
+  );
+
+  useEffect(() => {
+    if (data) {
+      setResult(data);
+    }
+  }, [data, setResult]);
+
+  useEffect(() => {
+    if (queryMapId) localStorage.removeItem('isVote');
+  }, []);
+
+  useEffect(() => {
+    if (data?.confirmed) {
+      clearRefetchInterval();
+    }
+  }, [data, clearRefetchInterval]);
+
+  const handleNext = () => {
+    setCurrentIndex(prevIndex => (prevIndex + 1) % distanceSummaries.length);
+  };
+
+  const handlePrev = () => {
+    setCurrentIndex(
+      prevIndex =>
+        (prevIndex - 1 + distanceSummaries.length) % distanceSummaries.length,
+    );
+  };
+
+  const handleHotplaceBtnClick = (station: any) => {
     setBottomSheet(prevState => ({
       ...prevState,
       isOpen: true,
       title: (
         <>
-          <span style={{ fontWeight: '800' }}>{stationName}</span>의
+          <span style={{ fontWeight: '800' }}>{station.stationName}</span>의
           <div>핫플레이스를 추천해요!</div>
         </>
       ),
-      contents: <HotPlaceModal />,
-      height: 70,
+      contents: <HotPlaceModal station={station} />,
+      height: 60,
     }));
   };
 
-  useEffect(() => {
-    if (shareKey && data) {
-      setResult(data);
-    }
-  }, [shareKey, data, setResult]);
-
   return (
-    <Container>
-      <Header>
-        <BackButton
-          isIconOnly
-          aria-label="Back"
-          onClick={() => router.push('/')}
+    <>
+      <Container>
+        <DistanceSummary
+          station={currentStation}
+          stationIndex={`0${currentIndex + 1}`}
+          stationLength={`0${distanceSummaries.length}`}
+          stationName={currentStation.stationName}
+          participants={participants}
+          stationParticipants={currentStation.stationParticipants}
+          shareKey={currentStation.shareKey}
+          vote={currentStation.vote}
+          onNext={handleNext}
+          onPrev={handlePrev}
+        />
+        <ResultMap
+          station={currentStation}
+          participants={participants}
+          itinerary={currentStation.itinerary}
+          stationName={currentStation.stationName}
+        />
+        <FloatingButton
+          radius="full"
+          size="lg"
+          color="success"
+          variant="shadow"
+          onClick={() => handleHotplaceBtnClick(currentStation)}
         >
-          <ArrowBackIcon />
-        </BackButton>
-      </Header>
-      <DistanceSummary />
-      <ResultMap />
-      <FloatingButton
-        radius="full"
-        size="lg"
-        color="success"
-        variant="shadow"
-        onClick={handleHotplaceBtnClick}
-      >
-        {stationName} 핫플레이스는 어디?
-      </FloatingButton>
-    </Container>
+          {currentStation.stationName} 핫플레이스는 어디?
+        </FloatingButton>
+      </Container>
+    </>
   );
 }
 
 const Container = styled.main`
   position: relative;
   width: 100%;
+  height: 100vh;
 `;
 
 const FloatingButton = styled(Button)`
-  position: absolute;
-  bottom: 20px;
+  position: fixed;
+  bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
   font-weight: 600;
-  z-index: 10;
-`;
-
-const Header = styled.header`
-  position: absolute;
-  top: 15px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 95%;
-  z-index: 10;
-`;
-
-const BackButton = styled(Button)`
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  z-index: 2;
 `;

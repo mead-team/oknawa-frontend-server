@@ -27,8 +27,8 @@ export default function HotPlaceModal({ station }: any) {
 
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useHotPlaceQuery(category, {
-      x: station.station.end_x,
-      y: station.station.end_y,
+      x: station.end_x,
+      y: station.end_y,
     });
 
   const allPlaces = data?.pages.flatMap(page => page.documents) ?? [];

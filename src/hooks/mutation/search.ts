@@ -1,27 +1,15 @@
 import { useMutation } from '@tanstack/react-query';
 
 import SearchService from '@/services/search/SearchService';
+import { MapIdType } from '@/services/search/types';
 import { SubmitDeparturePointRequestBody } from '@/services/search/types';
 
-import { useSetAtom } from 'jotai';
-import { SearchState, modalState } from '@/jotai/global/store';
+import { SearchState } from '@/jotai/global/store';
 
-interface IModalProps {
-  buttonLabel: string;
-  contents: string;
-}
+import useModal from '@/hooks/common/useModal';
 
 export const usePlaceSearchMutation = () => {
-  const setModal = useSetAtom(modalState);
-
-  const setModalContents = ({ buttonLabel, contents }: IModalProps) => {
-    setModal(pervState => ({
-      ...pervState,
-      isOpen: true,
-      buttonLabel: buttonLabel,
-      contents: contents,
-    }));
-  };
+  const { setModalContents } = useModal();
 
   return useMutation({
     mutationKey: ['placeSearch'],
@@ -34,6 +22,24 @@ export const usePlaceSearchMutation = () => {
         contents: '지점을 찾을 수 없습니다.\n다시 검색해주세요.',
       });
     },
+  });
+};
+
+export const usePlaceSearchMapIdMutation = () => {
+  return useMutation({
+    mutationKey: ['placeSearchMapId'],
+    mutationFn: (mapId: string) => SearchService.searchPolling(mapId),
+    onError: error => {
+      console.log('error 발생!', error);
+    },
+  });
+};
+
+export const usePlaceSearchWithShareKeyMutation = () => {
+  return useMutation({
+    mutationKey: ['placeSearchWithShareKey'],
+    mutationFn: (shareKey?: string | null) =>
+      SearchService.searchPlacesWithShareKey(shareKey),
   });
 };
 

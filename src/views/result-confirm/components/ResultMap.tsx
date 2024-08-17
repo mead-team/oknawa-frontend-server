@@ -29,10 +29,11 @@ const getStrokeColor = (index: number) => {
 };
 
 export default function ResultMap({
-  station,
   stationName,
   itinerary,
   participants,
+  end_x,
+  end_y,
 }: any) {
   const [loaded, setLoaded] = useState(false);
   const [map, setMap] = useState<kakao.maps.Map | undefined>(undefined);
@@ -78,7 +79,7 @@ export default function ResultMap({
     const bounds = getMapBounds()!;
 
     map.setBounds(bounds);
-  }, [map, station, getMapBounds]);
+  }, [map, getMapBounds]);
 
   useEffect(() => {
     const loadKakaoMapScript = () => {
@@ -93,13 +94,13 @@ export default function ResultMap({
     } else {
       loadKakaoMapScript();
     }
-  }, [station, polylines]);
+  }, [polylines]);
 
   return (
     <>
       {loaded && (
         <Map
-          center={{ lat: station.station.end_y, lng: station.station.end_x }}
+          center={{ lat: end_y, lng: end_x }}
           level={3}
           isPanto
           onCreate={setMap}
@@ -120,9 +121,7 @@ export default function ResultMap({
               />
             );
           })}
-          <CustomOverlayMap
-            position={{ lat: station.end_y, lng: station.end_x }}
-          >
+          <CustomOverlayMap position={{ lat: end_y, lng: end_x }}>
             <CenterMarker>{stationName}</CenterMarker>
           </CustomOverlayMap>
           {polylines.map((polyline: any, index: number) => {

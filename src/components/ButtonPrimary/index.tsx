@@ -5,34 +5,28 @@ interface ButtonProps {
   label?: string;
   disabled?: boolean;
   $widthFull?: boolean;
-  size?: 'small' | 'medium' | 'large';
-  type?: 'button' | 'submit' | 'reset';
   children?: ReactNode;
+  type?: 'button' | 'submit' | 'reset';
   onClick?: () => void;
-  className?: string;
 }
 
-export default function Button({
+export default function ButtonPrimary({
   label = '버튼',
   disabled,
   $widthFull,
   children,
-  size = 'medium',
   type = 'button',
   onClick,
-  className,
 }: ButtonProps) {
   return (
     <Container
       disabled={disabled}
       type={type}
       onClick={onClick}
-      className={className}
       $widthFull={$widthFull}
-      size={size}
     >
-      {children && children}
       <Text>{label}</Text>
+      {children && children}
     </Container>
   );
 }
@@ -40,30 +34,24 @@ export default function Button({
 const Container = styled.button<{
   disabled: boolean | undefined;
   $widthFull?: boolean;
-  size: 'small' | 'medium' | 'large';
 }>`
   display: flex;
   justify-content: center;
   align-items: center;
   width: ${({ $widthFull }) => ($widthFull ? '100%' : 'fit-content')};
-  height: ${({ size }) => {
-    switch (size) {
-      case 'small':
-        return '32px';
-      case 'medium':
-        return '44px';
-      case 'large':
-        return '56px';
-      default:
-        return '44px';
-    }
-  }};
   gap: 8px;
-  padding: 16px 12px 16px 16px;
-  border: ${({ disabled }) =>
-    disabled ? '1px solid #8D8D94' : '1px solid white'};
+  /* padding: 14px 0; */
+  padding: 16px;
+  height: 44px;
+
   border-radius: 8px;
-  color: ${({ disabled }) => (disabled ? '#8D8D94' : 'white')};
+  color: ${({ disabled }) => (disabled ? '#8D8D94' : '#101012')};
+  background-color: #18c964;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${({ disabled }) => (disabled ? 'initial' : '#14b057')};
+  }
 `;
 
 const Text = styled.h1`
