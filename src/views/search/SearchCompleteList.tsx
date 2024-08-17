@@ -94,7 +94,7 @@ export default function SearchCompleteList() {
         </Section>
         <Button
           label="출발지 추가하기 ⊕"
-          widthFull
+          $widthFull
           size="large"
           onClick={() => router.push('/search/individual')}
         />

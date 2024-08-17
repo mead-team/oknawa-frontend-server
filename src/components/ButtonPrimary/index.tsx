@@ -4,7 +4,7 @@ import styled from 'styled-components';
 interface ButtonProps {
   label?: string;
   disabled?: boolean;
-  widthFull?: boolean;
+  $widthFull?: boolean;
   children?: ReactNode;
   type?: 'button' | 'submit' | 'reset';
   onClick?: () => void;
@@ -13,7 +13,7 @@ interface ButtonProps {
 export default function ButtonPrimary({
   label = '버튼',
   disabled,
-  widthFull,
+  $widthFull,
   children,
   type = 'button',
   onClick,
@@ -23,7 +23,7 @@ export default function ButtonPrimary({
       disabled={disabled}
       type={type}
       onClick={onClick}
-      widthFull={widthFull}
+      $widthFull={$widthFull}
     >
       <Text>{label}</Text>
       {children && children}
@@ -33,12 +33,12 @@ export default function ButtonPrimary({
 
 const Container = styled.button<{
   disabled: boolean | undefined;
-  widthFull?: boolean;
+  $widthFull?: boolean;
 }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: ${({ widthFull }) => (widthFull ? '100%' : 'fit-content')};
+  width: ${({ $widthFull }) => ($widthFull ? '100%' : 'fit-content')};
   gap: 8px;
   /* padding: 14px 0; */
   padding: 16px;

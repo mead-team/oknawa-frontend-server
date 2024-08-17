@@ -58,12 +58,12 @@ export default function ModalBox() {
                 <Button
                   onClick={handleCloseBtnClick}
                   label={modal.buttonLabel}
-                  widthFull
+                  $widthFull
                 />
                 <ButtonPrimary
                   label={modal.buttonLabel02}
                   onClick={modal.onConfirm}
-                  widthFull
+                  $widthFull
                 />
               </>
             ) : (
@@ -72,7 +72,7 @@ export default function ModalBox() {
                   modal.onConfirm ? modal.onConfirm : handleCloseBtnClick
                 }
                 label={modal.buttonLabel}
-                widthFull
+                $widthFull
               />
             )}
           </ModalButtonWrapper>

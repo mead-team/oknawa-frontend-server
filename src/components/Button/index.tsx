@@ -4,10 +4,10 @@ import styled, { css } from 'styled-components';
 interface ButtonProps {
   label?: string;
   disabled?: boolean;
-  widthFull?: boolean;
+  $widthFull?: boolean;
   size?: 'small' | 'medium' | 'large';
-  children?: ReactNode;
   type?: 'button' | 'submit' | 'reset';
+  children?: ReactNode;
   style?: CSSProperties;
   onClick?: () => void;
 }
@@ -15,7 +15,7 @@ interface ButtonProps {
 export default function Button({
   label = '버튼',
   disabled,
-  widthFull,
+  $widthFull,
   children,
   size = 'medium',
   type = 'button',
@@ -27,7 +27,7 @@ export default function Button({
       disabled={disabled}
       type={type}
       onClick={onClick}
-      widthFull={widthFull}
+      $widthFull={$widthFull}
       size={size}
       style={style}
     >
@@ -39,14 +39,14 @@ export default function Button({
 
 const Container = styled.button<{
   disabled: boolean | undefined;
-  widthFull?: boolean;
+  $widthFull?: boolean;
   size: 'small' | 'medium' | 'large';
   style?: CSSProperties;
 }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: ${({ widthFull }) => (widthFull ? '100%' : 'fit-content')};
+  width: ${({ $widthFull }) => ($widthFull ? '100%' : 'fit-content')};
   height: ${({ size }) => {
     switch (size) {
       case 'small':

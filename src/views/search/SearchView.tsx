@@ -114,7 +114,7 @@ export default function SearchView({ type }: SearchViewProps) {
         <Button
           label={buttonText}
           disabled={isButtonDisabled}
-          widthFull
+          $widthFull
           size="large"
           type="submit"
         />
