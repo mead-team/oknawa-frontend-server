@@ -16,15 +16,15 @@ import { baseUrl } from '@/hooks/useDistanceSummary';
 import SearchLoading from './components/SearchLoading';
 import { usePlaceSearchMutation } from '@/hooks/mutation/search';
 import { resultState } from '@/jotai/result/store';
+import { useEffect, useState } from 'react';
 
 export default function SearchCompleteListWithTogetherView() {
   const router = useRouter();
 
   const setSearchList = useSetAtom(searchState);
   const setResult = useSetAtom(resultState);
-
-  const roomId = localStorage.getItem('roomId');
-  const hostKey = localStorage.getItem('hostKey');
+  const [roomId, setRoomId] = useState('');
+  const [hostKey, setHostKey] = useState('');
 
   const { participant: participants } = useInputStatusListQuery(roomId || '');
   const {
@@ -54,6 +54,16 @@ export default function SearchCompleteListWithTogetherView() {
       },
     });
   };
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const roomId = localStorage.getItem('roomId');
+      const hostKey = localStorage.getItem('hostKey');
+
+      setRoomId(roomId as string);
+      setHostKey(hostKey as string);
+    }
+  }, []);
 
   return (
     <Container>
