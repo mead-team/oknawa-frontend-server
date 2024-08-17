@@ -41,7 +41,7 @@ export default function SearchCompleteList() {
     isSuccess,
   } = usePlaceSearchMapIdMutation();
 
-  const handleSearchBtnClick = async () => {
+  const handleSearchBtnClick = () => {
     placeSearchMutate(searchList, {
       onSuccess: data => {
         const mapIdInfo: MapIdType = {
@@ -66,6 +66,14 @@ export default function SearchCompleteList() {
     });
   };
 
+  const handleDeleteIconClick = (index: number) => {
+    setSearchList(prevList => prevList.filter((_, i) => i !== index));
+  };
+
+  const handleModifyIconClick = () => {
+    console.log('handleModifyIconClick');
+  };
+
   useEffect(() => {
     const image = new Image();
     image.src = '/loading.gif';
@@ -88,7 +96,8 @@ export default function SearchCompleteList() {
                 key={index}
                 name={search.name}
                 place={search.address.regionName}
-                iconClick={() => console.log('hello')}
+                onDeleteIconClick={() => handleDeleteIconClick(index)}
+                onModifyIconClick={handleModifyIconClick}
               />
             );
           })}
@@ -100,7 +109,12 @@ export default function SearchCompleteList() {
           onClick={() => router.push('/search/individual')}
         />
       </Wrapper>
-      <SubmitButton size="lg" color="success" onClick={handleSearchBtnClick}>
+      <SubmitButton
+        size="lg"
+        color="success"
+        onClick={handleSearchBtnClick}
+        isDisabled={searchList.length < 2}
+      >
         이대로 추천 받기
       </SubmitButton>
       {(isPending || isSuccess) && <SearchLoading />}
@@ -113,15 +127,13 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: space-between;
   padding: 35px 19px 20px;
-  min-height: 100vh;
+  min-height: 100dvh;
 `;
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 13px;
-  margin-top: 50px;
-  padding-bottom: 120px;
 `;
 
 const Section = styled.section`
@@ -151,5 +163,6 @@ const Title = styled.h1`
 `;
 
 const SubmitButton = styled(FloatingButton)`
+  margin-top: 10px;
   font-weight: 600;
 `;

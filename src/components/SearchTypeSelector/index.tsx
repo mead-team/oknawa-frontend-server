@@ -1,10 +1,9 @@
 import styled from 'styled-components';
-import Avatar from '../Avatar';
 import { useRouter } from 'next/navigation';
-import toast from 'react-hot-toast';
-import { PeopleIcon } from '@/assets/icons/People';
-import { PlusIcon } from '@/assets/icons/Plus';
 import { ReactNode } from 'react';
+import { useAtomValue } from 'jotai';
+
+import { roomState } from '@/jotai/global/room';
 
 interface SearchTypeSelectorProps {
   type: 'individual' | 'together';
@@ -17,6 +16,8 @@ export default function SearchTypeSelector({
 }: SearchTypeSelectorProps) {
   const router = useRouter();
 
+  const storageRoomData = useAtomValue(roomState);
+
   const titleText = type === 'individual' ? '직접' : '함께';
   const description =
     type === 'individual'
@@ -25,19 +26,14 @@ export default function SearchTypeSelector({
 
   const handleButtonClick = () => {
     if (type === 'individual') {
-      router.push('/search/individual');
-    } else {
-      toast('서비스 준비중입니다.', {
-        duration: 900,
-        icon: '❗️',
-        style: {
-          borderRadius: '12px',
-          background: '#300B0B',
-          color: '#fff',
-          border: '1px solid #FF4D4D',
-        },
-      });
+      return router.push('/search/individual');
     }
+
+    if (type === 'together' && storageRoomData.roomId) {
+      return router.push('/search/list-together');
+    }
+
+    return router.push('/search/together');
   };
 
   return (

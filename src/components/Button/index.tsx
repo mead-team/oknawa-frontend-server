@@ -10,6 +10,7 @@ interface ButtonProps {
   children?: ReactNode;
   style?: CSSProperties;
   onClick?: () => void;
+  className?: string;
 }
 
 export default function Button({
@@ -21,12 +22,14 @@ export default function Button({
   type = 'button',
   style,
   onClick,
+  className,
 }: ButtonProps) {
   return (
     <Container
       disabled={disabled}
       type={type}
       onClick={onClick}
+      className={className}
       $widthFull={$widthFull}
       size={size}
       style={style}

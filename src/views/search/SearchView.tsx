@@ -3,16 +3,18 @@
 import { Input } from '@nextui-org/react';
 import { useAtom, useSetAtom } from 'jotai';
 import { styled } from 'styled-components';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import Address from '@/components/Address';
-
 import useSearchForm from '@/hooks/form/search/useSearchForm';
-
 import { bottomSheetState, searchState } from '@/jotai/global/store';
-
 import Button from '@/components/Button';
 import { ArrowBackIcon } from '@/assets/icons/ArrowBack';
+import {
+  useMakeRoomMutation,
+  useSubmitDeparturePointMutation,
+} from '@/hooks/mutation/search';
+import { roomState } from '@/jotai/global/room';
 
 const numberConfig: { [key: number]: string } = {
   1: '첫',
@@ -33,13 +35,21 @@ interface SearchViewProps {
 
 export default function SearchView({ type }: SearchViewProps) {
   const router = useRouter();
+  const shareRoomId = useSearchParams().get('roomId');
 
   const setBottomSheet = useSetAtom(bottomSheetState);
   const [searchList, setSearchList] = useAtom(searchState);
+  const [storageRoomData, setStorageRoomData] = useAtom(roomState);
 
   const { register, setValue, handleSubmit, watch, reset } = useSearchForm();
+  const { mutate: makeRoomMutate } = useMakeRoomMutation();
+  const { mutate: submitDeparturePointMutate } =
+    useSubmitDeparturePointMutation();
 
-  const handleSearchAddressBtnClick = (index: number) => {
+  const isIndividualView = type === 'individual';
+
+  const handleSearchAddressBtnClick = (index: number, e: any) => {
+    e.preventDefault();
     setBottomSheet(prevState => ({
       ...prevState,
       isOpen: true,
@@ -49,7 +59,60 @@ export default function SearchView({ type }: SearchViewProps) {
   };
 
   const handleSearchBtnClick = (searchForm: any) => {
-    setSearchList(prevState => [...prevState, searchForm]);
+    if (isIndividualView) {
+      setSearchList(prevState => [...prevState, searchForm]);
+    }
+
+    if (!isIndividualView) {
+      if (shareRoomId) {
+        submitDeparturePointMutate(
+          {
+            requestBody: {
+              name: searchForm.name,
+              region_name: searchForm.address.regionName,
+              start_x: searchForm.address.latitude,
+              start_y: searchForm.address.longitude,
+            },
+            roomId: shareRoomId,
+          },
+          {
+            onSuccess: () => {
+              setStorageRoomData({ roomId: shareRoomId, hostId: '' });
+              router.push('/search/list-together');
+            },
+          },
+        );
+      } else if (storageRoomData.roomId && searchList.length > 0) {
+        submitDeparturePointMutate(
+          {
+            requestBody: {
+              name: searchForm.name,
+              region_name: searchForm.address.regionName,
+              start_x: searchForm.address.latitude,
+              start_y: searchForm.address.longitude,
+            },
+            roomId: storageRoomData.roomId,
+          },
+          {
+            onSuccess: () => {
+              router.push('/search/list-together');
+            },
+          },
+        );
+      } else {
+        makeRoomMutate(searchForm, {
+          onSuccess: data => {
+            setStorageRoomData({
+              roomId: data?.room_id,
+              hostId: data?.room_host_id,
+            });
+            router.push('/search/list-together');
+          },
+        });
+      }
+
+      return;
+    }
 
     if (searchList.length >= 1) {
       router.push('/search/list');
@@ -58,18 +121,29 @@ export default function SearchView({ type }: SearchViewProps) {
     }
   };
 
+  const getTitleText = (orderNums: number) => {
+    if (isIndividualView) {
+      return `${numberConfig[orderNums + 1]}번째 출발지 정보를\n입력해주세요.`;
+    } else {
+      if (orderNums > 0) {
+        return `${
+          numberConfig[orderNums + 1]
+        }번째 출발지 정보를\n입력해주세요.`;
+      } else {
+        return '먼저 자신의 출발지 정보를\n입력해주세요.';
+      }
+    }
+  };
+
   const addressValue = watch('address');
   const nameValue = watch('name');
-  const titleText = `${
-    numberConfig[searchList.length + 1]
-  }번째 출발지 정보를\n입력해주세요.`;
+  const titleText = getTitleText(searchList.length);
   const buttonText =
     searchList.length >= 1
       ? '등록하기'
       : `${numberConfig[searchList.length + 2]}번째 출발지 추가하기`;
   const isButtonDisabled = !nameValue || !addressValue?.fullAddress;
 
-  const handleClearName = () => setValue('name', '');
   const handleClearAddress = () =>
     setValue('address', {
       fullAddress: '',
@@ -81,12 +155,11 @@ export default function SearchView({ type }: SearchViewProps) {
   return (
     <Container onSubmit={handleSubmit(handleSearchBtnClick)}>
       <Wrapper>
-        <IconBox onClick={() => router.back()}>
+        <IconBox onClick={() => router.push('/')}>
           <ArrowBackIcon />
         </IconBox>
         <TitleBox>
           <Title>{titleText}</Title>
-          <PeopleCount>① ②</PeopleCount>
         </TitleBox>
         <Section>
           <Input
@@ -95,11 +168,11 @@ export default function SearchView({ type }: SearchViewProps) {
             size="lg"
             maxLength={5}
             {...register('name')}
-            onClear={handleClearName}
+            onClear={() => setValue('name', '')}
             value={nameValue}
           />
           <ClickableArea
-            onClick={() => handleSearchAddressBtnClick(searchList.length)}
+            onClick={e => handleSearchAddressBtnClick(searchList.length, e)}
           >
             <Input
               isClearable
@@ -111,13 +184,15 @@ export default function SearchView({ type }: SearchViewProps) {
             />
           </ClickableArea>
         </Section>
-        <Button
-          label={buttonText}
-          disabled={isButtonDisabled}
-          $widthFull
-          size="large"
-          type="submit"
-        />
+        {isIndividualView ? (
+          <Button
+            label={buttonText}
+            disabled={isButtonDisabled}
+            type="submit"
+          />
+        ) : (
+          <Button label="등록하기" type="submit" disabled={isButtonDisabled} />
+        )}
       </Wrapper>
     </Container>
   );
@@ -128,14 +203,13 @@ const Container = styled.form`
   flex-direction: column;
   justify-content: space-between;
   padding: 35px 19px 20px;
-  min-height: 100vh;
+  min-height: 100dvh;
 `;
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 13px;
-  margin-top: 50px;
   padding-bottom: 120px;
 `;
 

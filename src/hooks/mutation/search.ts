@@ -2,6 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 
 import SearchService from '@/services/search/SearchService';
 import { MapIdType } from '@/services/search/types';
+import { SubmitDeparturePointRequestBody } from '@/services/search/types';
 
 import { SearchState } from '@/jotai/global/store';
 
@@ -39,5 +40,31 @@ export const usePlaceSearchWithShareKeyMutation = () => {
     mutationKey: ['placeSearchWithShareKey'],
     mutationFn: (shareKey?: string | null) =>
       SearchService.searchPlacesWithShareKey(shareKey),
+  });
+};
+
+export const useMakeRoomMutation = () => {
+  return useMutation({
+    mutationKey: ['roomMake'],
+    mutationFn: (searchForm: any) => SearchService.makeRoom(searchForm),
+    onError: error => {
+      console.log('error 발생!', error);
+    },
+  });
+};
+
+export const useSubmitDeparturePointMutation = () => {
+  return useMutation({
+    mutationKey: ['submitDeparturePoint'],
+    mutationFn: ({
+      requestBody,
+      roomId,
+    }: {
+      requestBody: SubmitDeparturePointRequestBody;
+      roomId: string;
+    }) => SearchService.submitDeparturePoint(requestBody, roomId),
+    onError: error => {
+      console.log('error 발생!', error);
+    },
   });
 };

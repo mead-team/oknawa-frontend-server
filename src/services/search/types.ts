@@ -12,6 +12,13 @@ export interface SearchFormType {
   userSection?: UserSectionType[];
 }
 
+export interface SubmitDeparturePointRequestBody {
+  name: string;
+  region_name: string;
+  start_x: 0;
+  start_y: 0;
+}
+
 export interface MapIdType {
   mapId: string;
   mapHostId: string;
