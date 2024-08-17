@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { useEffect, useState } from 'react';
 
@@ -92,6 +92,8 @@ export default function DistanceSummary({
   const reset = useResetAtom(modalState);
   const setResultConfirm = useSetAtom(resultConfirmState);
 
+  const queryMapId = useSearchParams().get('mapId');
+
   const { setModalContents } = useModal();
 
   const { mutate: placeSearchWithShareKey } =
@@ -130,7 +132,10 @@ export default function DistanceSummary({
 
   const clickVote = async () => {
     try {
-      await VoteService.setVote(mapIdInfo.mapId, shareKey);
+      await VoteService.setVote(
+        (mapIdInfo.mapId || queryMapId) ?? '',
+        shareKey,
+      );
 
       setButtonDisabled(!isButtonDisabled);
 
@@ -175,6 +180,7 @@ export default function DistanceSummary({
   const handleVoteConfirm = async () => {
     try {
       const result = await VoteService.setVoteConfirm(mapIdInfo, shareKey);
+
       console.error('confirm - result:', result);
       setModalContents({
         buttonLabel: '확인',

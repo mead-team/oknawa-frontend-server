@@ -22,9 +22,6 @@ export default function ResultConfirmBody() {
   const setBottomSheet = useSetAtom(bottomSheetState);
   const [resultConfirm, setResultConfirm] = useAtom(resultConfirmState);
 
-  console.log('confirm shareKey:', resultConfirm.share_key);
-  console.log('url shareKey:', shareKey);
-
   const { mutate: placeSearchWithShareKey } =
     usePlaceSearchWithShareKeyMutation();
 
