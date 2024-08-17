@@ -23,7 +23,7 @@ export default function SearchCompleteListWithTogetherView() {
 
   const setSearchList = useSetAtom(searchState);
   const setResult = useSetAtom(resultState);
-  const storageRoomData = useAtomValue(roomState);
+  const [storageRoomData, setStorageRoomData] = useAtom(roomState);
 
   const { participant: participants } = useInputStatusListQuery(
     storageRoomData.roomId || '',
@@ -62,6 +62,11 @@ export default function SearchCompleteListWithTogetherView() {
         setResult(data);
       },
     });
+  };
+
+  const handleQuiteRoomBtnClick = () => {
+    router.push('/');
+    setStorageRoomData({ roomId: '', hostId: '' });
   };
 
   return (
@@ -108,14 +113,19 @@ export default function SearchCompleteListWithTogetherView() {
           </Button>
         </ButtonWrapper>
       </Wrapper>
-      <SubmitButton
-        size="lg"
-        color="success"
-        onClick={handleSearchBtnClick}
-        isDisabled={participants?.length < 2}
-      >
-        만나기 편한 장소 추천받기
-      </SubmitButton>
+
+      <div>
+        <QuitRoom onClick={handleQuiteRoomBtnClick}>방 나가기</QuitRoom>
+        <SubmitButton
+          size="lg"
+          color="success"
+          onClick={handleSearchBtnClick}
+          isDisabled={participants?.length < 2}
+          className="w-full"
+        >
+          만나기 편한 장소 추천받기
+        </SubmitButton>
+      </div>
       {(isPending || isSuccess) && <SearchLoading />}
     </Container>
   );
@@ -174,4 +184,17 @@ const ButtonWrapper = styled.div`
 
 const SubmitButton = styled(FloatingButton)`
   font-weight: 600;
+`;
+
+const QuitRoom = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  cursor: pointer;
+  padding-bottom: 10px;
+  font-size: 13px;
+  color: #b91c1c;
+
+  &:hover {
+    opacity: 0.7;
+  }
 `;
