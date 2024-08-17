@@ -58,7 +58,7 @@ export default function SearchCompleteListWithTogetherView() {
   return (
     <Container>
       <Wrapper>
-        <IconBox onClick={() => router.back()}>
+        <IconBox onClick={() => router.push('/')}>
           <ArrowBackIcon />
         </IconBox>
         <Section>

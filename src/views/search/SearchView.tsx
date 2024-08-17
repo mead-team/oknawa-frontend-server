@@ -44,7 +44,8 @@ export default function SearchView({ type }: SearchViewProps) {
   const { mutate: submitDeparturePointMutate } =
     useSubmitDeparturePointMutation();
 
-  const roomId = localStorage.getItem('roomId');
+  const storageRoomId =
+    typeof window !== 'undefined' ? localStorage.getItem('roomId') : '';
   const isIndividualView = type === 'individual';
 
   const handleSearchAddressBtnClick = (index: number, e: any) => {
@@ -75,13 +76,13 @@ export default function SearchView({ type }: SearchViewProps) {
             roomId: shareRoomId,
           },
           {
-            onSuccess: data => {
+            onSuccess: () => {
               localStorage.setItem('roomId', shareRoomId);
               router.push('/search/list-together');
             },
           },
         );
-      } else if (roomId && searchList.length > 0) {
+      } else if (storageRoomId && searchList.length > 0) {
         submitDeparturePointMutate(
           {
             requestBody: {
@@ -90,7 +91,7 @@ export default function SearchView({ type }: SearchViewProps) {
               start_x: searchForm.address.latitude,
               start_y: searchForm.address.longitude,
             },
-            roomId: roomId,
+            roomId: storageRoomId,
           },
           {
             onSuccess: () => {
@@ -157,7 +158,6 @@ export default function SearchView({ type }: SearchViewProps) {
         </IconBox>
         <TitleBox>
           <Title>{titleText}</Title>
-          {isIndividualView && <PeopleCount>① ②</PeopleCount>}
         </TitleBox>
         <Section>
           <Input

@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import { useAtom } from 'jotai';
 import { useEffect } from 'react';
+import { UserCheck } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 import SearchTypeSelector from '@/components/SearchTypeSelector';
 import { PeopleIcon } from '@/assets/icons/People';
@@ -8,11 +10,20 @@ import { PlusIcon } from '@/assets/icons/Plus';
 import { searchState } from '@/jotai/global/store';
 
 export default function MainView() {
+  const router = useRouter();
+
   const [, setSearchList] = useAtom(searchState);
+
+  const storageRoomId =
+    typeof window !== 'undefined' ? localStorage.getItem('roomId') : '';
 
   useEffect(() => {
     setSearchList([]);
   }, [setSearchList]);
+
+  const handleCompletedRoomBtnClick = () => {
+    router.push('/search/list-together');
+  };
 
   return (
     <Container>
@@ -27,6 +38,12 @@ export default function MainView() {
           icon={<PeopleIcon width="42" height="42" />}
         />
       </SearchTypeSelectorBox>
+      {Boolean(storageRoomId) && (
+        <CompletedRoomButton onClick={handleCompletedRoomBtnClick}>
+          <UserCheck />
+          입력 중인 방 입장하기
+        </CompletedRoomButton>
+      )}
     </Container>
   );
 }
@@ -52,4 +69,20 @@ const SearchTypeSelectorBox = styled.div`
   display: flex;
   justify-content: center;
   gap: 20px;
+`;
+
+const CompletedRoomButton = styled.div`
+  display: flex;
+  gap: 10px;
+  align-self: center;
+  background-color: #27272a;
+  width: 50%;
+  padding: 16px 22px;
+  border-radius: 9px;
+  white-space: pre-line;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #242d2d;
+  }
 `;
