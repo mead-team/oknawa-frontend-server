@@ -4,7 +4,6 @@ import { Input } from '@nextui-org/react';
 import { useAtom, useSetAtom } from 'jotai';
 import { styled } from 'styled-components';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 
 import Address from '@/components/Address';
 
@@ -14,7 +13,10 @@ import { bottomSheetState, searchState } from '@/jotai/global/store';
 
 import Button from '@/components/Button';
 import { ArrowBackIcon } from '@/assets/icons/ArrowBack';
-import { useMakeRoomMutation } from '@/hooks/mutation/search';
+import {
+  useMakeRoomMutation,
+  useSubmitDeparturePointMutation,
+} from '@/hooks/mutation/search';
 
 const numberConfig: { [key: number]: string } = {
   1: '첫',
@@ -41,7 +43,10 @@ export default function SearchView({ type }: SearchViewProps) {
 
   const { register, setValue, handleSubmit, watch, reset } = useSearchForm();
   const { mutate: makeRoomMutate } = useMakeRoomMutation();
+  const { mutate: submitDeparturePointMutate } =
+    useSubmitDeparturePointMutation();
 
+  const roomId = localStorage.getItem('roomId');
   const isIndividualView = type === 'individual';
 
   const handleSearchAddressBtnClick = (index: number, e: any) => {
@@ -60,13 +65,33 @@ export default function SearchView({ type }: SearchViewProps) {
     }
 
     if (!isIndividualView) {
-      makeRoomMutate(searchForm, {
-        onSuccess: data => {
-          localStorage.setItem('roomId', data.room_id);
-          localStorage.setItem('hostKey', data.room_host_id);
-          router.push('/search/list-together');
-        },
-      });
+      if (roomId && searchList.length > 0) {
+        submitDeparturePointMutate(
+          {
+            requestBody: {
+              name: searchForm.name,
+              region_name: searchForm.address.regionName,
+              start_x: searchForm.address.latitude,
+              start_y: searchForm.address.longitude,
+            },
+            roomId,
+          },
+          {
+            onSuccess: () => {
+              router.push('/search/list-together');
+            },
+          },
+        );
+      } else {
+        makeRoomMutate(searchForm, {
+          onSuccess: data => {
+            localStorage.setItem('roomId', data?.room_id);
+            localStorage.setItem('hostKey', data?.room_host_id);
+            router.push('/search/list-together');
+          },
+        });
+      }
+
       return;
     }
 
@@ -77,11 +102,23 @@ export default function SearchView({ type }: SearchViewProps) {
     }
   };
 
+  const getTitleText = (orderNums: number) => {
+    if (isIndividualView) {
+      return `${numberConfig[orderNums + 1]}번째 출발지 정보를\n입력해주세요.`;
+    } else {
+      if (orderNums > 0) {
+        return `${
+          numberConfig[orderNums + 1]
+        }번째 출발지 정보를\n입력해주세요.`;
+      } else {
+        return '먼저 자신의 출발지 정보를\n입력해주세요.';
+      }
+    }
+  };
+
   const addressValue = watch('address');
   const nameValue = watch('name');
-  const titleText = isIndividualView
-    ? `${numberConfig[searchList.length + 1]}번째 출발지 정보를\n입력해주세요.`
-    : '먼저 자신의 출발지 정보를\n입력해주세요.';
+  const titleText = getTitleText(searchList.length);
   const buttonText =
     searchList.length >= 1
       ? '등록하기'

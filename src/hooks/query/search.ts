@@ -21,8 +21,8 @@ export const useInputStatusListQuery = (roomId: string) => {
     queryFn: () => SearchService.getInputStatusList(roomId),
   });
 
-  const participant = data.participant;
-  const roomIdFromBack = data.room_id;
+  const participant = data?.participant;
+  const roomIdFromBack = data?.room_id;
 
-  return { data, isLoading };
+  return { data, participant, isLoading };
 };

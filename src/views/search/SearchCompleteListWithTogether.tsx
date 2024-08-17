@@ -2,10 +2,14 @@
 
 import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
-import { ArrowBackIcon } from '@/assets/icons/ArrowBack';
 import { useAtom } from 'jotai';
+import { Link, CirclePlus } from 'lucide-react';
+
+import { ArrowBackIcon } from '@/assets/icons/ArrowBack';
 import { searchState } from '@/jotai/global/store';
 import { useInputStatusListQuery } from '@/hooks/query/search';
+import PeopleCard from './components/PeopleCard';
+import Button from '@/components/Button';
 
 export default function SearchCompleteListWithTogetherView() {
   const router = useRouter();
@@ -14,9 +18,14 @@ export default function SearchCompleteListWithTogetherView() {
 
   const roomId = localStorage.getItem('roomId');
 
-  const { data, isLoading } = useInputStatusListQuery(roomId || '');
+  const { participant: participants } = useInputStatusListQuery(roomId || '');
 
-  console.log('data', data);
+  const handleInviteBtnClick = () => {};
+
+  const handleAddBtnClick = () => {
+    setSearchList(participants);
+    router.push('/search/together');
+  };
 
   return (
     <Container>
@@ -31,6 +40,33 @@ export default function SearchCompleteListWithTogetherView() {
             <Desc>링크를 공유하고 팀원들을 초대해보세요.</Desc>
           </TitleBox>
         </Section>
+        <div className="flex flex-col gap-3">
+          {participants?.map((participant: any, index: number) => {
+            return (
+              <PeopleCard
+                key={index}
+                name={participant.name}
+                place={participant.region_name}
+              />
+            );
+          })}
+        </div>
+        <ButtonWrapper>
+          <Button
+            label="추가하기"
+            onClick={handleAddBtnClick}
+            className="flex items-center flex-1"
+          >
+            <CirclePlus width={20} height={20} />
+          </Button>
+          <Button
+            label="초대하기"
+            className="flex items-center flex-1"
+            onClick={handleInviteBtnClick}
+          >
+            <Link width={20} height={20} />
+          </Button>
+        </ButtonWrapper>
       </Wrapper>
     </Container>
   );
@@ -81,4 +117,10 @@ const Title = styled.h1`
 const Desc = styled.p`
   margin-top: 5px;
   color: #8d8d94;
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
 `;

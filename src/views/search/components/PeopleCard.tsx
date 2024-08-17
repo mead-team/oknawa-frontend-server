@@ -29,9 +29,11 @@ export default function PeopleCard({
         <Icon onClick={onModifyIconClick}>
           <PencilIcon width="20" height="20" />
         </Icon>
-        <Icon onClick={onDeleteIconClick}>
-          <MinusIcon width="20" height="20" />
-        </Icon>
+        {onDeleteIconClick && (
+          <Icon onClick={onDeleteIconClick}>
+            <MinusIcon width="20" height="20" />
+          </Icon>
+        )}
       </IconsBox>
     </Container>
   );

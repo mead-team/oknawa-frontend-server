@@ -1,11 +1,19 @@
 import styled from 'styled-components';
+import { useAtom } from 'jotai';
+import { useEffect } from 'react';
 
 import SearchTypeSelector from '@/components/SearchTypeSelector';
-
 import { PeopleIcon } from '@/assets/icons/People';
 import { PlusIcon } from '@/assets/icons/Plus';
+import { searchState } from '@/jotai/global/store';
 
 export default function MainView() {
+  const [, setSearchList] = useAtom(searchState);
+
+  useEffect(() => {
+    setSearchList([]);
+  }, [setSearchList]);
+
   return (
     <Container>
       <Title>{'출발지를 입력해주세요\n 중간 지점을 추천해드릴게요'}</Title>

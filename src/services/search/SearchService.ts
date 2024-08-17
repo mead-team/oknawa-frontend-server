@@ -2,7 +2,7 @@ import { api } from '@/axois';
 
 import SearchForm from '@/model/search/SearchForm';
 
-import { SearchFormType } from './types';
+import { SearchFormType, SubmitDeparturePointRequestBody } from './types';
 import { SearchState } from '@/jotai/global/store';
 import SearchFormWithTogether from '@/model/search-together/SearchFormWithTogether';
 
@@ -39,5 +39,16 @@ export default class SearchService {
     const res = await api.get(`/location/together/${roomId}/polling`);
 
     return res.data;
+  }
+
+  static async submitDeparturePoint(
+    requestBody: SubmitDeparturePointRequestBody,
+    roomId: string,
+  ) {
+    const { data } = await api.post(`/location/together/${roomId}`, {
+      ...requestBody,
+    });
+
+    return data;
   }
 }
