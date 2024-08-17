@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import { Button as FloatingButton } from '@nextui-org/react';
 
 import { ArrowBackIcon } from '@/assets/icons/ArrowBack';
-import { searchState } from '@/jotai/global/store';
+import { SearchState, searchState } from '@/jotai/global/store';
 import { useInputStatusListQuery } from '@/hooks/query/search';
 import PeopleCard from './components/PeopleCard';
 import Button from '@/components/Button';
@@ -56,7 +56,26 @@ export default function SearchCompleteListWithTogetherView() {
       return toast.error('방장의 권한입니다.');
     }
 
-    placeSearchMutate(participants, {
+    const transformedParticipants: SearchState[] = participants.map(
+      (participant: any, index: number) => {
+        const latitude =
+          index === 0 ? participant.start_y : participant.start_x;
+        const longitude =
+          index === 0 ? participant.start_x : participant.start_y;
+
+        return {
+          name: participant.name,
+          address: {
+            fullAddress: participant.region_name,
+            latitude: latitude,
+            longitude: longitude,
+            regionName: participant.region_name,
+          },
+        };
+      },
+    );
+
+    placeSearchMutate(transformedParticipants, {
       onSuccess: data => {
         router.push('/result');
         setResult(data);
