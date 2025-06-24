@@ -19,5 +19,5 @@ export interface HotPlace {
   main_photo_url: string;
   x: string;
   y: string;
-  open_hour: any;
+  day_business_hours_infos: any;
 }

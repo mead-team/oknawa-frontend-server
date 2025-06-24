@@ -58,11 +58,9 @@ export const useSubmitDeparturePointMutation = () => {
     mutationKey: ['submitDeparturePoint'],
     mutationFn: ({
       requestBody,
-      roomId,
     }: {
       requestBody: SubmitDeparturePointRequestBody;
-      roomId: string;
-    }) => SearchService.submitDeparturePoint(requestBody, roomId),
+    }) => SearchService.submitDeparturePoint(requestBody),
     onError: error => {
       console.log('error 발생!', error);
     },

@@ -8,7 +8,7 @@ export default class HotPlaceService {
     page = 1,
     size = 5,
   ) {
-    const res = await api.get(`/location/point/place/${category}`, {
+    const res = await api.get(`/functions/v1/location-point-place/${category}`, {
       params: {
         x: point.x,
         y: point.y,

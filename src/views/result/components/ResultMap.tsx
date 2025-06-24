@@ -132,7 +132,7 @@ export default function ResultMap({
                 path={polyline}
                 strokeWeight={6}
                 strokeOpacity={1}
-                strokeColor="#18C964"
+                strokeColor={getStrokeColor(index)}
               />
             );
           })}

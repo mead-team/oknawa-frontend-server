@@ -13,6 +13,7 @@ export interface SearchFormType {
 }
 
 export interface SubmitDeparturePointRequestBody {
+  room_id: string;
   name: string;
   region_name: string;
   start_x: 0;

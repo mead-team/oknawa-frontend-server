@@ -68,12 +68,12 @@ export default function SearchView({ type }: SearchViewProps) {
         submitDeparturePointMutate(
           {
             requestBody: {
+              room_id: shareRoomId,
               name: searchForm.name,
               region_name: searchForm.address.regionName,
               start_x: searchForm.address.latitude,
               start_y: searchForm.address.longitude,
-            },
-            roomId: shareRoomId,
+            }
           },
           {
             onSuccess: () => {
@@ -86,12 +86,12 @@ export default function SearchView({ type }: SearchViewProps) {
         submitDeparturePointMutate(
           {
             requestBody: {
+              room_id: storageRoomData.roomId,
               name: searchForm.name,
               region_name: searchForm.address.regionName,
               start_x: searchForm.address.latitude,
               start_y: searchForm.address.longitude,
-            },
-            roomId: storageRoomData.roomId,
+            }
           },
           {
             onSuccess: () => {

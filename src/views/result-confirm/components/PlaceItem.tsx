@@ -22,12 +22,12 @@ export default function PlaceItem({ place }: PlaceItemProps) {
     road_address_name,
     place_url,
     main_photo_url,
-    open_hour,
+    day_business_hours_infos,
   } = place;
 
-  const dayOfWeek =
-    open_hour?.periodList?.[0]?.timeList?.[0]?.dayOfWeek ?? '영업시간 미기재';
-  const timeSE = open_hour?.periodList?.[0]?.timeList?.[0]?.timeSE ?? '';
+  const today = day_business_hours_infos?.[0];
+  const dayOfWeek = today?.day_of_the_week ?? '영업시간 미기재';
+  const timeSE = today?.day_time?.start_end_time ?? '';
 
   const categoryIcons: CategoryIcons = {
     음식점: <RestaurantIcon color="gray" width="16" height="16" />,
